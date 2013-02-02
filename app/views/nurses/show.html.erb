@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Username:</b>
+  <%= @nurse.username %>
+</p>
+
+<p>
+  <b>First Name:</b>
+  <%= @nurse.first_name %>
+</p>
+<p>
+  <b>Last Name:</b>
+  <%= @nurse.last_name %>
+</p>
+
+<p>
+  <b>Admin?:</b>
+  <%= @nurse.admin %>
+</p>
+
+<p>
+  <b>Validator?:</b>
+  <%= @nurse.validator %>
+</p>
+
+<p>
+	<b>Procedures:</b>
+	<%= @nurse.completed_procs.size %>
+</p>
+
+<%= link_to 'Edit', edit_nurse_path(@nurse) %> |
+<%= link_to 'Back', nurses_path %>

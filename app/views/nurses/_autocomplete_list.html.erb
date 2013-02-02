@@ -1,0 +1,8 @@
+
+
+
+
+
+
+
+<%= Procedure.all.collect {|i| '"' + i.name + '"'}.join(',').html_safe %>

@@ -1,0 +1,52 @@
+ <h1>Welcome to the CathTraq system, Nurse <%= @nurse.first_name %>!</h1>
+ (username <%= @nurse.username %>)<p><p>
+ Would you like to add a procedure?
+
+
+
+
+ <%= form_for(@nurse, :url => { :action => "save_procedure" }) do |f| %>
+   <% if @completed_proc.errors.any? %>
+     <div id="error_explanation">
+      <h2><%= pluralize(@completed_proc.errors.count, "error") %> prevented this procedure from being added</h2>
+
+      <ul>
+        <% @completed_proc.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<fieldset>
+  <div class="field">
+    <%= label :procedure %><br />
+    <%= text_field_tag :procedure %><br />
+    <%= label_tag :date, 'Date' %><br />
+    <%= text_field_tag :date_start, Date.today.strftime('%d/%m/%Y') %><br />  
+    <%= label_tag :quantity, 'How many of these procedures?' %><br />
+    <%= number_field_tag :quantity, 1, :in => 1..CompletedProc::MAX_PROCS_PER_DAY %><br />
+    <%= label_tag :comments %><br />
+    <%= text_area_tag :comments, 'Put comments on procedure here, if any.', :cols => 40 %><br />
+    <div id='options' />
+  </div>
+</fieldset>
+<div class="actions">
+  <%= f.submit %>
+</div>
+<script>
+$( "#procedure" ).autocomplete({
+  source: [ <%= render 'autocomplete_list' %> ],
+  select: function( event, ui ) { 
+    $('#procedure').val(ui.item.value); 
+    $('#options').load( "<%= url_for(:action => 'options', :controller => 'nurses') %>" 
+      ,"proc="+encodeURIComponent(ui.item.value) ) 
+  },
+  change: function (event, ui) {
+    if(!ui.item){ $("#procedure").val(""); }
+  }
+});
+
+$( "#date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
+</script>
+
+<% end %>

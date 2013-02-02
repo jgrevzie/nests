@@ -1,0 +1,17 @@
+
+
+
+<% options = @proc.options %>
+<% if options.size>0 %>
+	Extra options for this procedure<br />
+	<% if options.end_with?('?') %>
+		<%= check_box_tag(:options, options.chop) %>
+		<%= label_tag(:options, options) %>
+	<% else %>
+		<% options.split(',').each do |option| %>
+			<%= radio_button_tag(:options, option) %>
+			<%= label_tag('options'+option, option) %>
+			<p>
+		<% end %>
+	<% end %>
+<% end %>

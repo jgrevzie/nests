@@ -1,0 +1,59 @@
+ <h1>Welcome to the CathTraq system, Nurse <%= @nurse.first_name %>!</h1>
+ (username <%= @nurse.username %>)<p><p>
+ Would you like to add a procedure?
+
+
+
+
+ <%= form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f| %>
+   <% if @completed_proc.errors.any? %>
+     <div id="error_explanation">
+      <h2><%= pluralize(@completed_proc.errors.count, "error") %> prevented this procedure from being added</h2>
+
+      <ul>
+        <% @completed_proc.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<fieldset>
+  <div class="field">
+    <%= f.label :proc_name %><br />
+    <%= f.text_field :proc_name, :id => 'proc_name' %><br />
+    <%= f.label :date_start, 'Date' %><br />
+    <%= f.text_field :date_start, :id => 'date_start' %><br />  
+    <%= f.label :quantity, 'How many of these procedures?' %><br />
+    <%= f.number_field :quantity, :in => 1..CompletedProc::MAX_PROCS_PER_DAY %><br />
+    <%= f.label :comments %><br />
+    <%= f.text_area :comments, :cols => 40, :rows => 4 %><br />
+    <div id='options' />
+  </div>
+</fieldset>
+<div class="actions">
+  <%= f.submit %>
+</div>
+
+<script>
+
+var proc_names = [ <%= render 'autocomplete_list' %> ];
+
+$( "#proc_name" ).autocomplete({
+  source: function( request, response ) {
+          response( $.grep( proc_names, function( item ){
+              return item.toLowerCase().indexOf(request.term) == 0;
+          }) ) },
+  select: function( event, ui ) { 
+    $('#proc_name').val(ui.item.value); 
+    $('#options').load( "<%= url_for(:action => 'options', :controller => 'nurses') %>" 
+      ,"proc="+encodeURIComponent(ui.item.value) ) 
+  },
+  change: function (event, ui) {
+    if(!ui.item){ $("#proc_name").val(""); }
+  }
+});
+
+$( "#date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
+</script>
+
+<% end %>
