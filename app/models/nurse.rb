@@ -3,8 +3,8 @@ class Nurse
   include ActiveModel::SecurePassword 
 
   field :username
-  field :admin, type: Boolean
-  field :validator, type: Boolean
+  field :admin, type: Boolean, default: false
+  field :validator, type: Boolean, default: false
   field :first_name
   field :last_name
   field :password_digest
@@ -17,13 +17,11 @@ class Nurse
   belongs_to :nurse
 
   def procs_needing_validation
-    CompletedProcs.where(
-      :nurse_id => self._id,
-      :validated => false)
+     CompletedProc.all(nurse_id: self._id, validated: false)
   end
 
-  def procs_pending_validation
-    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation }
+  def all_validatee_procs_pending_validation
+    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation } .flatten(1)
   end
 
 end

@@ -8,7 +8,7 @@ class CompletedProc
 	field :date_end, type: Date
 	field :quantity, type: Integer
 	field :options
-	field :validated, type: Boolean
+	field :validated, type: Boolean, default: false
 
 	has_one :procedure
 	belongs_to :nurse
@@ -34,7 +34,7 @@ class CompletedProc
 	end
 
 	def proc_name
-		self.procedure.name
+		self.procedure.name || ''
 	end
 
 end
