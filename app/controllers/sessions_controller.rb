@@ -1,6 +1,8 @@
 class SessionsController < ApplicationController
 	skip_before_filter :authorize
 
+	respond_to :html
+
 	def new
 	end
 
@@ -8,9 +10,14 @@ class SessionsController < ApplicationController
 		nurse = Nurse.where(username: params[:username]).first
 		if nurse and nurse.authenticate(params[:password])
 			session[:user_id] = nurse._id
-			if nurse.admin? then redirect_to admin_url else redirect_to add_procedure_nurse_url(nurse) end
+			if nurse.validator? 
+				redirect_to pending_validations_nurse_path(nurse) 
+			else 
+				redirect_to add_procedure_nurse_path(nurse)
+			end
 		else
-			redirect_to login_url, alert: "Invalid user/password combination"
+			flash[:alert] = "Invalid user/password combination"
+			render action: "new"
 		end
 	end
 

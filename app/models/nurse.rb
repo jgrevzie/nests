@@ -13,4 +13,17 @@ class Nurse
   has_secure_password
 
   has_many :completed_procs
+  has_many :validatees, :class_name => 'Nurse'
+  belongs_to :nurse
+
+  def procs_needing_validation
+    CompletedProcs.where(
+      :nurse_id => self._id,
+      :validated => false)
+  end
+
+  def procs_pending_validation
+    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation }
+  end
+
 end

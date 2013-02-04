@@ -1,3 +1,8 @@
+
+
+
+
+
 Procedure.create(:name => "Coronary Angiography", :abbrev => "C/A", :options => "Laser?")
 Procedure.create(:name => "Percutaneious Coronary Intervention", :abbrev => "PCI", :options => "")
 Procedure.create(:name => "C/A + PCI", :abbrev => "", :options => "alpha team,buttcake,simpletoon,monkey want bannanas")
@@ -33,7 +38,3 @@ Procedure.create(:name => "Emergency Intubation", :abbrev => "", :options => "")
 Procedure.create(:name => "Covered Stent", :abbrev => "", :options => "")
 Procedure.create(:name => "Advanced Life Support", :abbrev => "ALS", :options => "")
 Procedure.create(:name => "IV Cannulation", :abbrev => "", :options => "")
-				Nurse.create(:username => "jackie",
-				:first_name => "Jackie",
-				:last_name => "Peyton",
-				:password_digest => BCrypt::Password.create("password"))

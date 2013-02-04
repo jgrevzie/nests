@@ -5,4 +5,4 @@
 
 
 
-<%= Procedure.all.collect {|i| '"' + i.name + '"'}.join(',').html_safe %>
+<%= Procedure.asc(:name).collect {|i| '"' + i.name + '"'}.join(',').html_safe %>

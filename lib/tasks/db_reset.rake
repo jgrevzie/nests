@@ -18,12 +18,10 @@ namespace :nest do
 				seeds.puts create_proc
 			end
 
-			seeds.puts <<-string
-				Nurse.create(:username => "jackie",
+			Nurse.create(:username => "jackie",
 				:first_name => "Jackie",
 				:last_name => "Peyton",
 				:password_digest => BCrypt::Password.create("password"))
-			string
 		end
 		Rake::Task['db:seed'].invoke
 	end

@@ -1,22 +1,24 @@
  <h1>Welcome to the CathTraq system, Nurse <%= @nurse.first_name %>!</h1>
  (username <%= @nurse.username %>)<p><p>
- Would you like to add a procedure?
+ <% if flash[:notice] %>
+    <div id="notice"><%= flash[:notice] %></div>
+<% end %>
 
+Would you like to add a procedure?
 
+ <% if @completed_proc.errors.any? %>
+   <div id="error_explanation">
+    <h2><%= pluralize(@completed_proc.errors.count, "error") %> prevented this procedure from being added</h2>
 
+    <ul>
+      <% @completed_proc.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
- <%= form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f| %>
-   <% if @completed_proc.errors.any? %>
-     <div id="error_explanation">
-      <h2><%= pluralize(@completed_proc.errors.count, "error") %> prevented this procedure from being added</h2>
-
-      <ul>
-        <% @completed_proc.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f| %>
 <fieldset>
   <div class="field">
     <%= f.label :proc_name %><br />
@@ -34,15 +36,18 @@
   <%= f.submit %>
 </div>
 
+<% end %>
+<%= button_to 'Logout', logout_path, method: :delete %>
+
 <script>
 
 var proc_names = [ <%= render 'autocomplete_list' %> ];
 
 $( "#proc_name" ).autocomplete({
   source: function( request, response ) {
-          response( $.grep( proc_names, function( item ){
-              return item.toLowerCase().indexOf(request.term) == 0;
-          }) ) },
+    response( $.grep( proc_names, function( item ){
+      return item.toLowerCase().indexOf(request.term) == 0;
+    }) ) },
   select: function( event, ui ) { 
     $('#proc_name').val(ui.item.value); 
     $('#options').load( "<%= url_for(:action => 'options', :controller => 'nurses') %>" 
@@ -50,10 +55,10 @@ $( "#proc_name" ).autocomplete({
   },
   change: function (event, ui) {
     if(!ui.item){ $("#proc_name").val(""); }
-  }
+  },
+  minLength: 0
 });
 
 $( "#date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
 </script>
 
-<% end %>

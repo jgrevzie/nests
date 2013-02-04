@@ -85,6 +85,8 @@ class NursesController < ApplicationController
   def add_procedure
     @nurse = Nurse.find(params[:id])
     @completed_proc = CompletedProc.new
+    @completed_proc.procedure = Procedure.new
+
   end
   
   def save_procedure
@@ -93,7 +95,7 @@ class NursesController < ApplicationController
 
     respond_to do |format|      
      if @completed_proc.save && @nurse.completed_procs << @completed_proc
-       format.html { redirect_to @nurse, notice: 'Procedure added to nurse.' }
+       format.html { redirect_to add_procedure_nurse_path(@nurse), notice: 'Procedure added to nurse.' }
        format.json { render json: @nurse, status: :updated, location: @nurse }
      else
       format.html { render action: "add_procedure" }
@@ -110,5 +112,8 @@ def options
   end
 end
 
+def pending_validations
+  @nurse = Nurse.find(params[:id])  
+end
 
 end

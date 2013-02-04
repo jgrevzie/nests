@@ -8,8 +8,7 @@ class CompletedProc
 	field :date_end, type: Date
 	field :quantity, type: Integer
 	field :options
-
-	attr_accessor :proc_name
+	field :validated, type: Boolean
 
 	has_one :procedure
 	belongs_to :nurse
@@ -30,10 +29,12 @@ class CompletedProc
 	}
 	validates :procedure, presence: true
 
-	after_initialize :load_proc
-
-	def load_proc
+	def proc_name=(proc_name)
 		self.procedure = Procedure.where(name: proc_name).first
+	end
+
+	def proc_name
+		self.procedure.name
 	end
 
 end

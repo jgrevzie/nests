@@ -38,8 +38,18 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
 
+  #clear out the database
   config.before :each do
-    Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+   Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+   #Some would say it's a bad move to load seeds, but these are effectively constants
+    load "#{Rails.root}/db/seeds.rb"
   end
+end
 
+
+def login(nurse)
+    visit login_path
+    fill_in 'username', :with => nurse.username
+    fill_in 'password', :with => nurse.password
+    click_button 'Login'
 end
