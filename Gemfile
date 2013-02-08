@@ -18,9 +18,9 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'jquery-rails'
 end
 
-gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -42,6 +42,7 @@ gem 'thin'
 gem 'validates_timeliness'
 
 gem 'rb-fsevent', '~> 0.9.1'
+gem 'haml'
 
 gem "rspec-rails", :group => [:test, :development]
 group :test do

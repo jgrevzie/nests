@@ -1,0 +1,15 @@
+
+
+
+
+
+- if flash[:notice]
+  #notice= flash[:notice]
+- if @completed_proc.errors.any?
+  #error_explanation
+    %h2
+      = pluralize(@completed_proc.errors.count, "error")
+      prevented this procedure from being added
+    %ul
+      - @completed_proc.errors.full_messages.each do |msg|
+        %li= msg

@@ -6,5 +6,5 @@ class Procedure
 
   validates :name, presence: true, uniqueness: true
 
-  belongs_to :completed_proc
+  has_many :completed_procs
 end

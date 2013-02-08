@@ -1,0 +1,25 @@
+%h1 Listing nurses
+
+%table
+  %tr
+    %th Username
+    %th Admin
+    %th Validator
+    %th
+    %th
+    %th
+ 
+  - @nurses.each do |nurse|
+    %tr
+      %td= nurse.username
+      %td= nurse.admin
+      %td= nurse.validator
+      %td= link_to 'Show', nurse
+      %td= link_to 'Edit', edit_nurse_path(nurse)
+      %td= link_to 'Destroy', nurse, method: :delete, data: { confirm: 'Are you sure?' }
+      %td= link_to 'Add Proc', add_procedure_nurse_path(nurse)
+
+%br
+
+= link_to 'New Nurse', new_nurse_path
+= button_to 'Logout', logout_path, method: :delete

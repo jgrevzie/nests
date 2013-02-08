@@ -10,7 +10,7 @@ class CompletedProc
 	field :options
 	field :validated, type: Boolean, default: false
 
-	has_one :procedure
+	belongs_to :procedure
 	belongs_to :nurse
 
 	validates :quantity, :numericality => {
@@ -34,7 +34,7 @@ class CompletedProc
 	end
 
 	def proc_name
-		self.procedure.name || ''
+		if self.procedure then self.procedure.name || '' else '' end
 	end
 
 end
