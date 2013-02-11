@@ -19,6 +19,8 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   gem 'jquery-rails'
+  gem 'rb-fsevent', '~> 0.9.1'
+  gem "teabag"
 end
 
 
@@ -41,10 +43,11 @@ gem 'bcrypt-ruby'
 gem 'thin'
 gem 'validates_timeliness'
 
-gem 'rb-fsevent', '~> 0.9.1'
+
 gem 'haml'
 
 gem "rspec-rails", :group => [:test, :development]
+
 group :test do
   gem "fabrication"
   gem "capybara"

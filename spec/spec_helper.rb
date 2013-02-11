@@ -44,8 +44,10 @@ RSpec.configure do |config|
    #Some would say it's a bad move to load seeds, but these are effectively constants
     load "#{Rails.root}/db/seeds.rb"
   end
+
 end
 
+      Capybara.javascript_driver = :selenium
 
 def login(nurse)
     visit login_path
