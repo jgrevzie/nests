@@ -22,13 +22,8 @@ Would you like to add a procedure?
   = button_to 'Logout', logout_path, method: :delete
 
 :javascript
-  var proc_names = [ #{render 'autocomplete_list'} ];
-  
   $( "#proc_name" ).autocomplete({
-    source: function( request, response ) {
-      response( $.grep( proc_names, function( item ){
-        return item.toLowerCase().indexOf(request.term) == 0;
-      }) ) },
+    source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
       $('#proc_name').val(ui.item.value); 
       $('#options').load( "#{url_for(:action => 'options', :controller => 'nurses')}" 
