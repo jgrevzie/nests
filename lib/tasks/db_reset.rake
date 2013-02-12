@@ -6,7 +6,8 @@ require 'csv'
 require 'fabrication'
 
 def fabricate_nurses
-	Fabricate :head_nurse_5_subs, username: 'heather'
+	heather = Fabricate :head_nurse_5_subs, username: 'heather'
+	heather.validatees << Fabricate(:nurse, username: 'paul', first_name: 'Paul')
 	Fabricate :head_nurse_5_subs, username: 'sheila'
 end
 

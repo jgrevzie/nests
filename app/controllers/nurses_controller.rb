@@ -95,7 +95,8 @@ class NursesController < ApplicationController
 
     respond_to do |format|      
      if @completed_proc.save && @nurse.completed_procs << @completed_proc
-       format.html { redirect_to add_procedure_nurse_path(@nurse), notice: 'Procedure added to nurse.' }
+       format.html { redirect_to add_procedure_nurse_path(@nurse), 
+        notice: "Procedure '#{@completed_proc.procedure.name}' submitted for validation." }
        format.json { render json: @nurse, status: :updated, location: @nurse }
      else
       format.html { render action: "add_procedure" }

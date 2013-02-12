@@ -1,25 +1,22 @@
 %h1 Welcome to the CathTraq system, Nurse #{@nurse.first_name}!
-(username #{@nurse.username})
+%pre (username #{@nurse.username})
 
 = render "errors"
 
-Would you like to add a procedure?
+Would you like to submit a procedure for validation?
 
 = form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f|
   %fieldset
-    .field
-      .fields= f.label :proc_name
-      .fields= f.text_field :proc_name, :id => 'proc_name'
-      .fields= f.label :date_start, 'Date'
-      .fields= f.text_field :date_start, :id => 'date_start'
-      .fields= f.label :quantity, 'How many of these procedures?'
-      .fields= f.number_field :quantity, :in => 1..CompletedProc::MAX_PROCS_PER_DAY
-      .fields= f.label :comments
-      .fields= f.text_area :comments, :cols => 40, :rows => 4
-      #options
-  .actions
-    = f.submit
-  = button_to 'Logout', logout_path, method: :delete
+    .fields= f.label :proc_name
+    .fields= f.text_field :proc_name, :id => 'proc_name'
+    .fields= f.label :date_start, 'Date'
+    .fields= f.text_field :date_start, :id => 'date_start', :value => Date.today.strftime('%d/%m/%Y')
+    .fields= f.label :quantity, 'How many of these procedures?'
+    .fields= f.number_field :quantity, :in => 1..CompletedProc::MAX_PROCS_PER_DAY, :value => 1
+    .fields= f.label :comments
+    .fields= f.text_area :comments, :cols => 40, :rows => 4
+    #options
+  = f.submit 'Submit Proc for Validation'
 
 :javascript
   $( "#proc_name" ).autocomplete({

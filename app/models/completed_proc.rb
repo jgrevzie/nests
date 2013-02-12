@@ -18,7 +18,7 @@ class CompletedProc
 		:less_than_or_equal_to => MAX_PROCS_PER_DAY
 	}
 	validates :date_start, :timeliness => {
-		:before => Date.today+1,
+		:before => Date.today+2,
 		:after => Date.today.prev_week
 	}
 	validates :date_end, :timeliness =>  {
