@@ -7,9 +7,9 @@ Fabricator(:random_proc, from: :procedure) do
 end
 
 Fabricator(:procedure) do
-	name 'blah'
+	name 'Blaster'
 end
 
 Fabricator(:proc_seq, from: :procedure) do
-	name { sequence(:name) { |i| "blah#{i}" } }
+	name { sequence(:name) { |i| "procedure#{i}" } }
 end

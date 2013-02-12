@@ -104,16 +104,25 @@ class NursesController < ApplicationController
   end
 end
 
-def options
-  @proc = Procedure.find_by(name: params[:proc])
-  respond_to do |format|
-    format.js
-    format.json { render json: @proc.options }
+  def options
+    @proc = Procedure.find_by(name: params[:proc])
+    respond_to do |format|
+      format.js
+      format.json { render json: @proc.options }
+    end
   end
-end
 
-def pending_validations
-  @nurse = Nurse.find(params[:id])  
-end
+  def pending_validations
+    @nurse = Nurse.find(params[:id])
+  end
 
+  def validate_procs
+   @nurse = Nurse.find(params[:id])
+   params[:nurse][:proc_ids].each do |id, value|
+    cproc = CompletedProc.find id
+    cproc.validated = true
+    cproc.save
+   end
+   redirect_to nurses_url, notice: "procedures validated"
+  end
 end

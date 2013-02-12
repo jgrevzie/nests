@@ -9,9 +9,9 @@ require 'spec_helper'
 describe "Nurse" do
 
   describe 'nurse fabricators' do
-      it '(:nurse_seq) fabricates nurses with different usernames' do
-      nurse0 = Fabricate(:nurse_seq)
-      nurse1 = Fabricate(:nurse_seq)
+      it '(:nurse) fabricates nurses with different usernames' do
+      nurse0 = Fabricate(:nurse)
+      nurse1 = Fabricate(:nurse)
       nurse0.username.should_not  eq(nurse1.username)
     end
     it '(:nurse_5_procs) fabricates nurse with completed procs' do

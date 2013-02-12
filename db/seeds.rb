@@ -1,8 +1,3 @@
-
-
-
-
-
 Procedure.create(:name => "Coronary Angiography", :abbrev => "C/A", :options => "Laser?")
 Procedure.create(:name => "Percutaneious Coronary Intervention", :abbrev => "PCI", :options => "")
 Procedure.create(:name => "C/A + PCI", :abbrev => "", :options => "alpha team,buttcake,simpletoon,monkey want bannanas")

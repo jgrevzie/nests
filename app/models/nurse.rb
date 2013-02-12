@@ -21,7 +21,7 @@ class Nurse
   end
 
   def all_validatee_procs_pending_validation
-    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation } .flatten(1)
+    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation } .flatten(1) || []
   end
 
 end

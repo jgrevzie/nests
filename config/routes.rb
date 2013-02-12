@@ -15,7 +15,7 @@ Nests::Application.routes.draw do
       put 'save_procedure'
       get 'options'
       get 'pending_validations'
-      put 'update_validations'
+      put 'validate_procs'
     end
   end
 

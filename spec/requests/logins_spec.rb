@@ -5,6 +5,7 @@ require 'spec_helper'
 VALIDATION_CONTENT = 'Pending Validations'
 
 describe 'login page' do
+
 	it 'after successful sigin-in, takes regular nurse to add procedure page' do
 		nurse = Fabricate(:nurse)
 		login(nurse)
