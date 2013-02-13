@@ -5,7 +5,6 @@ class CompletedProc
 
 	field :comments
 	field :date_start, type: Date
-	field :date_end, type: Date
 	field :quantity, type: Integer
 	field :options
 	field :validated, type: Boolean, default: false
@@ -20,12 +19,6 @@ class CompletedProc
 	validates :date_start, :timeliness => {
 		:before => Date.today+2,
 		:after => Date.today.prev_week
-	}
-	validates :date_end, :timeliness =>  {
-		:before => Date.tomorrow,
-		:after => Date.current.prev_week,
-		:on_or_after => @date_start,
-		:if => :@date_end
 	}
 	validates :procedure, presence: true
 

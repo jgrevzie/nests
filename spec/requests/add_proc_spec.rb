@@ -24,7 +24,7 @@ end
 describe 'nurse completes procedure' do
 	it 'redirects from login page for ordinary nurse' do
     login_nurse.validator?.should be_false
-    page.should have_content 'add a procedure'
+    page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
   end
   it 'selects properly from drop down list', :js => true do
     Fabricate :procedure, name: PROC_NAME

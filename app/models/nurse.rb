@@ -24,4 +24,14 @@ class Nurse
     self.validatees.inject([]) { |result, el| result << el.procs_needing_validation } .flatten(1) || []
   end
 
+  def validate_procs(proc_ids)
+    proc_ids.each do |id|
+      cproc = CompletedProc.find id
+      # skip nurses that this head nurse can't validate
+      next unless self.validatees.include? cproc.nurse
+       cproc.validated = true
+      cproc.save
+   end
+ end
+
 end

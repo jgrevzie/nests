@@ -3,7 +3,7 @@
 
 = render "errors"
 
-Would you like to submit a procedure for validation?
+Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
 
 = form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f|
   %fieldset
