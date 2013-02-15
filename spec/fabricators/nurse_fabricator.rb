@@ -19,9 +19,6 @@ Fabricator(:nurse_5_procs, from: :nurse) do
 end
 
 Fabricator(:head_nurse_5_subs, from: :nurse) do
-	first_name 'Jackie'
-	username 'jackie'
-	password 'password'
 	validator true
 	after_create { |hnurse| 5.times {hnurse.validatees << Fabricate(:nurse_5_procs)} }
 end

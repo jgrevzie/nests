@@ -5,7 +5,7 @@
 
 Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
 
-= form_for(@completed_proc, :method => :put, :url => { :action => "save_procedure" }) do |f|
+= form_for @completed_proc, method: :put, url: "save_procedure" do |f|
   %fieldset
     .fields= f.label :proc_name
     .fields= f.text_field :proc_name, :id => 'proc_name'

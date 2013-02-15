@@ -6,7 +6,7 @@
 %h1 #{ApplicationHelper::VALIDATION_CONTENT} for Nurse #{@nurse.first_name}
 (username #{@nurse.username})
 
-= form_for :proc_ids, :method => :put, :url => { :action => "validate_procs" } do |f|
+= form_for :proc_ids, method: :put, url: 'validate_procs' do |f|
   %table#pendingValidationsTable{border: 1}
     %tr
       %th Validate?
@@ -17,7 +17,10 @@
       %tr
         %td= f.check_box comp_proc._id, {checked: true}, 'validate', nil
         %td Nurse #{comp_proc.nurse.first_name} (#{comp_proc.nurse.username})
-        %td= comp_proc.procedure.name
+        %td 
+          = comp_proc.procedure.name
+          = "(#{comp_proc.quantity})" if comp_proc.quantity>1
+
         %td= comp_proc.date_start
 
   =f.submit 'Validate Checked'

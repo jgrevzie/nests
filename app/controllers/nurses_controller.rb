@@ -119,7 +119,7 @@ def save_procedure
 
   def validate_procs
     @nurse = Nurse.find(params[:id])
-    @nurse.validate_procs params[:proc_ids].keys
+    @nurse.validate_procs params[:proc_ids].keys if params[:proc_ids]
     redirect_to nurses_url, notice: "procedures validated"
   end
 end
