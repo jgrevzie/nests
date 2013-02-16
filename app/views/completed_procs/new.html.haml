@@ -2,11 +2,10 @@
 %pre (username #{@nurse.username})
 
 = render "errors"
-= debug @completed_proc.errors.size
 
 Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
 
-= form_for @completed_proc, method: :put, url: "save_procedure" do |f|
+= form_for @completed_proc do |f|
   %fieldset
     .fields= f.label :proc_name
     .fields= f.text_field :proc_name, :id => 'proc_name'
@@ -24,8 +23,8 @@ Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
     source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
       $('#proc_name').val(ui.item.value); 
-      $('#options').load( "#{url_for(action: 'options', id: @completed_proc._id, controller: 'completed_procs')}" 
-        ,"proc="+encodeURIComponent(ui.item.value) ) 
+      $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
+                          "proc="+encodeURIComponent(ui.item.value) ) 
     },
     change: function (event, ui) {
       if(!ui.item){ $("#proc_name").val(""); }

@@ -36,16 +36,17 @@ class CompletedProcsController < ApplicationController
     @nurse = Nurse.find session[:user_id]
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
-      flash[:notice] = 'CompletedProc was successfully created.' 
+      flash[:notice] = 'Submitted procedure for validation.' 
     end
 
-    respond_with @completed_proc
+    respond_with @completed_proc, location: new_completed_proc_path
   end
 
   # PUT /completed_procs/1
   # PUT /completed_procs/1.json
   def update
-    @nurse = Nurse.find(params[:id])
+    @nurse = Nurse.find session[:user_id]
+    @completed_proc = CompletedProc.find params[:id]
     flash[:notice] = 'Nurse was successfully updated.' if @nurse.update_attributes(params[:nurse])
     respond_with @nurse
   end
