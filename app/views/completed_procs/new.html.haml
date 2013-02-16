@@ -2,6 +2,7 @@
 %pre (username #{@nurse.username})
 
 = render "errors"
+= debug @completed_proc.errors.size
 
 Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
 
@@ -23,7 +24,7 @@ Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
     source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
       $('#proc_name').val(ui.item.value); 
-      $('#options').load( "#{url_for(:action => 'options', :controller => 'nurses')}" 
+      $('#options').load( "#{url_for(action: 'options', id: @completed_proc._id, controller: 'completed_procs')}" 
         ,"proc="+encodeURIComponent(ui.item.value) ) 
     },
     change: function (event, ui) {

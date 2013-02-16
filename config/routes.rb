@@ -11,11 +11,14 @@ Nests::Application.routes.draw do
 
   resources :nurses do
     member do
-      get 'add_procedure'
-      put 'save_procedure'
-      get 'options'
       get 'pending_validations'
       put 'validate_procs'
+    end
+  end
+
+  resources :completed_procs do
+    member do
+      get 'options'
     end
   end
 

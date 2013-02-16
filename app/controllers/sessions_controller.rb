@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
 			if nurse.validator? 
 				redirect_to pending_validations_nurse_path(nurse) 
 			else 
-				redirect_to add_procedure_nurse_path(nurse)
+				redirect_to new_completed_proc_path
 			end
 		else
 			flash[:alert] = "Invalid user/password combination"

@@ -6,7 +6,7 @@
 
 
 NURSE_NAMES = ['Anne', 'Barry', 'Cate', 'Derek', 'Edith', 'Fred', 'Gayleen', 'Harry', 
-	'Isabell', 'Josef', 'Karen', 'Larry', 'Maude', 'Azeef', 'Ashima', 'Ross', 'Sonna']
+	'Isabell', 'Josef', 'Karen', 'Larry', 'Maude', 'Azeef', 'Ashima', 'Ross', 'Sonna', 'Nancy']
 
 Fabricator(:nurse) do
 	first_name { NURSE_NAMES.sample }
