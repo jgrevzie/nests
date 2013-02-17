@@ -17,7 +17,7 @@
       %td= link_to 'Show', nurse
       %td= link_to 'Edit', edit_nurse_path(nurse)
       %td= link_to 'Destroy', nurse, method: :delete, data: { confirm: 'Are you sure?' }
-      %td= link_to 'Add Proc', add_procedure_nurse_path(nurse)
+      %td= link_to 'Add Proc', new_completed_proc_path
       %td= link_to 'Pending Validations', pending_validations_nurse_path(nurse)
 
 

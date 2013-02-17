@@ -14,18 +14,11 @@ require 'spec_helper'
 
 
 
-
 describe "'Pending validations for nurse' screen" do
   it 'displays a table with a row for each pending proc, shows # of procs' do
     head_nurse = Fabricate :head_nurse_5_subs
 
-    #builds a nurse with a known proc name and quantity
-    proc = Fabricate :procedure, name: 'PROC_NAME'
-    cp = Fabricate :completed_proc, quantity: 5, procedure: proc
-    sub_nurse = Fabricate :nurse
-    sub_nurse.completed_procs << cp
-
-    head_nurse.validatees << sub_nurse
+    head_nurse.validatees << Fabricate(:nurse_1_proc, proc_name: 'PROC_NAME', q: 5)
     n_procs_pending_validation = head_nurse.all_validatee_procs_pending_validation.size
 
     login head_nurse
@@ -45,7 +38,7 @@ describe "'Pending validations for nurse' screen" do
     page.should have_content ApplicationHelper::VALIDATION_CONTENT
     click_button 'Validate Checked'
   end
-  it "should be able to validate a few procs" do
+  it "validates a subset of total procs" do
     hn = Fabricate :head_nurse_5_subs
     orig_pending = hn.all_validatee_procs_pending_validation.size
 
@@ -58,6 +51,13 @@ describe "'Pending validations for nurse' screen" do
      
     click_button 'Validate Checked'
     hn.all_validatee_procs_pending_validation.size.should eq orig_pending/2 
+  end
+  it "displays links to completed procs, takes user to edit proc screen" do
+    hn = Fabricate :nurse, validator: true
+    hn.validatees << Fabricate(:nurse_1_proc, proc_name: 'PROC', q: 5)
+    login hn
+    click_link('PROC (5)')
+    page.should have_content 'procedure'
   end
 
 end

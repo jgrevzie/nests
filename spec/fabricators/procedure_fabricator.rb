@@ -11,5 +11,6 @@ Fabricator(:procedure) do
 end
 
 Fabricator(:proc_seq, from: :procedure) do
-	name { sequence(:name) { |i| "procedure#{i}" } }
+	name { sequence(:proc_names) { |i| "procedure#{i}" } }
 end
+

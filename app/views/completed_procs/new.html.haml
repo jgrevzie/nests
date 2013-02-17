@@ -1,35 +1,11 @@
+
+
+
+
+
 %h1 Welcome to the CathTraq system, Nurse #{@nurse.first_name}!
 %pre (username #{@nurse.username})
 
-= render "errors"
-
 Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
 
-= form_for @completed_proc do |f|
-  %fieldset
-    .fields= f.label :proc_name
-    .fields= f.text_field :proc_name, :id => 'proc_name'
-    .fields= f.label :date_start, 'Date'
-    .fields= f.text_field :date_start, :id => 'date_start', :value => Date.today.strftime('%d/%m/%Y')
-    .fields= f.label :quantity, 'How many of these procedures?'
-    .fields= f.number_field :quantity, :in => 1..CompletedProc::MAX_PROCS_PER_DAY, :value => 1
-    .fields= f.label :comments
-    .fields= f.text_area :comments, :cols => 40, :rows => 4
-    #options
-  = f.submit 'Submit Proc for Validation'
-
-:javascript
-  $( "#proc_name" ).autocomplete({
-    source: [ #{render 'autocomplete_list'} ],
-    select: function( event, ui ) { 
-      $('#proc_name').val(ui.item.value); 
-      $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
-                          "proc="+encodeURIComponent(ui.item.value) ) 
-    },
-    change: function (event, ui) {
-      if(!ui.item){ $("#proc_name").val(""); }
-    },
-    minLength: 0
-  });
-  
-  $( "#date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
+= render 'form'

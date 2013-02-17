@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
 		nurse = Nurse.where(username: params[:username]).first
 		if nurse and nurse.authenticate(params[:password])
 			session[:user_id] = nurse._id
+			session[:nurse] = nurse
 			if nurse.validator? 
 				redirect_to pending_validations_nurse_path(nurse) 
 			else 

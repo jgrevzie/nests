@@ -19,14 +19,9 @@ describe 'nurses/pending_validations' do
   rendered.should have_selector 'table#pendingValidationsTable tr', 
     count: n_procs_pending_validation+1
   end
-  it 'indicates procs with quantity greather than 1' do
-    proc = Fabricate :procedure, name: 'PROC_NAME'
-    cp = Fabricate :completed_proc, quantity: 5, procedure: proc
-    sub_nurse = Fabricate :nurse
-    sub_nurse.completed_procs << cp
-    
+  it 'indicates procs with quantity greather than 1' do    
     @nurse = Fabricate :nurse, validator: true
-    @nurse.validatees << sub_nurse
+    @nurse.validatees << Fabricate(:nurse_1_proc, proc_name: 'PROC_NAME', q: 5)
 
     render
     rendered.should have_content "PROC_NAME (5)"

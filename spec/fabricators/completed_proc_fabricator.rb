@@ -6,9 +6,16 @@
 
 
 Fabricator(:completed_proc) do
-	date_start { Date.today }
+	transient :proc_name
+  date_start { Date.today }
 	quantity 1
-	procedure { Fabricate :proc_seq }
+	procedure do |n| 
+    if n[:proc_name]
+      Fabricate :procedure, name: n[:proc_name]
+    else
+      Fabricate :procedure
+    end
+  end
 end
 
 Fabricator(:random_completed_proc, from: :completed_proc) do

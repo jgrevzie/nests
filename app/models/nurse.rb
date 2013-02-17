@@ -34,4 +34,8 @@ class Nurse
    end
  end
 
-end
+  def can_validate_proc?(cproc)
+    self.validator? && self.validatees.include?(cproc.nurse)
+  end
+
+end # class

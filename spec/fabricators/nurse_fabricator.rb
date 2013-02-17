@@ -22,3 +22,11 @@ Fabricator(:head_nurse_5_subs, from: :nurse) do
 	validator true
 	after_create { |hnurse| 5.times {hnurse.validatees << Fabricate(:nurse_5_procs)} }
 end
+
+Fabricator(:nurse_1_proc, from: :nurse) do
+	transient :proc_name, :q
+	after_create do |me, trans| 
+		me.completed_procs \
+			<< Fabricate(:completed_proc, proc_name: trans[:proc_name], quantity: trans[:q])
+	end
+end

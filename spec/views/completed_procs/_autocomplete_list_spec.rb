@@ -5,10 +5,7 @@ require 'spec_helper'
 
 
 
-describe 'nurses/_autocomplete_list' do
-  it 'renders' do
-    render
-  end
+describe 'completed_procs/_autocomplete_list' do
   it 'renders corrct list of procedures' do
     render
     eval("[ #{rendered} ].size").should == Procedure.count

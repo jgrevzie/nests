@@ -2,5 +2,9 @@
 
 
 
+- if logged_in_nurse.can_validate_proc?(@completed_proc)
+  %h1 Validate / Edit procedure for Nurse #{@completed_proc.nurse.first_name}
+- else
+  %h1 Edit Procedure (will fail if already validated)
 
-Hello again!
+- render 'form'
