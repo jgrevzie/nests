@@ -27,14 +27,14 @@ describe "Nurse" do
     end  
   end
 
-  describe 'method procs_needing_validation' do 
+  describe '#procs_needing_validation' do 
     it "gets an enumeration of procedures for a nurse that have't been validated" do     
       n = Fabricate :nurse_5_procs
       n.procs_needing_validation.count.should == 5
     end
   end
 
-  describe 'method all_validatee_procs_pending_validation' do 
+  describe '#all_validatee_procs_pending_validation' do 
     it "gets all procs that a head nurse needs to validate" do 
       head_nurse = Fabricate :nurse, username: 'head_nurse'
       head_nurse.validatees << Fabricate(:nurse_5_procs)
@@ -42,7 +42,7 @@ describe "Nurse" do
     end
   end
 
-  describe 'method validate_procs' do
+  describe '#validate_procs' do
     it "validates completed procedures supplied by id" do
       hn = Fabricate :head_nurse_5_subs
       proc_ids = hn.all_validatee_procs_pending_validation
@@ -64,4 +64,27 @@ describe "Nurse" do
     end
   end
 
+  describe '#can_validate_proc?' do
+    it "returns false if this nurse is not a validator" do
+      hn = Fabricate :head_nurse_5_subs, validator: false
+      hn.can_validate_proc?(hn.validatees[0].completed_procs[0]).should be_false
+    end
+    it "returns false if supplied proc belongs to Nurse X, but Nurse X doesn't belong to self" do
+      hn = Fabricate :head_nurse_5_subs
+      n = Fabricate :nurse_1_proc
+      hn.can_validate_proc?(n.completed_procs[0]).should be_false
+    end
+    it "returns false if completed proc doesn't belong to a nurse" do
+      hn = Fabricate :head_nurse_5_subs
+      cp = Fabricate :completed_proc
+      hn.can_validate_proc?(cp).should be_false
+    end
+    it "returns true if nurse is 'owner' of Nurse X, and proc belongs to Nurse X" do
+      hn = Fabricate :nurse, validator: true
+      n = Fabricate :nurse_1_proc
+      hn.validatees << n
+      hn.can_validate_proc?(n.completed_procs[0]).should be_true
+    end
+  end
 end
+

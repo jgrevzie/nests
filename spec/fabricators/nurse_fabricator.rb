@@ -25,8 +25,9 @@ end
 
 Fabricator(:nurse_1_proc, from: :nurse) do
 	transient :proc_name, :q
-	after_create do |me, trans| 
-		me.completed_procs \
-			<< Fabricate(:completed_proc, proc_name: trans[:proc_name], quantity: trans[:q])
+	after_create do |me, t| 
+		params = [] << ( [:proc_name, t[:proc_name]] if t[:proc_name] )
+		params << [:quantity, t[:q]] if t[:q]
+		me.completed_procs << Fabricate(:completed_proc, Hash[params])
 	end
 end

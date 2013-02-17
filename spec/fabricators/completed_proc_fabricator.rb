@@ -9,12 +9,9 @@ Fabricator(:completed_proc) do
 	transient :proc_name
   date_start { Date.today }
 	quantity 1
-	procedure do |n| 
-    if n[:proc_name]
-      Fabricate :procedure, name: n[:proc_name]
-    else
-      Fabricate :procedure
-    end
+	procedure do |a| 
+    params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
+    Fabricate :procedure, Hash[params]
   end
 end
 

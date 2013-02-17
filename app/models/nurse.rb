@@ -31,11 +31,11 @@ class Nurse
       next unless self.validatees.include? cproc.nurse
        cproc.validated = true
       cproc.save
-   end
- end
+    end
+  end
 
   def can_validate_proc?(cproc)
-    self.validator? && self.validatees.include?(cproc.nurse)
+    self.validator? && cproc.nurse && self.validatees.include?(cproc.nurse)
   end
 
 end # class
