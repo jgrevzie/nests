@@ -30,4 +30,8 @@ class CompletedProc
 		if self.procedure then self.procedure.name || '' else '' end
 	end
 
+	def self.pending_validations
+		CompletedProc.where(validated: false)
+	end
+
 end

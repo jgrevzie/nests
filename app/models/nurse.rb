@@ -13,29 +13,22 @@ class Nurse
   has_secure_password
 
   has_many :completed_procs
-  has_many :validatees, :class_name => 'Nurse'
   belongs_to :nurse
 
-  def procs_needing_validation
+  def procs_I_submitted
      CompletedProc.all(nurse_id: self._id, validated: false)
   end
 
-  def all_validatee_procs_pending_validation
-    self.validatees.inject([]) { |result, el| result << el.procs_needing_validation } .flatten(1) || []
+  def validate_by_id(completed_proc_ids)
+    self.validate(CompletedProc.in _id: completed_proc_ids)
   end
 
-  def validate_procs(proc_ids)
-    proc_ids.each do |id|
-      cproc = CompletedProc.find id
-      # skip nurses that this head nurse can't validate
-      next unless self.validatees.include? cproc.nurse
-       cproc.validated = true
-      cproc.save
+  def validate(completed_procs)
+    raise "ordinary nurse tried to validate a proc!!" unless self.validator?
+    completed_procs.each do |i|
+      i.validated = true
+      i.save
     end
-  end
-
-  def can_validate_proc?(cproc)
-    self.validator? && cproc.nurse && self.validatees.include?(cproc.nurse)
   end
 
 end # class

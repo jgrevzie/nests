@@ -5,12 +5,12 @@ require 'spec_helper'
 
 describe 'login page' do
 
-	it 'after successful sigin-in, takes regular nurse to add procedure page' do
+	it 'after successful sign in, takes regular nurse to submit procedure page' do
 		nurse = Fabricate :nurse
 		login nurse
 		page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
 	end
-	it 'tells nurse that username and password are invalid' do
+	it 'tells nurse that username and password are invalid, when annoyed' do
 		nurse = Fabricate :nurse
 		nurse.password = ''
 		login nurse
@@ -22,8 +22,8 @@ describe 'login page' do
 		page.should have_content ApplicationHelper::VALIDATION_CONTENT
 	end
 	it 'takes validating nurse to validation page after successful login' do 
-		validator_nurse = Fabricate :nurse, validator: true
-		login validator_nurse
+		vn = Fabricate :v_nurse
+		login vn
 		page.should have_content ApplicationHelper::VALIDATION_CONTENT
 	end
 

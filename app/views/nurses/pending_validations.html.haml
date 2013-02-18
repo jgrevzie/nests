@@ -13,7 +13,7 @@
       %th Nurse
       %th Procedure
       %th Date
-    - @nurse.all_validatee_procs_pending_validation.each do |comp_proc|
+    - CompletedProc.pending_validations.each do |comp_proc|
       %tr
         %td= f.check_box comp_proc._id, {checked: true}, 'validate', nil
         %td Nurse #{comp_proc.nurse.first_name} (#{comp_proc.nurse.username})
