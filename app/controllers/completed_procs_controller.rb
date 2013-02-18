@@ -20,7 +20,7 @@ class CompletedProcsController < ApplicationController
   # GET /completed_procs/new
   # GET /completed_procs/new.json
   def new
-    @nurse = Nurse.find session[:user_id]
+    @nurse = Nurse.logged_in_nurse
     @completed_proc = CompletedProc.new 
     respond_with @completed_proc
   end
@@ -33,7 +33,7 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs
   # POST /completed_procs.json
   def create
-    @nurse = Nurse.find session[:user_id]
+    @nurse = Nurse.logged_in_nurse
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
@@ -45,10 +45,10 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1
   # PUT /completed_procs/1.json
   def update
-    @nurse = Nurse.find session[:user_id]
     @completed_proc = CompletedProc.find params[:id]
-    flash[:notice] = 'Nurse was successfully updated.' if @nurse.update_attributes(params[:nurse])
-    respond_with @nurse
+    flash[:notice] = 'Procedure was successfully updated.' \
+      if @completed_proc.update_attributes(params[:completed_proc])
+    respond_with @completed_proc
   end
 
   # DELETE /completed_procs/1
