@@ -20,7 +20,7 @@ class CompletedProcsController < ApplicationController
   # GET /completed_procs/new
   # GET /completed_procs/new.json
   def new
-    @nurse = Nurse.logged_in_nurse
+    @nurse = logged_in_nurse
     @completed_proc = CompletedProc.new 
     respond_with @completed_proc
   end
@@ -33,7 +33,7 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs
   # POST /completed_procs.json
   def create
-    @nurse = Nurse.logged_in_nurse
+    @nurse = logged_in_nurse
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 

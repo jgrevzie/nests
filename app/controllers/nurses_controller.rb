@@ -58,7 +58,6 @@ class NursesController < ApplicationController
 
   def validate_procs
     @nurse = Nurse.find(params[:id])
-    p params[:proc_ids].keys if params[:proc_ids]
     @nurse.validate_by_id params[:proc_ids].keys if params[:proc_ids]
     redirect_to nurses_url, notice: "procedures validated"
   end
