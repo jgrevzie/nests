@@ -8,7 +8,11 @@ class CompletedProcsController < ApplicationController
   # GET /completed_procs
   # GET /completed_procs.json
   def index
-    respond_with( @completed_procs = CompletedProc.asc(:date_start) )
+    @nurse = logged_in_nurse
+    respond_with( @completed_procs = CompletedProc.asc.and( 
+      { nurse: @nurse}, 
+      { validated: false } 
+    ))
   end
 
   # GET /completed_procs/1
@@ -46,9 +50,15 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1.json
   def update
     @completed_proc = CompletedProc.find params[:id]
-    flash[:notice] = 'Procedure was successfully updated.' \
-      if @completed_proc.update_attributes(params[:completed_proc])
-    respond_with @completed_proc
+    params[:completed_proc][:validated] = false unless logged_in_nurse.validator?
+    flash[:notice] = 'Updated proc' if @completed_proc.update_attributes(params[:completed_proc])
+ 
+    if logged_in_nurse.validator?
+      next_page = pending_validations_nurse_path(logged_in_nurse)
+    else
+      next_page = new_completed_proc_path
+    end
+    respond_with @completed_proc, location: next_page
   end
 
   # DELETE /completed_procs/1
@@ -57,12 +67,6 @@ class CompletedProcsController < ApplicationController
     @nurse = Nurse.find(params[:id])
     @nurse.destroy
     respond_with @nurse
-  end
-
-  def add_procedure
-    @nurse = Nurse.find(params[:id])
-    @completed_proc = CompletedProc.new
-    @completed_proc.procedure = Procedure.new
   end
 
   def options

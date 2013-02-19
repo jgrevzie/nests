@@ -9,6 +9,7 @@
 <body>
 
 <%= yield %>
+<%= button_to 'Show my procs pending validation', completed_procs_path, method: :get %>
 <%= button_to 'Logout', logout_path, method: :delete %>
 </body>
 </html>

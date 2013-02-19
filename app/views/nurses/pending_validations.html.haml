@@ -3,8 +3,9 @@
 
 
 
-%h1 #{ApplicationHelper::VALIDATION_CONTENT} for Nurse #{@nurse.first_name}
-(username #{@nurse.username})
+%h1 #{ApplicationHelper::VALIDATION_CONTENT} for Nurse #{@nurse.first_name} (uid #{@nurse.username})
+
+%pre (total #{CompletedProc.pending_validations.count})
 
 = form_for :proc_ids, method: :put, url: 'validate_procs' do |f|
   %table#pendingValidationsTable{border: 1}
@@ -15,7 +16,7 @@
       %th Date
     - CompletedProc.pending_validations.each do |comp_proc|
       %tr
-        %td= f.check_box comp_proc._id, {checked: true}, 'validate', nil
+        %td= f.check_box comp_proc.id, {checked: true}, 'validate', nil
         %td Nurse #{comp_proc.nurse.first_name} (#{comp_proc.nurse.username})
         %td 
           %a{href: edit_completed_proc_path(comp_proc)}
