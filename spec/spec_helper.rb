@@ -47,7 +47,7 @@ RSpec.configure do |config|
 
 end
 
-Capybara.javascript_driver = :selenium
+Capybara.javascript_driver = :webkit
 
 def login(nurse)
     visit login_path

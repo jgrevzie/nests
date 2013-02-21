@@ -52,4 +52,5 @@ group :test do
   gem "fabrication"
   gem "capybara"
   gem "guard-rspec"
+  gem "capybara-webkit"
 end

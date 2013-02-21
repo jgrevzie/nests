@@ -22,7 +22,7 @@
     = f.label :validated, "Validate this procedure?"
     
 
-  .submit= f.submit
+  = f.submit id: 'submit'
 
 :javascript
   $( "#proc_name" ).autocomplete({

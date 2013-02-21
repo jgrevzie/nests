@@ -8,13 +8,13 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in_nurse, :signed_in_nurse
 
 	def authorize
-		unless session[:user_id] && Nurse.where(id: session[:user_id]).exists
+		unless logged_in_nurse
 			redirect_to login_url, notice: "Welcome - please log in to CathTraq"
 		end
 	end
 
   def logged_in_nurse
-    session[:nurse]
+    Nurse.where(id: session[:nurse_id]).first
   end
 
   def signed_in_nurse

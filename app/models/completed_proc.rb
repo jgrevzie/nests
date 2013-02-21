@@ -34,4 +34,9 @@ class CompletedProc
 		CompletedProc.where(validated: false)
 	end
 
+	class << CompletedProc
+		alias_method :pending, :pending_validations
+		alias_method :pending_validation, :pending_validations
+	end
+
 end

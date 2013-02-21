@@ -9,8 +9,7 @@ class SessionsController < ApplicationController
 	def create
 		nurse = Nurse.where(username: params[:username]).first
 		if nurse and nurse.authenticate(params[:password])
-			session[:user_id] = nurse._id
-			session[:nurse] = nurse
+			session[:nurse_id] = nurse.id
 			if nurse.validator? 
 				redirect_to pending_validations_nurse_path(nurse) 
 			else 
@@ -23,7 +22,7 @@ class SessionsController < ApplicationController
 	end
 
 	def destroy
-		session[:user_id] = nil
+		session[:nurse_id] = nil
 		redirect_to login_url, notice: "Logged out"
 	end
 end

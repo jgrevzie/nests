@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 require 'spec_helper'
 
 
