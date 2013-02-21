@@ -17,6 +17,7 @@
     .fields= f.label :comments
     .fields= f.text_area :comments, cols: 40, rows: 4
     #options
+      = render 'options', options: @completed_proc.procedure.options
   - if logged_in_nurse.validator? then
     = f.check_box :validated
     = f.label :validated, "Validate this procedure?"

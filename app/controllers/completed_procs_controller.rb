@@ -2,7 +2,7 @@ class CompletedProcsController < ApplicationController
 
 
 
-  respond_to :html, :xml, except: :options
+  respond_to :html, :xml
   respond_to :js
 
   # GET /completed_procs
@@ -26,6 +26,7 @@ class CompletedProcsController < ApplicationController
   def new
     @nurse = logged_in_nurse
     @completed_proc = CompletedProc.new 
+    @completed_proc.procedure = Procedure.new
     respond_with @completed_proc
   end
 
@@ -70,7 +71,7 @@ class CompletedProcsController < ApplicationController
   end
 
   def options
-    @proc = Procedure.find_by(name: params[:proc])
-    respond_with @proc.options
+    proc = Procedure.find_by(name: params[:proc])
+    render partial: 'options', locals: { options: proc.options }
   end
 end
