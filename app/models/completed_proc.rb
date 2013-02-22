@@ -4,8 +4,8 @@ class CompletedProc
 	MAX_PROCS_PER_DAY = 20
 
 	field :comments
-	field :date_start, type: Date
-	field :quantity, type: Integer
+	field :date_start, type: Date, default: Date.current
+	field :quantity, type: Integer, default: 1
 	field :options
 	field :validated, type: Boolean, default: false
 

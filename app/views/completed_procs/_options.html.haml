@@ -1,16 +1,15 @@
 
 
 
-- p options
 - if options && options.size>0
   Extra options for this procedure
   = fields_for :completed_proc do |f|
     - if options.end_with? '?'
       %label
-        =f.check_box :options, {}, options.chop
-        =options
+        = options
+        = f.check_box :options, {}, options.chop
     - else
       - options.split(',').each do |option|
         %label
-          =f.radio_button :options, option
-          =option
+          = option
+          = f.radio_button :options, option

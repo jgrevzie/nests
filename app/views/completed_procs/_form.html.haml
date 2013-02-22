@@ -9,11 +9,11 @@
 = form_for @completed_proc do |f|
   %fieldset
     .fields= f.label :proc_name, "Procedure Name"
-    .fields= f.text_field :proc_name, id: 'proc_name'
+    .fields= f.text_field :proc_name
     .fields= f.label :date_start, 'Date'
-    .fields= f.text_field :date_start, id: 'date_start', value: Date.today.strftime('%d/%m/%Y')
+    .fields= f.text_field :date_start
     .fields= f.label :quantity, 'How many of these procedures?'
-    .fields= f.number_field :quantity, in: 1..CompletedProc::MAX_PROCS_PER_DAY, value: 1
+    .fields= f.number_field :quantity, in: 1..CompletedProc::MAX_PROCS_PER_DAY
     .fields= f.label :comments
     .fields= f.text_area :comments, cols: 40, rows: 4
     #options
@@ -26,7 +26,7 @@
   = f.submit id: 'submit'
 
 :javascript
-  $( "#proc_name" ).autocomplete({
+  $( "#completed_proc_proc_name" ).autocomplete({
     source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
       $('#proc_name').val(ui.item.value); 
@@ -39,4 +39,4 @@
     minLength: 0
   });
   
-  $( "#date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
+  $( "#completed_proc_date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
