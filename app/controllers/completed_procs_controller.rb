@@ -39,9 +39,13 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs.json
   def create
     @nurse = logged_in_nurse
+    # prevents sneaky nurses from posting validated procs
+    params[:completed_proc][:validated] = false unless logged_in_nurse.validator?
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
+    else
+      p @completed_proc.errors
     end
 
     respond_with @completed_proc, location: new_completed_proc_path

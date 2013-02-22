@@ -2,9 +2,8 @@
 
 
 
-- if logged_in_nurse.validator?
-  %h1 Validate / Edit procedure for Nurse #{@completed_proc.nurse.first_name}
-- else
-  %h1 Edit Procedure (will fail if already validated)
-
-= render 'form'
+- if logged_in_nurse.validator? || !@completed_proc.validated?
+  %h1 Edit procedure for Nurse #{@completed_proc.nurse.first_name}
+  = render 'form'
+- else @completed_proc.validated
+  %h1 Procedure has already been validated, can only be edited by validating nurse.

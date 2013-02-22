@@ -5,7 +5,6 @@
 
 require 'spec_helper'
 
-PROC_FIELD = 'Procedure Name'
 PROC_NAME = '_____procedure'
 PROC_NAME2 = "#{PROC_NAME}2"
 
@@ -27,6 +26,16 @@ def click_on_popup_menu_item(item_name)
     page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
 end
 
+def fill_in_and_submit(cp)
+  fill_in 'Procedure Name', with: cp.procedure.name
+  click_on_popup_menu_item cp.procedure.name
+  fill_in 'Date', with: cp.date_start
+  fill_in 'How many of these procedures?', with: cp.quantity
+  fill_in 'Comments', with: cp.comments
+  choose cp.options
+  click_button 'submit'
+end
+
 describe "'Submit proc for validation' page" do
 	it "is landing page if you're an ordinary nurse" do
     login_new_nurse.validator?.should be_false
@@ -37,9 +46,9 @@ describe "'Submit proc for validation' page" do
     
     login_new_nurse
 
-    fill_in PROC_FIELD, with: PROC_NAME[1..5]
+    fill_in "Procedure Name", with: PROC_NAME[1..5]
     page.should have_text PROC_NAME
-    fill_in PROC_FIELD, with: PROC_NAME[-5, -1]
+    fill_in "Procedure Name", with: PROC_NAME[-5, -1]
     page.should have_text PROC_NAME
   end
   it "updates page with proc options, once a proc name is chosen from menu", js: true do 
@@ -48,11 +57,11 @@ describe "'Submit proc for validation' page" do
 
     login_new_nurse
 
-    fill_in PROC_FIELD, with: PROC_NAME
+    fill_in "Procedure Name", with: PROC_NAME
     click_on_popup_menu_item PROC_NAME
     page.should have_unchecked_field "option1"
 
-    fill_in PROC_FIELD, with: PROC_NAME2
+    fill_in "Procedure Name", with: PROC_NAME2
     click_on_popup_menu_item PROC_NAME2
     page.should have_unchecked_field 'checkbox?'
   end
@@ -60,13 +69,7 @@ describe "'Submit proc for validation' page" do
     login_new_nurse
     cp = comp_proc
 
-    fill_in 'Procedure Name', with: cp.procedure.name
-    click_on_popup_menu_item cp.procedure.name
-    fill_in 'Date', with: cp.date_start
-    fill_in 'How many of these procedures?', with: cp.quantity
-    fill_in 'Comments', with: cp.comments
-    choose cp.options
-    click_button 'submit'
+    fill_in_and_submit(cp)
     
     page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
     CompletedProc.pending.count.should eq 2
@@ -83,12 +86,31 @@ describe "'Submit proc for validation' page" do
     cp = comp_proc
     n.completed_procs << cp
     visit edit_completed_proc_path(cp)
-    page.should have_content "Edit Procedure"
+    page.should have_content "Edit procedure"
     find_field("Procedure Name").value.should eq cp.procedure.name
     find_field("Date").value.should eq cp.date_start.strftime '%d/%m/%Y'
     find_field("How many of these procedures?").value.should eq cp.quantity.to_s
     find_field("Comments").value.should eq cp.comments
     all("#options input[type='radio']").size.should eq cp.procedure.options.split(',').size
+  end
+  it "updates proc", js: true do
+    n = login_new_nurse
+    cp = comp_proc
+    n.completed_procs << cp
+    
+    p2 = Fabricate :procedure, name: PROC_NAME2, options: "option4, option5"
+    cp_2 = Fabricate :completed_proc, quantity: 1, date_start: Date.today-2, comments:'Later', 
+                 options: 'option4', procedure: p2    
+    
+    visit edit_completed_proc_path cp
+    fill_in_and_submit cp_2
 
+    p cp
+    cp.procedure.name.should eq cp_2.procedure.name
+    cp.date_start.should eq cp_2.date_start
+    cp.quantity.should eq cp_2.quantity
+    cp.comments.should eq cp_2.comments
+    cp.options.should eq cp_2.options    
   end
 end
+
