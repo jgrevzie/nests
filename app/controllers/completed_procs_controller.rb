@@ -61,7 +61,7 @@ class CompletedProcsController < ApplicationController
     else
       next_page = new_completed_proc_path
     end
-    
+
     respond_with @completed_proc, location: next_page
   end
 
@@ -74,7 +74,7 @@ class CompletedProcsController < ApplicationController
   end
 
   def options
-    proc = Procedure.find_by(name: params[:proc])
-    render partial: 'options', locals: { options: proc.options }
+    proc = Procedure.where(name: params[:proc]).first
+    render partial: 'options', locals: { options: (proc ? proc.options : '')}
   end
 end

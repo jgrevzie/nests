@@ -27,7 +27,7 @@ class CompletedProc
 	end
 
 	def proc_name
-		if self.procedure then self.procedure.name || '' else '' end
+		self.procedure.name if self.procedure
 	end
 
 	def self.pending_validations

@@ -17,7 +17,7 @@
     .fields= f.label :comments
     .fields= f.text_area :comments, cols: 40, rows: 4
     #options
-      = render 'options', options: @completed_proc.procedure.options
+      = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
   - if logged_in_nurse.validator? then
     = f.check_box :validated
     = f.label :validated, "Validate this procedure?"
@@ -26,17 +26,18 @@
   = f.submit id: 'submit'
 
 :javascript
+  function load_options(proc_name) {
+    $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
+                        "proc="+encodeURIComponent(proc_name) );
+  }
   $( "#completed_proc_proc_name" ).autocomplete({
     source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
-      $('#proc_name').val(ui.item.value); 
-      $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
-                          "proc="+encodeURIComponent(ui.item.value) ) 
-    },
-    change: function (event, ui) {
-      if(!ui.item){ $("#proc_name").val(""); }
+      $('#proc_name').val(ui.item.value);
+      load_options(ui.item.value);
     },
     minLength: 0
   });
+  $( "#completed_proc_proc_name" ).change( function() {load_options($( "#completed_proc_proc_name" ).val())})
   
   $( "#completed_proc_date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
