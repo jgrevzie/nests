@@ -16,7 +16,7 @@ class Nurse
   belongs_to :nurse
 
   def procs_I_submitted
-     CompletedProc.all(nurse_id: self._id, validated: false)
+     CompletedProc.all(nurse_id: self._id, status: 'pending')
   end
 
   def validate_by_id(completed_proc_ids)
@@ -26,7 +26,7 @@ class Nurse
   def validate(completed_procs)
     raise "ordinary nurse tried to validate a proc!!" unless self.validator?
     completed_procs.each do |i|
-      i.validated = true
+      i.validate
       i.save
     end
   end

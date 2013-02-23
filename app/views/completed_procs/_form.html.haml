@@ -19,10 +19,13 @@
     #options
       = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
   - if logged_in_nurse.validator? then
-    = f.check_box :validated
-    = f.label :validated, "Validate this procedure?"
-    
+    Validate this procedure?
+    = f.label :status, 'Valid'
+    = f.radio_button :status, 'valid'
+    = f.label :status, 'Invalid'
+    = f.radio_button :status, 'invalid'
 
+  %br
   = f.submit id: 'submit'
 
 :javascript

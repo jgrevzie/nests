@@ -11,7 +11,7 @@ class CompletedProcsController < ApplicationController
     @nurse = logged_in_nurse
     respond_with( @completed_procs = CompletedProc.asc.and( 
       { nurse: @nurse}, 
-      { validated: false } 
+      { status: 'pending' } 
     ))
   end
 
@@ -40,7 +40,7 @@ class CompletedProcsController < ApplicationController
   def create
     @nurse = logged_in_nurse
     # prevents sneaky nurses from posting validated procs
-    params[:completed_proc][:validated] = false unless logged_in_nurse.validator?
+    params[:completed_proc].except!('status') unless logged_in_nurse.validator?
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
@@ -53,7 +53,7 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1.json
   def update
     @completed_proc = CompletedProc.find params[:id]
-    params[:completed_proc][:validated] = false unless logged_in_nurse.validator?
+    params[:completed_proc].except!('status') unless logged_in_nurse.validator?
     flash[:notice] = 'Updated proc'  if @completed_proc.update_attributes(params[:completed_proc])
 
     if logged_in_nurse.validator?
