@@ -44,8 +44,6 @@ class CompletedProcsController < ApplicationController
     @completed_proc = CompletedProc.new(params[:completed_proc])
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
-    else
-      p @completed_proc.errors
     end
 
     respond_with @completed_proc, location: new_completed_proc_path
@@ -56,13 +54,14 @@ class CompletedProcsController < ApplicationController
   def update
     @completed_proc = CompletedProc.find params[:id]
     params[:completed_proc][:validated] = false unless logged_in_nurse.validator?
-    flash[:notice] = 'Updated proc' if @completed_proc.update_attributes(params[:completed_proc])
- 
+    flash[:notice] = 'Updated proc'  if @completed_proc.update_attributes(params[:completed_proc])
+
     if logged_in_nurse.validator?
       next_page = pending_validations_nurse_path(logged_in_nurse)
     else
       next_page = new_completed_proc_path
     end
+    
     respond_with @completed_proc, location: next_page
   end
 

@@ -36,6 +36,11 @@ def fill_in_and_submit(cp)
   click_button 'submit'
 end
 
+def procs_equiv?(cp_1, cp_2)
+  ignore_attrs = ['_id', 'nurse_id']
+  cp_1.attributes.except(*ignore_attrs) == cp_2.attributes.except(*ignore_attrs)
+end
+
 describe "'Submit proc for validation' page" do
 	it "is landing page if you're an ordinary nurse" do
     login_new_nurse.validator?.should be_false
@@ -75,11 +80,7 @@ describe "'Submit proc for validation' page" do
     CompletedProc.pending.count.should eq 2
     
     cp_out = CompletedProc.pending[1]
-    cp_out.procedure.name.should eq cp.procedure.name
-    cp_out.date_start.should eq cp.date_start
-    cp_out.quantity.should eq cp.quantity
-    cp_out.comments.should eq cp.comments
-    cp_out.options.should eq cp.options
+    procs_equiv?(cp, cp_out).should be_true
   end
   it 'displays completed procedure on update' do 
     n = login_new_nurse
@@ -102,15 +103,12 @@ describe "'Submit proc for validation' page" do
     cp_2 = Fabricate :completed_proc, quantity: 1, date_start: Date.today-2, comments:'Later', 
                  options: 'option4', procedure: p2    
     
-    visit edit_completed_proc_path cp
+    visit edit_completed_proc_path(cp)
     fill_in_and_submit cp_2
+    page.should have_selector '#notice', text: 'Updated'
 
-    p cp
-    cp.procedure.name.should eq cp_2.procedure.name
-    cp.date_start.should eq cp_2.date_start
-    cp.quantity.should eq cp_2.quantity
-    cp.comments.should eq cp_2.comments
-    cp.options.should eq cp_2.options    
+    cp.reload
+    procs_equiv?(cp, cp_2).should be_true
   end
 end
 
