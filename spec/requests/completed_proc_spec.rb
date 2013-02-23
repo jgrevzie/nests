@@ -28,11 +28,10 @@ end
 
 def fill_in_and_submit(cp)
   fill_in 'Procedure Name', with: cp.procedure.name
-  click_on_popup_menu_item cp.procedure.name
   fill_in 'Date', with: cp.date_start
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
-  choose cp.options
+  choose cp.options if cp.options
   click_button 'submit'
 end
 
@@ -81,6 +80,14 @@ describe "'Submit proc for validation' page" do
     
     cp_out = CompletedProc.pending[1]
     procs_equiv?(cp, cp_out).should be_true
+  end
+  it "submits proc with unknown name, gets error" do
+    login_new_nurse
+    cp = Fabricate :completed_proc
+    cp.procedure.name = 'NON-EXIST'
+
+    fill_in_and_submit cp
+    page.should have_selector '#error_explanation', text: 'Procedure'
   end
   it 'displays completed procedure on update' do 
     n = login_new_nurse
