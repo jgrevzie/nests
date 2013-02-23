@@ -26,18 +26,18 @@
   = f.submit id: 'submit'
 
 :javascript
-  function load_options(proc_name) {
+  function load_options() {
     $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
-                        "proc="+encodeURIComponent(proc_name) );
+                        "proc="+encodeURIComponent( $("#completed_proc_proc_name").val() ) );
   }
   $( "#completed_proc_proc_name" ).autocomplete({
     source: [ #{render 'autocomplete_list'} ],
     select: function( event, ui ) { 
-      $('#proc_name').val(ui.item.value);
-      load_options(ui.item.value);
+      $('#completed_proc_proc_name').val(ui.item.value);
+      load_options();
     },
     minLength: 0
   });
-  $( "#completed_proc_proc_name" ).change( function() {load_options($( "#completed_proc_proc_name" ).val())})
+  $( "#completed_proc_proc_name" ).change( load_options )
   
   $( "#completed_proc_date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
