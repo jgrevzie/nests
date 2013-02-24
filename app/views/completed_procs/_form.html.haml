@@ -10,6 +10,7 @@
   %fieldset
     .fields= f.label :proc_name, "Procedure Name"
     .fields= f.text_field :proc_name
+    #procError Choose a valid procedure name
     .fields= f.label :date_start, 'Date'
     .fields= f.text_field :date_start
     .fields= f.label :quantity, 'How many of these procedures?'
@@ -28,6 +29,13 @@
   %br
   = f.submit id: 'submit'
 
+:css
+   #procError {
+    display: none;
+    width: 250px;
+    background: red;
+  }
+
 :javascript
   PROCID = '#completed_proc_proc_name'
   proc_list = #{render 'autocomplete_list'}
@@ -39,14 +47,18 @@
   function fixCase() {
     where = $.inArray( $(PROCID).val().toLowerCase(), 
                        proc_list.map( function(i) { return i.toLowerCase() }) );
-    if ( where != -1 ) { $(PROCID).val(proc_list[where]) }
-    else { $(PROCID).val('') }
+    if ( where != -1 ) { 
+      $(PROCID).val(proc_list[where]);
+      $('#procError').hide() 
+    }
+    else { $('#procError').show() }
   }
   
   $(PROCID).autocomplete({
     source: proc_list,
     select: function( event, ui ) { 
       $(PROCID).val(ui.item.value);
+      $('#procError').hide();
       loadOptions();
     },
     minLength: 0,
