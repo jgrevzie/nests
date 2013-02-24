@@ -20,7 +20,7 @@ class CompletedProc
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
 	validates :date_start, timeliness: { before: Date.today+2, after: Date.today.prev_week }
-	validates :procedure, presence: { message: "That procedure isn't known to CathTraq" }
+	validates :procedure, presence: { message: "isn't known to CathTraq" }
 	validates :status, inclusion: { in: [PENDING, VALID, INVALID], message: 'unknown' }
 
 	def proc_name=(proc_name)

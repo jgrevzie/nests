@@ -76,6 +76,8 @@ describe "'Submit proc for validation' page" do
     fill_in_and_submit(cp)
     
     page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
+    page.should_not have_selector "#error_explanation"
+    page.should have_selector '#notice'
     CompletedProc.pending.count.should eq 2
     
     cp_out = CompletedProc.pending[1]

@@ -29,18 +29,28 @@
   = f.submit id: 'submit'
 
 :javascript
+  PROCID = '#completed_proc_proc_name'
+
   function load_options() {
     $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
-                        "proc="+encodeURIComponent( $("#completed_proc_proc_name").val() ) );
+                        "proc="+encodeURIComponent( $(PROCID).val() ) );
   }
-  $( "#completed_proc_proc_name" ).autocomplete({
-    source: [ #{render 'autocomplete_list'} ],
+  
+  
+  proc_list = #{render 'autocomplete_list'}
+
+  $(PROCID).autocomplete({
+    source: proc_list,
     select: function( event, ui ) { 
-      $('#completed_proc_proc_name').val(ui.item.value);
+      $(PROCID).val(ui.item.value);
       load_options();
     },
-    minLength: 0
+    minLength: 0,
+    change: function(event, ui) { 
+      if( !ui.item && $.inArray($(PROCID).val(), proc_list)==-1 ) { $(PROCID).val(""); } 
+    }
   });
-  $( "#completed_proc_proc_name" ).change( load_options )
   
-  $( "#completed_proc_date_start" ).datepicker({ dateFormat: "dd/mm/yy" });
+  $(PROCID).change( load_options )
+  
+  $("#completed_proc_date_start").datepicker({ dateFormat: "dd/mm/yy" });
