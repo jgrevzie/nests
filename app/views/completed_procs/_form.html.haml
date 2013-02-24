@@ -30,27 +30,29 @@
 
 :javascript
   PROCID = '#completed_proc_proc_name'
+  proc_list = #{render 'autocomplete_list'}
 
-  function load_options() {
+  function loadOptions() {
     $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
                         "proc="+encodeURIComponent( $(PROCID).val() ) );
   }
+  function fixCase() {
+    where = $.inArray( $(PROCID).val().toLowerCase(), 
+                       proc_list.map( function(i) { return i.toLowerCase() }) );
+    if ( where != -1 ) { $(PROCID).val(proc_list[where]) }
+    else { $(PROCID).val('') }
+  }
   
-  
-  proc_list = #{render 'autocomplete_list'}
-
   $(PROCID).autocomplete({
     source: proc_list,
     select: function( event, ui ) { 
       $(PROCID).val(ui.item.value);
-      load_options();
+      loadOptions();
     },
     minLength: 0,
-    change: function(event, ui) { 
-      if( !ui.item && $.inArray($(PROCID).val(), proc_list)==-1 ) { $(PROCID).val(""); } 
-    }
+    change: function(event, ui) { fixCase() } 
   });
   
-  $(PROCID).change( load_options )
+  $(PROCID).change( loadOptions )
   
   $("#completed_proc_date_start").datepicker({ dateFormat: "dd/mm/yy" });
