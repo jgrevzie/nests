@@ -3,11 +3,16 @@ class CompletedProc
 
 	MAX_PROCS_PER_DAY = 20
 
+	PENDING = 'blah1'
+	VALID = 'blah2'
+	INVALID = 'blah5'
+
+
 	field :comments
 	field :date_start, type: Date, default: Date.current
 	field :quantity, type: Integer, default: 1
 	field :options
-	field :status, default: 'pending'
+	field :status, default: PENDING
 
 	belongs_to :procedure
 	belongs_to :nurse
@@ -16,7 +21,7 @@ class CompletedProc
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
 	validates :date_start, timeliness: { before: Date.today+2, after: Date.today.prev_week }
 	validates :procedure, presence: { message: "That procedure isn't known to CathTraq" }
-	validates :status, inclusion: { in: %w(pending valid invalid) }
+	validates :status, inclusion: { in: [PENDING, VALID, INVALID], message: 'unknown' }
 
 	def proc_name=(proc_name)
 		self.procedure = Procedure.where(name: proc_name).first
@@ -27,17 +32,17 @@ class CompletedProc
 	end
 
 	def validate
-		self.status = 'valid'
+		self.status = VALID
 	end
 	def validated?
-		self.status == 'valid'
+		self.status == VALID
 	end
 	def reject
-		self.status = 'invalid'
+		self.status = INVALID
 	end
 
 	def self.pending_validations
-		CompletedProc.where(status: 'pending')
+		CompletedProc.where(status: PENDING)
 	end
 
 	class << CompletedProc

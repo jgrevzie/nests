@@ -16,7 +16,7 @@ class Nurse
   belongs_to :nurse
 
   def procs_I_submitted
-     CompletedProc.all(nurse_id: self._id, status: 'pending')
+     CompletedProc.all(nurse_id: self._id, status: CompletedProc::PENDING)
   end
 
   def validate_by_id(completed_proc_ids)
