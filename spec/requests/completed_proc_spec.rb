@@ -91,7 +91,7 @@ describe "'Submit proc for validation' page" do
     fill_in_and_submit cp
     page.should have_selector '#error_explanation', text: 'Procedure'
   end
-  it 'displays completed procedure on update' do 
+  it 'when updating, shows fields of previously entered completed proc' do 
     n = login_new_nurse
     cp = comp_proc
     n.completed_procs << cp
@@ -103,7 +103,7 @@ describe "'Submit proc for validation' page" do
     find_field("Comments").value.should eq cp.comments
     all("#options input[type='radio']").size.should eq cp.procedure.options.split(',').size
   end
-  it "updates proc", js: true do
+  it "updates proc, and saves new values", js: true do
     n = login_new_nurse
     cp = comp_proc
     n.completed_procs << cp
@@ -119,5 +119,15 @@ describe "'Submit proc for validation' page" do
     cp.reload
     procs_equiv?(cp, cp_2).should be_true
   end
-end
+  it "lets VN validate a proc" do
+    cp = comp_proc
+    (Fabricate :nurse).completed_procs << cp
 
+    login Fabricate :v_nurse
+    visit edit_completed_proc_path(cp)
+    choose 'Valid'
+    click_button 'submit'
+    page.should have_text ApplicationHelper::PENDING_VALIDATIONS
+    CompletedProc.pending.size.should eq 0
+  end
+end

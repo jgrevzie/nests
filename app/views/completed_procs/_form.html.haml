@@ -21,10 +21,12 @@
       = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
   - if logged_in_nurse.validator? then
     Validate this procedure?
-    = f.label :status, 'Valid'
-    = f.radio_button :status, 'valid'
-    = f.label :status, 'Invalid'
-    = f.radio_button :status, 'invalid'
+    %label
+      Valid
+      = f.radio_button :status, CompletedProc::VALID
+    %label
+      Invalid
+      = f.radio_button :status, CompletedProc::INVALID
 
   %br
   = f.submit id: 'submit'
