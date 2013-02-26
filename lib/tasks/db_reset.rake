@@ -35,13 +35,17 @@ namespace :nest do
 	task :reset => 'db:mongoid:drop' do
 		open(DB_DIR + '/seeds.rb', 'w') do |seeds|
 			load_procs seeds
-			load_nurses seeds
+			load_nurses seeds if Rails.env.development?
 		end
 		Rake::Task['db:seed'].invoke
 		
-		#Fabricate :nurse, username: 'nancy'
-		5.times { Fabricate :nurse_5_procs }
-
+		if Rails.env.development?
+			Fabricate :nurse, username: 'nancy'
+			#Give some of the nurses pending completed procs
+			Nurse.all.to_ary.sample(10).each do |n|
+				5.times { n.completed_procs << Fabricate(:random_completed_proc) }
+			end
+		end
 	end
 
 end

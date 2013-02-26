@@ -48,7 +48,6 @@ class CompletedProc
 	end
 
 	def acknowledge_reject
-		throw "Tried to ack non reject!!" unless self.status == REJECTED
 		self.status = ACK_REJECT
 		self.save
 	end

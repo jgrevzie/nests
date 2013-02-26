@@ -5,12 +5,9 @@
 
 
 
-NURSE_NAMES = ['Anne', 'Barry', 'Cate', 'Derek', 'Edith', 'Fred', 'Gayleen', 'Harry', 
-	'Isabell', 'Josef', 'Karen', 'Larry', 'Maude', 'Azeef', 'Ashima', 'Ross', 'Sonna']
-
 Fabricator(:nurse) do
-	first_name { NURSE_NAMES.sample }
-	username { sequence(:username) { |i| "userid#{i}" }}
+	first_name 'nancy'
+	username { sequence(:username) { |i| "nancy#{i}" }}
 	password 'password'
 end
 
