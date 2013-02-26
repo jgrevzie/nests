@@ -13,5 +13,6 @@
   %body
     = yield 
     - if logged_in_nurse
-      = button_to 'Goto my home page', completed_procs_path, method: :get 
+      %br
+      = button_to 'Goto my home page', home_nurse_path(logged_in_nurse), method: :get 
       = button_to 'Logout', logout_path, method: :delete 

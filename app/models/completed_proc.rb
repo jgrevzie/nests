@@ -6,6 +6,8 @@ class CompletedProc
 	PENDING = 'blah1'
 	VALID = 'blah2'
 	INVALID = 'blah5'
+	REJECTED = INVALID
+	ACK_REJECT = 'blah7'
 
 
 	field :comments
@@ -21,7 +23,7 @@ class CompletedProc
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
 	validates :date_start, timeliness: { before: Date.today+2, after: Date.today.prev_week }
 	validates :procedure, presence: { message: "isn't known to CathTraq" }
-	validates :status, inclusion: { in: [PENDING, VALID, INVALID], message: 'unknown' }
+	validates :status, inclusion: { in: [PENDING, VALID, INVALID, ACK_REJECT], message: 'unknown' }
 
 	def proc_name=(proc_name)
 		self.procedure = Procedure.where(name: proc_name).first
@@ -43,6 +45,12 @@ class CompletedProc
 
 	def self.pending_validations
 		CompletedProc.where(status: PENDING)
+	end
+
+	def acknowledge_reject
+		throw "Tried to ack non reject!!" unless self.status == REJECTED
+		self.status = ACK_REJECT
+		self.save
 	end
 
 	class << CompletedProc

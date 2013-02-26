@@ -13,6 +13,7 @@ Nests::Application.routes.draw do
     member do
       get 'pending_validations'
       put 'validate_procs'
+      get 'home'
     end
   end
 

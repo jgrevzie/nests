@@ -32,7 +32,10 @@ class CompletedProcsController < ApplicationController
 
   # GET /completed_procs/1/edit
   def edit
-    respond_with( @completed_proc = CompletedProc.find(params[:id]) )
+    @rejected = params[:rejected]
+    @completed_proc = CompletedProc.find(params[:id])
+    @completed_proc.acknowledge_reject if @rejected
+    respond_with( @completed_proc)
   end
 
   # POST /completed_procs
@@ -53,6 +56,7 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1.json
   def update
     @completed_proc = CompletedProc.find params[:id]
+     #prevent sneaky nurse hackers from PUTting validated procs
     params[:completed_proc].except!('status') unless logged_in_nurse.validator?
     flash[:notice] = 'Updated proc'  if @completed_proc.update_attributes(params[:completed_proc])
 

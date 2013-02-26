@@ -130,4 +130,7 @@ describe "'Submit proc for validation' page" do
     page.should have_text ApplicationHelper::PENDING_VALIDATIONS
     CompletedProc.pending.size.should eq 0
   end
+  it "shows error message if proc name is invalid"
+  it "doesn't error message if proc is valid"
+  it "fixes proc name up a little, if it's on the dodgy side"
 end

@@ -1,0 +1,57 @@
+
+
+
+
+
+%h1 Home Page for Nurse #{@nurse.first_name} 
+%pre (username #{@nurse.username})
+
+%table#pendingValidationsTable{border: 1}
+  %caption Procedures waiting for validation
+  %tr
+    %th Procedure
+    %th Date
+  - @nurse.pending_procs.each do |comp_proc|
+    %tr
+      %td 
+        %a{href: edit_completed_proc_path(comp_proc)}
+          = comp_proc.procedure.name
+          = "(#{comp_proc.quantity})" if comp_proc.quantity>1
+
+      %td= comp_proc.date_start
+
+%br
+%br
+
+%table#rejectedTable{border: 1}
+  %caption Invalidated procedures (please read to remove)
+  %tr
+    %th Procedure
+    %th Date
+  - @nurse.rejected_procs.each do |comp_proc|
+    %tr
+      %td
+        %a.rejected{href: edit_completed_proc_path(comp_proc, rejected: true)}
+          = comp_proc.procedure.name
+          = "(#{comp_proc.quantity})" if comp_proc.quantity>1
+
+      %td= comp_proc.date_start
+
+%br
+%br
+
+%table#summaryCompletedProcsTable{border: 1}
+  %caption Summary of your completed procs
+  %tr
+    %th Procedure
+    %th How many
+  - @nurse.completed_procs_summary.each do |proc_name, count|
+    - next unless count>0
+    %tr
+      %td #{proc_name}
+      %td #{count}
+
+:css
+  a.rejected  {
+    color: red;
+  }

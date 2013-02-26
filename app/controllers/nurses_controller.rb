@@ -51,6 +51,11 @@ class NursesController < ApplicationController
     @nurse.destroy
     respond_with @nurse
   end
+  
+  def home
+    @nurse = logged_in_nurse
+    respond_with @nurse
+  end
 
   def pending_validations
     @nurse = Nurse.find(params[:id])

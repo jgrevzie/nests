@@ -16,7 +16,28 @@ class Nurse
   belongs_to :nurse
 
   def procs_I_submitted
-     CompletedProc.all(nurse_id: self._id, status: CompletedProc::PENDING)
+     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING)
+  end
+  alias_method :pending_procs, :procs_I_submitted
+
+  def rejected_procs
+    CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED)
+  end
+
+  def completed_procs_summary
+    summary = {}
+    Procedure.all.each do |proc|
+      count = 0
+      CompletedProc.where(nurse_id: self.id, 
+                          procedure_id: proc.id, 
+                          status: CompletedProc::VALID).each do |cp|
+        count += cp.quantity
+      end
+
+      summary[proc.name] = count.to_i 
+    end
+
+    return summary
   end
 
   def validate_by_id(completed_proc_ids)
@@ -30,5 +51,6 @@ class Nurse
       i.save
     end
   end
+
 
 end # class

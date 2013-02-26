@@ -64,6 +64,25 @@ describe "Nurse" do
       expect { n.validate_by_id( (Fabricate :completed_proc).id ) }.to raise_error
     end
   end
+  describe "#completed_procs_summary" do
+    it "returns an array of totals of validated proc types for a given nurse" do
+      n = Fabricate :nurse
+      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 5)
+      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC2', quantity: 7)
+
+      vn = Fabricate :v_nurse
+      vn.validate n.completed_procs
+
+      n.completed_procs_summary['PROC1'].should eq 5
+      n.completed_procs_summary['PROC2'].should eq 7
+    end
+    it "doesn't include procs that haven't been validated" do
+      n = Fabricate :nurse
+      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 5) 
+
+      n.completed_procs_summary['PROC1'].should eq 0
+    end
+  end
 
 end #Nurse
 
