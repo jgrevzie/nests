@@ -7,22 +7,4 @@
 
 %pre (total #{CompletedProc.pending_validations.count})
 
-= form_for :proc_ids, method: :put, url: 'validate_procs' do |f|
-  %table#pendingValidationsTable{border: 1}
-    %tr
-      %th Validate?
-      %th Nurse
-      %th Procedure
-      %th Date
-    - CompletedProc.pending_validations.each do |comp_proc|
-      %tr
-        %td= f.check_box comp_proc.id, {checked: true}, 'validate', nil
-        %td Nurse #{comp_proc.nurse.first_name} (#{comp_proc.nurse.username})
-        %td 
-          %a{href: edit_completed_proc_path(comp_proc)}
-            = comp_proc.procedure.name
-            = "(#{comp_proc.quantity})" if comp_proc.quantity>1
-
-        %td= comp_proc.date_start
-
-  =f.submit 'Validate Checked'
+= render 'pending_validations_table'

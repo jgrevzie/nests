@@ -1,3 +1,7 @@
-DailyValidations#send_pendings
+Hello Nurse <%= @nurse.first_name %>
 
-<%= @greeting %>, find me in app/views/app/views/daily_validations/send_pendings.text.erb
+
+You have <%= CompletedProc.pending.count %> pending validation/s today.  Please log into CathTraq to sign them off.
+
+Regards,
+CathTraq

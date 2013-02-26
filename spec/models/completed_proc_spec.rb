@@ -27,7 +27,6 @@ describe "completed_proc" do
 
   describe "#acknowledge_reject" do
     it "changes status of comp proc to acknowleged and saves"
-    it "throws if the comp proc wasn't in the rejected state"
   end
 
 end

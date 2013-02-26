@@ -14,6 +14,7 @@ Nests::Application.routes.draw do
       get 'pending_validations'
       put 'validate_procs'
       get 'home'
+      get 'send_mail'
     end
   end
 

@@ -1,3 +1,10 @@
+
+
+
+
+- if flash[:notice]
+  #notice= flash[:notice]
+
 %h1 List of nurses known to CathTraq
 
 %table
@@ -18,7 +25,8 @@
       %td= link_to 'Edit', edit_nurse_path(nurse)
       %td= link_to 'Destroy', nurse, method: :delete, data: { confirm: 'Are you sure?' }
       %td= link_to 'Add Proc', new_completed_proc_path
-      %td= link_to 'Pending Validations', pending_validations_nurse_path(nurse)
+      %td= link_to 'Pending Validations', pending_validations_nurse_path(nurse) if nurse.validator?
+      %td= link_to 'Send Mail', send_mail_nurse_path(nurse) if nurse.validator?
 
 
 %br

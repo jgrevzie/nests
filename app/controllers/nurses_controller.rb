@@ -2,6 +2,8 @@ class NursesController < ApplicationController
 
 
 
+  skip_before_filter :verify_authenticity_token, :only => [:send_mail]
+
   respond_to :html, :xml, except: :options
   respond_to :js
 
@@ -51,6 +53,12 @@ class NursesController < ApplicationController
     @nurse.destroy
     respond_with @nurse
   end
+
+  def send_mail
+    @nurse = Nurse.find(params[:id])
+    DailyValidations.send_pendings(@nurse).deliver
+    redirect_to nurses_path, notice: 'Sent mail'
+  end
   
   def home
     @nurse = logged_in_nurse
@@ -58,12 +66,13 @@ class NursesController < ApplicationController
   end
 
   def pending_validations
-    @nurse = Nurse.find(params[:id])
+    @nurse = Nurse.find(params[:id]) 
+    respond_with @nurse   
   end
 
   def validate_procs
     @nurse = Nurse.find(params[:id])
     @nurse.validate_by_id params[:proc_ids].keys if params[:proc_ids]
-    redirect_to nurses_url, notice: "procedures validated"
+    redirect_to pending_validations_nurse_path(@nurse), notice: "procedures validated"
   end
 end

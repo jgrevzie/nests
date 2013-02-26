@@ -6,9 +6,15 @@ class DailyValidations < ActionMailer::Base
   #
   #   en.daily_validations.send_pendings.subject
   #
-  def send_pendings
-    @greeting = "Hi"
+  add_template_helper(ApplicationHelper)
 
-    mail to: "to@example.org"
+  def protect_against_forgery?
+      false
+  end
+
+  def send_pendings(nurse)
+    @nurse = nurse
+
+    mail to: @nurse.email, subject: "Daily validations"
   end
 end

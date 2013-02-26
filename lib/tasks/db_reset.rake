@@ -40,7 +40,7 @@ namespace :nest do
 		Rake::Task['db:seed'].invoke
 		
 		if Rails.env.development?
-			Fabricate :nurse, username: 'nancy'
+			Fabricate :nurse
 			#Give some of the nurses pending completed procs
 			Nurse.all.to_ary.sample(10).each do |n|
 				5.times { n.completed_procs << Fabricate(:random_completed_proc) }
