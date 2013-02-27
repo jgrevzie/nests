@@ -63,5 +63,7 @@ module Nests
       g.test_framework      :rspec, fixture: true
       g.fixture_replacement :fabrication
     end
+
+    config.action_controller.include_all_helpers = false
   end
 end

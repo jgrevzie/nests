@@ -1,3 +1,7 @@
+
+
+
+
 class SessionsController < ApplicationController
 	skip_before_filter :authorize
 
@@ -10,7 +14,9 @@ class SessionsController < ApplicationController
 		nurse = Nurse.where(username: params[:username]).first
 		if nurse and nurse.authenticate(params[:password])
 			session[:nurse_id] = nurse.id
-			if nurse.validator? 
+			if params[:next_url] 
+				redirect_to params[:next_url]
+			elsif nurse.validator? 
 				redirect_to pending_validations_nurse_path(nurse) 
 			else 
 				redirect_to new_completed_proc_path
@@ -23,7 +29,7 @@ class SessionsController < ApplicationController
 
 	def destroy
 		session[:nurse_id] = nil
-		redirect_to login_url, notice: "Logged out"
+		redirect_to login_url, alert: "Logged out"
 	end
 end
 
