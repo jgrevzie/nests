@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 	end
 
   def logged_in_nurse
-    Nurse.where(id: session[:nurse_id]).first
+    Nurse.where(id: cookies[:nurse_id]).first if cookies[:nurse_id]
   end
 
   def signed_in_nurse

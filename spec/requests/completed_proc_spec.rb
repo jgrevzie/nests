@@ -133,4 +133,5 @@ describe "'Submit proc for validation' page" do
   it "shows error message if proc name is invalid"
   it "doesn't error message if proc is valid"
   it "fixes proc name up a little, if it's on the dodgy side"
+  it "doesn't go back to the login screen if user submits a proc (bug occurred re mailer and forgery protection)"
 end

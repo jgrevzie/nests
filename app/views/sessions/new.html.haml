@@ -17,6 +17,9 @@
 			%label{for: "password"}Password:
 			%br
 			= password_field_tag :password, params[:password]
+		#rememberMe
+			= label_tag :remember_me
+			= check_box_tag :remember_me, 1, params[:remember_me]
 	= hidden_field_tag :next_url, params[:next_url]
 	#submit
 		= submit_tag "Login"

@@ -12,15 +12,24 @@ class SessionsController < ApplicationController
 
 	def create
 		nurse = Nurse.where(username: params[:username]).first
+
 		if nurse and nurse.authenticate(params[:password])
-			session[:nurse_id] = nurse.id
-			if params[:next_url] 
+			if params[:remember_me]
+				p 'PERMANENT'
+				cookies.permanent[:nurse_id] = nurse.id
+			else
+				p 'TEMP'
+				cookies[:nurse_id] = nurse.id
+			end
+
+			if !params[:next_url].empty?
 				redirect_to params[:next_url]
 			elsif nurse.validator? 
 				redirect_to pending_validations_nurse_path(nurse) 
 			else 
 				redirect_to new_completed_proc_path
 			end
+
 		else
 			flash[:alert] = "Invalid user/password combination"
 			render action: "new"
@@ -28,8 +37,7 @@ class SessionsController < ApplicationController
 	end
 
 	def destroy
-		session[:nurse_id] = nil
+		cookies[:nurse_id] = nil
 		redirect_to login_url, alert: "Logged out"
 	end
 end
-

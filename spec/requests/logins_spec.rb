@@ -26,5 +26,6 @@ describe 'login page' do
 		login vn
 		page.should have_content ApplicationHelper::VALIDATION_CONTENT
 	end
-
+	it "takes nurse to a page other than tyhe default page if specified in params"
+	it "tests for the remember me checkbox"
 end
