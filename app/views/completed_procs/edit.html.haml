@@ -3,10 +3,10 @@
 
 
 - if logged_in_nurse.validator? || !@completed_proc.validated?
-  %h1 Edit procedure for Nurse #{@completed_proc.nurse.first_name}
+  %h1 Edit procedure for #{@completed_proc.nurse.first_name}
   %pre.rejected
     = "This procedure was invalidated, please read comments and resubmit, " + |
-      "or go back to home page" if @rejected                                  |
+      "or acknowledge" if @completed_proc.rejected?                                  |
   = render 'form'
 - else @completed_proc.validated
   %h1 Procedure has already been validated, can only be edited by validating nurse.

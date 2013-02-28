@@ -13,39 +13,31 @@ end
 
 def load_procs(seeds_file)
 	csv = CSV.foreach(DB_DIR+'/procedures.csv', :headers => true) do |row|
-		create_proc = %Q/Procedure.create(:name => "#{row['Name']}", :abbrev => "#{row['Abbrev']}", :options => "#{row['Options']}")/
+		create_proc = %Q/Procedure.create(:name => "#{row['name']}", :abbrev => "#{row['abbrev']}", :options => "#{row['options']}")/
 		seeds_file.puts create_proc
 	end
 end
-def load_nurses(seeds_file)
+def load_nurses
 	csv = CSV.foreach(DB_DIR+'/nurses.csv', headers: true) do |row|
-		username = row['username'] || clean(row['first_name'])[0] + clean(row['last_name'])
-		is_validator = row['validator'].downcase.include? 'y' if row['validator']
-		email = row['email'] || "#{clean(row['first_name'])}.#{clean(row['last_name'])}@svpm.org.au"
-		create_nurse = %Q/Nurse.create(first_name: "#{row['first_name']}", last_name: "#{row['last_name']}", username: "#{username}", password: 'password', validator: "#{is_validator}", email: "#{email}")/
-		seeds_file.puts create_nurse
+		row['username'] = clean(row['first_name'][0]) + clean(row['last_name']) unless row['username']
+		row['validator'] = row['validator'] ? row['validator'].downcase.include?('y') : false
+		row['email'] = 
+			"#{clean(row['first_name'])}.#{clean(row['last_name'])}@svpm.org.au" unless row['email']
+		row['password'] = 'password'
+
+		n = Fabricate :nurse, row.to_hash
+		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
+
 	end
-
-
 end
 
 namespace :nest do
 
 	desc 'reset database with seed data from csv'
 	task :reset => 'db:mongoid:drop' do
-		open(DB_DIR + '/seeds.rb', 'w') do |seeds|
-			load_procs seeds
-			load_nurses seeds if Rails.env.development?
-		end
-		Rake::Task['db:seed'].invoke
-		
-		if Rails.env.development?
-			Fabricate :nurse
-			#Give some of the nurses pending completed procs
-			Nurse.all.to_ary.sample(10).each do |n|
-				5.times { n.completed_procs << Fabricate(:random_completed_proc) }
-			end
-		end
-	end
+		open(DB_DIR + '/seeds.rb', 'w') { |seeds| load_procs seeds }
+		Rake::Task['db:seed'].invoke		
+		load_nurses if Rails.env.development?
+	end #task
 
-end
+end #namespace

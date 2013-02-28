@@ -12,7 +12,12 @@ Fabricator(:nurse) do
 end
 
 Fabricator(:nurse_5_procs, from: :nurse) do
-	after_create { |n| 5.times {n.completed_procs << Fabricate(:random_completed_proc)} }
+	after_create {|n| 5.times { n.completed_procs << Fabricate(:random_completed_proc) }}
+end
+
+Fabricator(:nurse_5_pending, from: :nurse, aliases: [:nurse_5_pendings]) do
+	after_create {|n| 5.times { n.completed_procs << Fabricate(:random_completed_proc, 
+																														 status: CompletedProc::PENDING) }}
 end
 
 Fabricator(:nurse_1_proc, from: :nurse) do

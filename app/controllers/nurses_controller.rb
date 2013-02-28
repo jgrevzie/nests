@@ -4,8 +4,7 @@ class NursesController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:send_mail]
 
-  respond_to :html, :xml, except: :options
-  respond_to :js
+  respond_to :html, :xml, :js
 
   # GET /nurses
   # GET /nurses.json

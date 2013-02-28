@@ -8,6 +8,8 @@ class Nurse
   field :first_name
   field :last_name
   field :password_digest
+  field :comments
+  field :designation
 
   validates :username, presence: true, uniqueness:true
   has_secure_password
@@ -40,14 +42,18 @@ class Nurse
     return summary
   end
 
-  def validate_by_id(completed_proc_ids)
-    self.validate(CompletedProc.in _id: completed_proc_ids)
+  def completed_procs_total
+    self.completed_procs_summary.each_value.inject(:+)
   end
 
-  def validate(completed_procs)
+  def validate_by_id(completed_proc_ids)
+    self.vdate(CompletedProc.in _id: completed_proc_ids)
+  end
+
+  def vdate(completed_procs)
     raise "ordinary nurse tried to validate a proc!!" unless self.validator?
     completed_procs.each do |i|
-      i.validate
+      i.vdate
       i.save
     end
   end

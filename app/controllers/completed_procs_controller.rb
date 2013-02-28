@@ -32,9 +32,7 @@ class CompletedProcsController < ApplicationController
 
   # GET /completed_procs/1/edit
   def edit
-    @rejected = params[:rejected]
     @completed_proc = CompletedProc.find(params[:id])
-    @completed_proc.acknowledge_reject if @rejected
     respond_with( @completed_proc)
   end
 
@@ -55,12 +53,20 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1
   # PUT /completed_procs/1.json
   def update
+    ack = params[:commit]=="Acknowledge"
     @completed_proc = CompletedProc.find params[:id]
+    @completed_proc.ack_reject if ack
+     
      #prevent sneaky nurse hackers from PUTting validated procs
-    params[:completed_proc].except!('status') unless logged_in_nurse.validator?
+    if params[:completed_proc][:status]==CompletedProc::VALID && !logged_in_nurse.validator
+      params[:completed_proc].except!('status')
+    end
+
     flash[:notice] = 'Updated proc'  if @completed_proc.update_attributes(params[:completed_proc])
 
-    if logged_in_nurse.validator?
+    if ack
+      next_page = home_nurse_path logged_in_nurse
+    elsif logged_in_nurse.validator?
       next_page = pending_validations_nurse_path(logged_in_nurse)
     else
       next_page = new_completed_proc_path

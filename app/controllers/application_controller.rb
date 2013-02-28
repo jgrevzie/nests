@@ -21,5 +21,5 @@ class ApplicationController < ActionController::Base
   def signed_in_nurse
     logged_in_nurse
   end
-
+  
 end

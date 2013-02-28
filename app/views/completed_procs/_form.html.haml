@@ -26,9 +26,9 @@
       = f.radio_button :status, CompletedProc::VALID
     %label
       Invalid
-      = f.radio_button :status, CompletedProc::INVALID
+      = f.radio_button :status, CompletedProc::REJECTED
 
-  %br
+  = f.submit 'Acknowledge', id: 'ack' if @completed_proc.rejected?
   = f.submit id: 'submit'
 
 :css
@@ -36,6 +36,9 @@
     display: none;
     width: 250px;
     background: red;
+  }
+  #ack {
+    color: red
   }
 
 :javascript

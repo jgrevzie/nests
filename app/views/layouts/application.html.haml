@@ -15,4 +15,7 @@
     - if logged_in_nurse
       %br
       = button_to 'Goto my home page', home_nurse_path(logged_in_nurse), method: :get 
+      = button_to 'Pending Validations', 
+                   pending_validations_nurse_path(logged_in_nurse),
+                   method: :get if logged_in_nurse.validator?
       = button_to 'Logout', logout_path, method: :delete 

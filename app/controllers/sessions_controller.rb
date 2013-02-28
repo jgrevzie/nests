@@ -15,10 +15,8 @@ class SessionsController < ApplicationController
 
 		if nurse and nurse.authenticate(params[:password])
 			if params[:remember_me]
-				p 'PERMANENT'
 				cookies.permanent[:nurse_id] = nurse.id
 			else
-				p 'TEMP'
 				cookies[:nurse_id] = nurse.id
 			end
 

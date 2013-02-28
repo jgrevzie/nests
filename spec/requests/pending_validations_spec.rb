@@ -16,7 +16,7 @@ describe "'Pending validations for nurse' screen" do
   end
   it "validates all procs if submit button is clicked" do
     vn = Fabricate :v_nurse
-    Fabricate :nurse_5_procs
+    Fabricate :nurse_5_pendings
     
     CompletedProc.pending_validations.count.should eq 5
     login vn
@@ -31,7 +31,7 @@ describe "'Pending validations for nurse' screen" do
   end
   it "validates a subset of total procs" do
     vn = Fabricate :v_nurse
-    5.times { Fabricate :nurse_5_procs }
+    5.times { Fabricate :nurse_5_pendings }
 
     orig_pending = CompletedProc.pending_validations.count
 
