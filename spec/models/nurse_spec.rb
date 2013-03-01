@@ -83,7 +83,19 @@ describe "Nurse" do
       n.completed_procs_summary['PROC1'].should eq 0
     end
   end
-  describe "#completed_procs_total"
+  describe "#completed_procs_total" do
+    it "returns total number of completed procs for this nurse" do
+      n = Fabricate :nurse_5_pending
+      vn = Fabricate :v_nurse
+      vn.vdate(n.completed_procs)
+      n.completed_procs_total.should eq 5
+    end
+    it "doesn't include rejected or pending procs" do
+      n = Fabricate :nurse_5_procs
+      valid = n.completed_procs.select {|i| i.status==CompletedProc::VALID}.length
+      n.completed_procs_total.should eq valid
+    end
+  end
 
 end #Nurse
 

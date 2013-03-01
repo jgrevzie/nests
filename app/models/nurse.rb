@@ -43,7 +43,7 @@ class Nurse
   end
 
   def completed_procs_total
-    self.completed_procs_summary.each_value.inject(:+)
+    CompletedProc.where(nurse_id: self.id, status: CompletedProc::VALID).count
   end
 
   def validate_by_id(completed_proc_ids)

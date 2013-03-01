@@ -25,8 +25,13 @@ describe "completed_proc" do
     end
   end
 
-  describe "#acknowledge_reject" do
-    it "changes status of comp proc to acknowleged and saves"
+  describe "#ack_reject" do
+    it "changes status of comp proc to acknowleged and saves" do
+      cp = Fabricate :completed_proc
+      CompletedProc.pending.count.should eq 1
+      cp.ack_reject
+      CompletedProc.pending.count.should eq 0
+    end
   end
 
 end

@@ -78,8 +78,9 @@ describe "'Submit proc for validation' page" do
     page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
     page.should_not have_selector "#error_explanation"
     page.should have_selector '#notice'
-    CompletedProc.pending.count.should eq 2
-    
+    page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
+
+    CompletedProc.pending.count.should eq 2    
     cp_out = CompletedProc.pending[1]
     procs_equiv?(cp, cp_out).should be_true
   end
@@ -130,8 +131,21 @@ describe "'Submit proc for validation' page" do
     page.should have_text ApplicationHelper::PENDING_VALIDATIONS
     CompletedProc.pending.size.should eq 0
   end
-  it "shows error message if proc name is invalid"
-  it "doesn't error message if proc is valid"
-  it "fixes proc name up a little, if it's on the dodgy side"
-  it "doesn't go back to the login screen if user submits a proc (bug occurred re mailer and forgery protection)"
+  it "shows error message if proc name is invalid, disappears if it is valid", js: true do
+    Fabricate :procedure, name: 'PROC'
+    login Fabricate :nurse
+    fill_in 'Procedure Name', with: 'this is not a procedure name'
+    fill_in 'Comments', with: 'Look at that gorgeous error message.'
+    find('#procError').should  be_visible
+    fill_in 'Procedure Name', with: 'PROC'
+    fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
+    find('#procError').should_not  be_visible
+  end
+  it "fixes proc name up a little, if it's on the dodgy side", js: true do
+    Fabricate :procedure, name: 'Procedure Test'
+    login Fabricate :nurse
+    fill_in 'Procedure Name', with: 'procedure test'
+    fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
+    find_field('Procedure Name').value.should eq 'Procedure Test'
+  end
 end
