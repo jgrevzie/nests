@@ -22,7 +22,7 @@
   });
 
 #accordion
-  %h3 Procedures awaiting validation (#{@nurse.pending_procs.count})
+  %h3#pendingHeader Procedures awaiting validation (#{@nurse.pending_procs.count})
   - if @nurse.pending_procs.count>0
     %table#pendingValidationsTable{border: 1}
       %tr
@@ -39,7 +39,7 @@
   - else
     %em Nothing waiting for validation.
 
-  %h3 Invalid procedures (#{@nurse.rejected_procs.count})
+  %h3#rejectedHeader Invalid procedures (#{@nurse.rejected_procs.count})
   - if @nurse.rejected_procs.count>0
     %table#rejectedTable{border: 1}
       %tr
@@ -55,9 +55,9 @@
   - else
     %em None of your procedures are invalid.
 
-  %h3 Summary of your completed procs (#{@nurse.completed_procs_total})
+  %h3#summaryHeader Summary of your completed procs (#{@nurse.completed_procs_total})
   - if @nurse.completed_procs_total>0
-    %table#summaryCompletedProcsTable{border: 1}
+    %table#summaryTable{border: 1}
       %tr
         %th Procedure
         %th How many

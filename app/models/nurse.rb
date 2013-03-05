@@ -14,7 +14,7 @@ class Nurse
   validates :username, presence: true, uniqueness:true
   has_secure_password
 
-  has_many :completed_procs
+  has_many :completed_procs, dependent: :delete, autosave: true
   belongs_to :nurse
 
   def procs_I_submitted

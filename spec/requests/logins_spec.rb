@@ -26,6 +26,20 @@ describe 'login page' do
 		login vn
 		page.should have_content ApplicationHelper::VALIDATION_CONTENT
 	end
-	it "takes nurse to a page other than tyhe default page if specified in params"
-	it "tests for the remember me checkbox"
+	it "takes nurse to a page other than the default page if specified in params" do
+		n = Fabricate :nurse
+		login n, next_url: home_nurse_path(n)
+		page.should have_content 'Home'
+	end
+
+	it "tests for the remember me checkbox" do
+		n = Fabricate :nurse
+		login n, :remember_me
+		cookies = Capybara.current_session.driver.browser.current_session
+				.instance_variable_get(:@rack_mock_session).cookie_jar.instance_variable_get(:@cookies)
+
+		#clear cookies without expiries (ie session cookies)
+		cookies.delete_if {|i| !i.expires}
+		cookies.length.should eq 1
+	end
 end

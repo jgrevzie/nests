@@ -49,9 +49,13 @@ end
 
 Capybara.javascript_driver = :webkit
 
-def login(nurse)
-    visit login_path
-    fill_in 'username', :with => nurse.username
-    fill_in 'password', :with => nurse.password
-    click_button 'Login'
+def login(nurse, *args)
+  options = args.extract_options!
+  visit login_path(options)
+  fill_in 'username', with: nurse.username
+  fill_in 'password', with: nurse.password
+  check 'Remember me' if args.include? :remember_me
+
+  #click button unless args have :no_submit
+  click_button 'Login' unless args.include? :no_submit
 end
