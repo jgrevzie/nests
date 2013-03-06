@@ -87,13 +87,16 @@ describe "Nurse" do
     it "returns total number of completed procs for this nurse" do
       n = Fabricate :nurse_5_pending
       vn = Fabricate :v_nurse
-      vn.vdate(n.completed_procs)
-      n.completed_procs_total.should eq 5
+      vn.vdate n.completed_procs
+
+      n.completed_procs_total.should eq n.completed_procs.inject(0) {|accu, cp| accu+cp.quantity}
     end
     it "doesn't include rejected or pending procs" do
       n = Fabricate :nurse_5_procs
-      valid = n.completed_procs.select {|i| i.status==CompletedProc::VALID}.length
-      n.completed_procs_total.should eq valid
+      total = n.completed_procs.inject(0) do |accu, cp| 
+        cp.status==CompletedProc::VALID ? accu+cp.quantity : accu
+      end
+      n.completed_procs_total.should eq total
     end
   end
 
