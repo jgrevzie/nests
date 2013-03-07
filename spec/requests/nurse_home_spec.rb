@@ -24,12 +24,16 @@ describe "Nurse's home page" do
   before (:each) do
     @n = Fabricate :nurse
     
+    #Adds completed procs to nurse.  @q hash contains number of procs for a given status
     @q = {}
     [CP::PENDING, CP::REJECTED, CP::ACK_REJECT].each do |status|
       (@q[status] = rand 1..10).times { 
         @n.completed_procs << Fabricate(:comp_proc_seq, status: status) }
     end
 
+    #Adds a bunch of valid procs.  
+    # @q_valid contains counts for each proc
+    # q_valid[:nprocs] is number of different procs
     @q_valid = {}
     (@q_valid[:n_procs] = rand 1..10).times do |i|
       proc_name = "VALID#{i}"
@@ -46,6 +50,12 @@ describe "Nurse's home page" do
     n = visit_home
     page.should have_text 'Home'
     page.should have_text n.first_name
+  end
+  #Fragile?  Needs something to check z-index issues
+  it "closes top accordion if header is clicked" do
+    n = visit_home
+    find('#topHeader').click
+    find('#topHeader').should_not have_text 'Designation'
   end
 
   describe "(completed proc table)" do
