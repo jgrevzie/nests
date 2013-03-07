@@ -4,9 +4,10 @@
 
 
 %h1 Home Page for #{@nurse.first_name} 
+= image_tag 'nurse.jpeg', id: 'nurseImage'
 
 #accordion
-  %h3 Personal Info
+  %h3#topHeader Personal Info
   = form_for @nurse, remote: true do |f|
     = f.label :designation
     .watchMe= f.text_field :designation
@@ -76,4 +77,24 @@
 :css
   a.rejected  {
     color: red;
+  }
+  #nurseImage {
+    width: 75px;
+    height: auto;
+    position: relative;
+    float: right;
+    border: 1px dotted;
+    padding: 1px;
+    margin-left: 5px;
+    margin-right: 5px;
+    z-index: 10;
+  }
+  h1 {
+    position: relative;
+    float: left;
+  }
+  #accordion {
+    position: relative;
+    top: -40px;
+    clear: both;
   }
