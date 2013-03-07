@@ -2,6 +2,9 @@
 
 
 
+= content_for :header do 
+  %h1 Super secret administrative page
+
 - if flash[:notice]
   #notice= flash[:notice]
 
@@ -27,7 +30,6 @@
       %td= link_to 'Add Proc', new_completed_proc_path
       %td= link_to 'Pending Validations', pending_validations_nurse_path(nurse) if nurse.validator?
       %td= link_to 'Send Mail', send_mail_nurse_path(nurse) if nurse.validator?
-
 
 %br
 

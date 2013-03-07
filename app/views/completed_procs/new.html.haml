@@ -3,9 +3,9 @@
 
 
 
-%h1 Welcome to the CathTraq system, #{@nurse.first_name}!
-%pre (username #{@nurse.username})
+= content_for :header do
+  %h1 Submit Procedure
 
-Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}?
+Would you like to #{ApplicationHelper::SUBMIT_PROC_CONTENT}, #{@nurse.first_name}?
 
 = render 'form'

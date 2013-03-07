@@ -11,15 +11,27 @@
   = csrf_meta_tags 
 
   %body
-    = image_tag 'logo.png', id: 'logo'
-    = yield 
-    - if logged_in_nurse
-      %br
-      = button_to 'Goto my home page', home_nurse_path(logged_in_nurse), method: :get 
-      = button_to 'Pending Validations', 
-                   pending_validations_nurse_path(logged_in_nurse),
-                   method: :get if logged_in_nurse.validator?
-      = button_to 'Logout', logout_path, method: :delete 
+    .container
+      .header
+        = image_tag 'logo.png', id: 'logo'
+        = yield :header
+
+
+      .left
+        - if logged_in_nurse
+          %br
+          = button_to 'Home Page', home_nurse_path(logged_in_nurse), method: :get 
+          = button_to 'Submit Proc', new_completed_proc_path, method: :get
+          = button_to 'Pending Validations', 
+                       pending_validations_nurse_path(logged_in_nurse),
+                       method: :get if logged_in_nurse.validator?
+          = button_to 'Send Mail (demo only)',
+                      send_mail_nurse_path(logged_in_nurse),
+                      method: :get if logged_in_nurse.validator?
+          = button_to 'Logout', logout_path, method: :delete 
+      .content
+        = yield
+      .footer      
 
   :css
     #logo {
@@ -28,4 +40,30 @@
       float: right ;
       position: relative ;
       z-index: 1 ;
+    }
+    div.container {
+      width:100%;
+      margin:0px;
+      border:1px solid gray;
+    }
+    div.header,div.footer {
+      padding:0.5em;
+      color:white;
+      background-color:gray;
+      clear:left;
+    }
+    h1.header {
+      padding:0;
+      margin:0;
+    }
+    div.left {
+      float:left;
+      width:160px;
+      margin:0;
+      padding:1em;
+    }
+    div.content {
+      margin-left:190px;
+      border-left:1px solid gray;
+      padding:1em;
     }

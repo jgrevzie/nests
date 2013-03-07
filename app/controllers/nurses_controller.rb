@@ -56,7 +56,7 @@ class NursesController < ApplicationController
   def send_mail
     @nurse = Nurse.find(params[:id])
     DailyValidations.send_pendings(@nurse).deliver
-    redirect_to nurses_path, notice: 'Sent mail'
+    redirect_to request.referer
   end
   
   def home

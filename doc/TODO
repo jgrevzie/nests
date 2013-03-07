@@ -3,5 +3,27 @@
 
 
 
-Save who validated nurse.
-Nurse should be able to edit completed proc before validation.
+
+
+    div.container {
+    width:100%;
+    margin:0px;
+    border:1px solid gray;
+    line-height:150%;
+    }
+    #logo {
+      width: 100px ;
+      height: auto ;
+      float: right ;
+      position: relative ;
+      z-index: 1 ;
+    }
+    div.header {
+      clear:left;
+    }
+    .left {
+      float:left;
+    }
+    .content {
+      border-left: 1px solid gray;
+    }
