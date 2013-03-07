@@ -5,7 +5,7 @@
 
 
 
-Fabricator(:completed_proc) do
+Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date_start { Date.today }
 	quantity 1
@@ -23,5 +23,5 @@ Fabricator(:random_completed_proc, from: :completed_proc) do
   date_start { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
   procedure { Fabricate :random_proc}
-  status { ([CompletedProc::VALID]*5 + [CompletedProc::REJECTED, CompletedProc::PENDING]).sample }
+  status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*4).sample }
 end

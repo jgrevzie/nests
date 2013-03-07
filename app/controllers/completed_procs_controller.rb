@@ -32,17 +32,26 @@ class CompletedProcsController < ApplicationController
 
   # GET /completed_procs/1/edit
   def edit
+    @nurse = logged_in_nurse
     @completed_proc = CompletedProc.find(params[:id])
     respond_with( @completed_proc)
+  end
+
+  def setup_date_validation(cp)
+    cp.check_date = true unless logged_in_nurse.validator?
   end
 
   # POST /completed_procs
   # POST /completed_procs.json
   def create
     @nurse = logged_in_nurse
+    
     # prevents sneaky nurses from posting validated procs
     params[:completed_proc].except!('status') unless logged_in_nurse.validator?
+
     @completed_proc = CompletedProc.new(params[:completed_proc])
+    setup_date_validation @completed_proc
+
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
     end
@@ -53,11 +62,15 @@ class CompletedProcsController < ApplicationController
   # PUT /completed_procs/1
   # PUT /completed_procs/1.json
   def update
-    ack = params[:commit]=="Acknowledge"
+    @nurse = logged_in_nurse
     @completed_proc = CompletedProc.find params[:id]
+
+    ack = params[:commit]=="Acknowledge"
     @completed_proc.ack_reject if ack
      
-     #prevent sneaky nurse hackers from PUTting validated procs
+    setup_date_validation @completed_proc
+
+    #prevent sneaky nurse hackers from PUTting validated procs
     if params[:completed_proc][:status]==CompletedProc::VALID && !logged_in_nurse.validator
       params[:completed_proc].except!('status')
     end

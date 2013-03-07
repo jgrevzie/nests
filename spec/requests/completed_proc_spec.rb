@@ -26,13 +26,14 @@ def click_on_popup_menu_item(item_name)
     page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
 end
 
-def fill_in_and_submit(cp)
+def fill_in_proc_form(cp, *args)
+  options = args.extract_options!
   fill_in 'Procedure Name', with: cp.procedure.name
   fill_in 'Date', with: cp.date_start
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
   choose cp.options if cp.options
-  click_button 'submit'
+  click_button 'submit' if options[:submit]
 end
 
 def procs_equiv?(cp_1, cp_2)
@@ -73,10 +74,10 @@ describe "'Submit proc for validation' page" do
     login_new_nurse
     cp = comp_proc
 
-    fill_in_and_submit(cp)
+    fill_in_proc_form cp, submit: true
     
     page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
-    page.should_not have_selector "#error_explanation"
+    page.should_not have_selector "#errorExplanation"
     page.should have_selector '#notice'
     page.should have_content ApplicationHelper::SUBMIT_PROC_CONTENT
 
@@ -89,8 +90,8 @@ describe "'Submit proc for validation' page" do
     cp = Fabricate :completed_proc
     cp.procedure.name = 'NON-EXIST'
 
-    fill_in_and_submit cp
-    page.should have_selector '#error_explanation', text: 'Procedure'
+    fill_in_proc_form cp, submit: true
+    page.should have_selector '#errorExplanation', text: 'Procedure'
   end
   it 'when updating, shows fields of previously entered completed proc' do 
     n = login_new_nurse
@@ -98,10 +99,7 @@ describe "'Submit proc for validation' page" do
     n.completed_procs << cp
     visit edit_completed_proc_path(cp)
     page.should have_content "Edit procedure"
-    find_field("Procedure Name").value.should eq cp.procedure.name
-    find_field("Date").value.should eq cp.date_start.strftime '%d/%m/%Y'
-    find_field("How many of these procedures?").value.should eq cp.quantity.to_s
-    find_field("Comments").value.should eq cp.comments
+    fill_in_proc_form cp
     all("#options input[type='radio']").size.should eq cp.procedure.options.split(',').size
   end
   it "updates proc, and saves new values", js: true do
@@ -114,7 +112,7 @@ describe "'Submit proc for validation' page" do
                  options: 'option4', procedure: p2    
     
     visit edit_completed_proc_path(cp)
-    fill_in_and_submit cp_2
+    fill_in_proc_form cp_2, submit: true
     page.should have_selector '#notice', text: 'Updated'
 
     cp.reload
@@ -148,4 +146,42 @@ describe "'Submit proc for validation' page" do
     fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
     find_field('Procedure Name').value.should eq 'Procedure Test'
   end
+
+  def update_new_proc_with_old_date_and_submit(nurse)
+    cp = comp_proc
+    nurse.completed_procs << cp
+    login nurse
+    visit edit_completed_proc_path(cp)
+    fill_in 'Date', with: CP::OLDEST_NEW_PROC-1
+    click_button 'submit'
+  end
+
+  DATE_ERROR = 'Date start must be after'
+
+  describe "invokes timliness checks that" do
+    before(:each) do
+      @old_proc = Fabricate :cp, date_start: CP::OLDEST_NEW_PROC-1, nurse: (Fabricate :nurse)
+    end
+    it "don't allow the creation of an old procedure by regular nurse" do
+      login Fabricate :nurse
+      visit new_completed_proc_path
+      fill_in_proc_form @old_proc, submit: true
+      find('#errorExplanation').should have_text DATE_ERROR
+    end
+    it "allow creation of old procedure by vn" do
+      login Fabricate :v_nurse
+      visit new_completed_proc_path
+      fill_in_proc_form @old_proc, submit: true
+      page.should have_no_selector('#errorExplanation')
+    end
+    it "don't allow update of old procedure by regular nurse" do
+      update_new_proc_with_old_date_and_submit Fabricate :nurse
+      find('#errorExplanation').should have_text DATE_ERROR
+    end
+    it "allow update of old proc by vn" do
+      update_new_proc_with_old_date_and_submit Fabricate :v_nurse
+      page.should have_no_selector('#errorExplanation')
+    end
+  end
+
 end

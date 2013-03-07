@@ -1,7 +1,12 @@
+
+
+
+
 class CompletedProc
 	include Mongoid::Document
 
 	MAX_PROCS_PER_DAY = 20
+	OLDEST_NEW_PROC = Date.today-10
 
 	PENDING = 'pending'
 	VALID = 'valid'
@@ -9,6 +14,8 @@ class CompletedProc
 	INVALID = REJECTED
 	ACK_REJECT = 'ack_reject'
 
+
+	attr_accessor :check_date
 
 	field :comments
 	field :date_start, type: Date, default: Date.current
@@ -21,10 +28,11 @@ class CompletedProc
 
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
-	validates :date_start, timeliness: { before: Date.today+2, after: Date.today.prev_week }
 	validates :procedure, presence: { message: "isn't known to CathTraq" }
 	validates :status, inclusion: { in: [PENDING, VALID, REJECTED, ACK_REJECT], 
 																			 message: 'unknown' }
+	validates :date_start, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
+												 if: :check_date
 
 	def proc_name=(proc_name)
 		self.procedure = Procedure.where(name: proc_name).first
@@ -63,3 +71,5 @@ class CompletedProc
 	end
 
 end
+
+CP = CompletedProc

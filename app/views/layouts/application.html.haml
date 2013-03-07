@@ -6,11 +6,12 @@
 %html
   %head
   %title CathTraq
-  = stylesheet_link_tag    "application", :media => "all" 
+  = stylesheet_link_tag "application", :media => "all" 
   = javascript_include_tag "application" 
   = csrf_meta_tags 
 
   %body
+    = image_tag 'logo.png', id: 'logo'
     = yield 
     - if logged_in_nurse
       %br
@@ -19,3 +20,12 @@
                    pending_validations_nurse_path(logged_in_nurse),
                    method: :get if logged_in_nurse.validator?
       = button_to 'Logout', logout_path, method: :delete 
+
+  :css
+    #logo {
+      width: 100px ;
+      height: auto ;
+      float: right ;
+      position: relative ;
+      z-index: 1 ;
+    }

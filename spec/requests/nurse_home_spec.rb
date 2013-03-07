@@ -8,8 +8,6 @@ require 'spec_helper'
 
 
 
-CP = CompletedProc 
-
 def visit_home(*args)
   options = args.extract_options!
   n = options[:n] || @n
@@ -122,6 +120,10 @@ describe "Nurse's home page" do
       visit_home
       count_rows(@TABLE).should eq 0
     end
+  end
+
+  describe "personal info" do
+    it "updates if fields are changed"
   end
 
 end

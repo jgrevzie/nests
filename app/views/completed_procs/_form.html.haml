@@ -19,7 +19,7 @@
     .fields= f.text_area :comments, cols: 40, rows: 4
     #options
       = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
-  - if logged_in_nurse.validator? then
+  - if @nurse.validator? then
     Validate this procedure?
     %label
       Valid
@@ -72,4 +72,6 @@
   
   $(PROCID).change( loadOptions )
   
-  $("#completed_proc_date_start").datepicker({ dateFormat: "dd/mm/yy" });
+  $("#completed_proc_date_start").datepicker({
+    #{@nurse.validator ? '' : 'minDate: -8, maxDate: +1,'}
+    dateFormat: "dd/mm/yy" });

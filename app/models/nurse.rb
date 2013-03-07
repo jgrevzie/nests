@@ -18,17 +18,17 @@ class Nurse
   belongs_to :nurse
 
   def procs_I_submitted
-     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING)
+     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
   end
   alias_method :pending_procs, :procs_I_submitted
 
   def rejected_procs
-    CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED)
+    CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED).desc(:date_start)
   end
 
   def completed_procs_summary
     summary = {}
-    Procedure.all.each do |proc|
+    Procedure.asc(:name).each do |proc|
       count = 0
       CompletedProc.where(nurse_id: self.id, 
                           procedure_id: proc.id, 
