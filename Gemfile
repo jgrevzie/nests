@@ -45,8 +45,9 @@ gem 'haml'
 
 gem "rspec-rails", :group => [:test, :development]
 
+gem "fabrication"
+
 group :test do
-  gem "fabrication"
   gem "capybara"
   gem "guard-rspec"
   gem "capybara-webkit"
