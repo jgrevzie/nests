@@ -78,12 +78,10 @@ test:
         # low amounts for fast failures.
         max_retries: 1
         retry_interval: 0
-<% if ENV['MONGOHQ_URL'] %>
   production:
     sessions:
       default:
-        uri: <%= ENV['MONGOHQ_URL'] %>
+        uri: mongodb://heroku:e29ec5a4bd3aa1b1465adca3b3317a20@linus.mongohq.com:10082/app13264462
         options:
           skip_version_check: true
           safe: true
-<% end %>
