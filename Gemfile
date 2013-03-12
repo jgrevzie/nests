@@ -41,7 +41,8 @@ end
 
 # To use debugger
 # gem 'debugger'
-gem "mongoid", "~> 3.0.0"
+
+gem "mongoid"
 gem 'bcrypt-ruby'
 gem 'thin'
 gem 'validates_timeliness'

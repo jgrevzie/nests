@@ -34,15 +34,11 @@ end
 namespace :nest do
 
 	desc 'reset database with seed data from csv'
-	task :reset => 'db:mongoid:drop' do
+	task reset: :environment do
+		Mongoid.purge!
 		open(DB_DIR + '/seeds.rb', 'w') { |seeds| load_procs seeds }
 		Rake::Task['db:seed'].invoke		
-		load_nurses if Rails.env.development?
+		load_nurses if Rails.env.development? || Rails.env.production?
 	end #task
-
-	task :hello do
-		puts "Hello"
-		p ENV
-	end
 
 end #namespace
