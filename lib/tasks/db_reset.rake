@@ -40,4 +40,9 @@ namespace :nest do
 		load_nurses if Rails.env.development?
 	end #task
 
+	task :hello do
+		puts "Hello"
+		p ENV
+	end
+
 end #namespace
