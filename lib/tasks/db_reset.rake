@@ -33,8 +33,15 @@ end
 
 namespace :nest do
 
-	desc 'reset database with seed data from csv'
-	task :reset => 'db:mongoid:drop' do
+	# desc 'reset database with seed data from csv'
+	# task :reset => 'db:mongoid:drop' do
+	# 	open(DB_DIR + '/seeds.rb', 'w') { |seeds| load_procs seeds }
+	# 	Rake::Task['db:seed'].invoke		
+	# 	load_nurses if Rails.env.development?
+	# end #task
+
+	task :reset do
+		p ENV
 		open(DB_DIR + '/seeds.rb', 'w') { |seeds| load_procs seeds }
 		Rake::Task['db:seed'].invoke		
 		load_nurses if Rails.env.development?
