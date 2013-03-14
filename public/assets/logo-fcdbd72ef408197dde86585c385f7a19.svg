@@ -31,8 +31,8 @@
      inkscape:zoom="0.87085715"
      inkscape:cx="372.04724"
      inkscape:cy="410.39547"
-     inkscape:window-x="3"
-     inkscape:window-y="73"
+     inkscape:window-x="86"
+     inkscape:window-y="97"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <defs
@@ -67,7 +67,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -148,10 +148,7 @@
      x="155.93221"
      y="786.2605"
      id="text4035"
-     sodipodi:linespacing="125%"
-     inkscape:export-filename="/Users/quinn/Projects/nests/app/assets/images/logo.png"
-     inkscape:export-xdpi="90"
-     inkscape:export-ydpi="90"><tspan
+     sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4037"
        x="155.93221"

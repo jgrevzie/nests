@@ -20,13 +20,7 @@ class SessionsController < ApplicationController
 				cookies[:nurse_id] = nurse.id
 			end
 
-			if !params[:next_url].empty?
-				redirect_to params[:next_url]
-			elsif nurse.validator? 
-				redirect_to pending_validations_nurse_path(nurse) 
-			else 
-				redirect_to new_completed_proc_path
-			end
+			params[:next_url].empty? ? redirect_to(initial_page) : redirect_to(params[:next_url])
 
 		else
 			flash[:alert] = "Invalid user/password combination"
@@ -37,5 +31,9 @@ class SessionsController < ApplicationController
 	def destroy
 		cookies[:nurse_id] = nil
 		redirect_to login_url, alert: "Logged out"
+	end
+
+	def home
+		redirect_to initial_page
 	end
 end

@@ -18,8 +18,11 @@ class ApplicationController < ActionController::Base
     Nurse.where(id: cookies[:nurse_id]).first if cookies[:nurse_id]
   end
 
-  def signed_in_nurse
-    logged_in_nurse
+  alias_method :signed_in_nurse, :logged_in_nurse
+
+  def initial_page
+    return login_path unless n = logged_in_nurse
+    n.validator? ? pending_validations_nurse_path(n): new_completed_proc_path
   end
   
 end
