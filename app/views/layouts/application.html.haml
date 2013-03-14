@@ -20,14 +20,11 @@
       .left
         - if logged_in_nurse
           %br
-          .link= link_to 'Home Page', home_nurse_path(logged_in_nurse), method: :get 
-          .link= link_to 'Submit Proc', new_completed_proc_path, method: :get
-          .link= link_to 'Pending Validations', 
-                        pending_validations_nurse_path(logged_in_nurse),
-                        method: :get if logged_in_nurse.validator?
-          .link= link_to 'Send Mail (demo only)',
-                      send_mail_nurse_path(logged_in_nurse),
-                      method: :get if logged_in_nurse.validator?
+          .link= link_to 'Home Page', home_nurse_path(logged_in_nurse)
+          .link= link_to 'Submit Proc', new_completed_proc_path
+          - if logged_in_nurse.validator?
+            .link= link_to 'Pending Validations', pending_validations_nurse_path(logged_in_nurse)
+            .link= link_to 'Send Mail (demo only)', send_mail_nurse_path(logged_in_nurse)
           .link= link_to 'Logout', logout_path, method: :delete 
       .content
         = yield
