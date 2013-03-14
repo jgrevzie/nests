@@ -41,4 +41,8 @@ namespace :nest do
 		load_nurses if Rails.env.development? || Rails.env.production?
 	end #task
 
+	task show_env: :environment do
+		p ENV
+	end
+
 end #namespace
