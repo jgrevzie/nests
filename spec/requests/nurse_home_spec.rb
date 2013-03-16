@@ -51,11 +51,16 @@ describe "Nurse's home page" do
     page.should have_text 'Home'
     page.should have_text n.first_name
   end
-  #Fragile?  Needs something to check z-index issues
+  #Fragile?  Needs something to check z-index issues, showed up as a bug previously.
   it "closes top accordion if header is clicked" do
     n = visit_home
     find('#topHeader').click
     find('#topHeader').should_not have_text 'Designation'
+  end
+
+  describe "personal info" do
+    it "updates if fields are changed"
+    it "shows spinning wheel while changes are being made"
   end
 
   describe "(completed proc table)" do
@@ -130,10 +135,6 @@ describe "Nurse's home page" do
       visit_home
       count_rows(@TABLE).should eq 0
     end
-  end
-
-  describe "personal info" do
-    it "updates if fields are changed"
   end
 
 end

@@ -5,25 +5,13 @@
 
 
 
-    div.container {
-    width:100%;
-    margin:0px;
-    border:1px solid gray;
-    line-height:150%;
-    }
-    #logo {
-      width: 100px ;
-      height: auto ;
-      float: right ;
-      position: relative ;
-      z-index: 1 ;
-    }
-    div.header {
-      clear:left;
-    }
-    .left {
-      float:left;
-    }
-    .content {
-      border-left: 1px solid gray;
-    }
+ Record who validated procedure.
+ Summary of completed procedures by date with y axis showing quantity?
+ Validate all in mail should be a link, for disfunctional email clients.
+ Record year started in application.
+ Abbreviation search.
+ Nurse should be attached to section in hospital and get appropriate procedures.
+ If procedure has options then chosing an option should be compulsory.
+ Completed procs should be clickable, take through to information about each procedure.
+ 'Proper' checking for validate in params, removal if they are spoofed.
+ Nurse should not be allowed to look at other nurse unless validator.
