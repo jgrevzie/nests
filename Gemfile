@@ -14,8 +14,6 @@ gem 'rails', '3.2.11'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
@@ -26,6 +24,8 @@ group :assets do
   gem "teabag"
 end
 
+gem 'sass-rails',   '~> 3.2.3'
+gem 'coffee-rails', '~> 3.2.1'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
