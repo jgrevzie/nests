@@ -55,7 +55,7 @@ class NursesController < ApplicationController
 
   def send_mail
     @nurse = Nurse.find(params[:id])
-    DailyValidations.send_pendings(@nurse).deliver
+    DailyValidations.send_pendings_to_nurse(@nurse).deliver
     redirect_to request.referer
   end
   
