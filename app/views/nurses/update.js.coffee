@@ -2,4 +2,4 @@
 
 
 
-$('#updateMe').text("Personal Info (updated)")
+$('#updateMe').hide()

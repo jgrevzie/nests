@@ -10,6 +10,7 @@ class Nurse
   field :password_digest
   field :comments
   field :designation
+  field :wants_mail, type: Boolean
 
   validates :username, presence: true, uniqueness:true
   has_secure_password
@@ -57,6 +58,5 @@ class Nurse
       i.save
     end
   end
-
 
 end # class

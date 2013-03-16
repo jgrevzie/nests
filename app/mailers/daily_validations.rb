@@ -10,10 +10,16 @@ class DailyValidations < ActionMailer::Base
 
 
     
+  #Just used to turn off forgery protection.
   add_template_helper MailHelper
 
-   def send_pendings(nurse)
-   @nurse = nurse
+  def send_pendings
+    Nurse.where(validator: true, wants_mail: true).each { |n| send_pendings_to_nurse(n).deliver }
+  end
+
+  def send_pendings_to_nurse(nurse)
+    puts "sending mail to nurse #{nurse.username} (#{nurse.email})"
+    @nurse = nurse
 
     mail to: @nurse.email, subject: "Daily validations"
   end

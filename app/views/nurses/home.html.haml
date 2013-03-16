@@ -7,8 +7,16 @@
   = image_tag 'nurse.jpeg', id: 'nurseImage'
   %h1 Home Page for #{@nurse.first_name} 
 
+:javascript
+  $(function() {
+    $( "#accordion" ).accordion({collapsible: true, heightStyle: "content"});
+  });
+
 #accordion
-  %h3#topHeader Personal Info
+  %h3#topHeader 
+    Personal Info
+    %span#updateMe (updating #{image_tag 'ajax-loader.gif'})
+
   = form_for @nurse, remote: true do |f|
     = f.label :designation
     .watchMe= f.text_field :designation
@@ -16,14 +24,24 @@
     = f.label :comments, "Previous Experience & Other Comments"
     .watchMe= f.text_area :comments, cols: 40, rows: 4
 
-    %a (Link to resume here)
+    = f.label :email
+    .watchMe= f.email_field :email
+
+    - if @nurse.validator?
+      .watchMe
+        = f.label :wants_mail, "Receive daily emails?"
+        = f.check_box :wants_mail
+
+    %br
+    %a (Link to resume goes here)
 
     :javascript
-      $('.watchMe').change( function() { $(this).parents('form:first').submit(); } );
-      $(function() {
-        $( "#accordion" ).accordion({collapsible: true, heightStyle: "content"});
-      });
-
+      $('#updateMe').hide();
+      $('.watchMe').change( function() { 
+        $('#updateMe').show();
+        $(this).parents('form:first').submit();
+       } );
+ 
   %h3 Professional Development
 
   %em Info about professional development goes here.
