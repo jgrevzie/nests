@@ -25,7 +25,7 @@ def load_nurses
 			"#{clean(row['first_name'])}.#{clean(row['last_name'])}@svpm.org.au" unless row['email']
 		row['password'] = 'password'
 
-		n = Fabricate :nurse, row.to_hash
+		n = Fabricate :nurse, row.to_hash # CSV::Row needs to be converted to hash
 		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
 
 	end

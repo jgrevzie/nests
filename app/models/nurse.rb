@@ -10,6 +10,7 @@ class Nurse
   field :password_digest
   field :comments
   field :designation
+  field :email
   field :wants_mail, type: Boolean
 
   validates :username, presence: true, uniqueness:true
