@@ -10,7 +10,7 @@ require 'spec_helper'
 
 def visit_home(*args)
   options = args.extract_options!
-  n = options[:n] || @n
+  n = args[0] || @n
   login n
   visit home_nurse_path n
   return n
@@ -58,9 +58,38 @@ describe "Nurse's home page" do
     find('#topHeader').should_not have_text 'Designation'
   end
 
-  describe "personal info" do
-    it "updates if fields are changed"
-    it "shows spinning wheel while changes are being made"
+  describe "(personal info)", js: true do
+    it "updates if fields are changed" do
+      vn = visit_home Fabricate(:v_nurse)
+
+      fill_in 'Designation', with: 'Test Designation'
+      fill_in 'nurse_comments', with: 'Test Comments'
+
+      page.has_no_css?('#topHeader img', visible: true).should be_true
+      fill_in 'Email', with: 'test@example.com'
+      page.has_no_css?('#topHeader img', visible: true).should be_true
+      check 'Receive daily emails?'
+      page.has_no_css?('#topHeader img', visible: true).should be_true
+
+      # Wait for the AJAX to complete
+#      page.has_no_css?('#topHeader img', visible: true).should be_true
+
+      vn.reload.designation.should eq 'Test Designation'
+      vn.reload.comments.should eq 'Test Comments'
+      vn.reload.email.should eq 'test@example.com'
+      vn.reload.wants_mail.should be_true
+    end
+    it "doesn't show checkbox to receive mail, unless validator" do
+      n = visit_home
+      page.has_css?('#wants_mail').should be_false
+    end
+    it "shows spinning wheel while changes are being made", js: true do
+      vn = visit_home Fabricate(:v_nurse)
+      check 'Receive daily emails?'
+      find('#topHeader img').visible?.should be_true
+      sleep 1 # Brittle.
+      find('#topHeader img').visible?.should be_false
+    end
   end
 
   describe "(completed proc table)" do
@@ -100,7 +129,7 @@ describe "Nurse's home page" do
       page.all("table##{@TABLE} a.rejected").count.should eq @q[CP::REJECTED]
     end
     it "when link is clicked, update page should allow proc to be acknowledged" do
-      visit_home n: @n
+      visit_home @n
       proc1 = @n.completed_procs[0].procedure.name
       first("##{@TABLE} a").click
       page.has_css?('input [value="Acknowledge"]').should be_true
