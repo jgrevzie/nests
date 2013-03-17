@@ -58,30 +58,34 @@ describe "Nurse's home page" do
     find('#topHeader').should_not have_text 'Designation'
   end
 
+  def click_and_wait_for_ajax
+    find('h1').click
+    page.has_no_css?('#topHeader img', visible: true).should be_true
+  end
+  
   describe "(personal info)", js: true do
     it "updates if fields are changed" do
       vn = visit_home Fabricate(:v_nurse)
 
       fill_in 'Designation', with: 'Test Designation'
-      fill_in 'nurse_comments', with: 'Test Comments'
-
-      page.has_no_css?('#topHeader img', visible: true).should be_true
-      fill_in 'Email', with: 'test@example.com'
-      page.has_no_css?('#topHeader img', visible: true).should be_true
-      check 'Receive daily emails?'
-      page.has_no_css?('#topHeader img', visible: true).should be_true
-
-      # Wait for the AJAX to complete
-#      page.has_no_css?('#topHeader img', visible: true).should be_true
-
+      click_and_wait_for_ajax
       vn.reload.designation.should eq 'Test Designation'
+
+      fill_in 'nurse_comments', with: 'Test Comments'
+      click_and_wait_for_ajax
       vn.reload.comments.should eq 'Test Comments'
+
+      fill_in 'Email', with: 'test@example.com'
+      click_and_wait_for_ajax
       vn.reload.email.should eq 'test@example.com'
+
+      check 'Receive daily emails?'
+      click_and_wait_for_ajax
       vn.reload.wants_mail.should be_true
     end
     it "doesn't show checkbox to receive mail, unless validator" do
       n = visit_home
-      page.has_css?('#wants_mail').should be_false
+      page.should have_no_css('#wants_mail')
     end
     it "shows spinning wheel while changes are being made", js: true do
       vn = visit_home Fabricate(:v_nurse)
