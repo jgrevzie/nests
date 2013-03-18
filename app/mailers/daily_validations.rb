@@ -18,7 +18,6 @@ class DailyValidations < ActionMailer::Base
   end
 
   def send_pendings_to_nurse(nurse)
-    puts "sending mail to nurse #{nurse.username} (#{nurse.email})"
     @nurse = nurse
 
     mail to: @nurse.email, subject: "Daily validations"

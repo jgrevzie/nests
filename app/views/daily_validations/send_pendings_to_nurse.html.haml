@@ -1,0 +1,15 @@
+
+
+
+
+
+%p Dear #{@nurse.first_name}
+%p Here are your pending validations for today.
+%p 
+  If your email client can't display the following table properly, click 
+  %a{href: pending_validations_nurse_url(@nurse)}here
+
+=render 'nurses/pending_validations_table'
+
+%p Thanks,
+CliniTraq

@@ -5,6 +5,7 @@
 
 
 
+ Proper logging, especially mails.
  Record who validated procedure.
  Summary of completed procedures by date with y axis showing quantity?
  Validate all in mail should be a link, for disfunctional email clients.
