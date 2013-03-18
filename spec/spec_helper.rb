@@ -58,4 +58,5 @@ def login(nurse, *args)
 
   #click button unless args have :no_submit
   click_button 'Login' unless args.include? :no_submit
+  nurse
 end

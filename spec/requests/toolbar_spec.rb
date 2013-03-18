@@ -3,7 +3,7 @@ require 'spec_helper'
 
 
 describe "toolbar" do
-  describe "(Send Mail)"
+  describe "(Send Mail)" do
     it "when clicked, sends that user a mail" do
       login Fabricate :v_nurse
       click_on 'Send Mail'
@@ -13,4 +13,5 @@ describe "toolbar" do
       login Fabricate :nurse
       find('.left').should have_no_link 'Send Mail'
     end
+  end
 end

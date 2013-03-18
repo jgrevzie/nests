@@ -9,7 +9,7 @@ class NursesController < ApplicationController
   respond_to :html, :xml, :js
 
   def is_nurse_allowed_here
-    redirect_to '/403.html' unless logged_in_nurse.validator? || params[:id] == logged_in_nurse.id
+    redirect_to '/403.html' unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
   end
 
   # GET /nurses
