@@ -2,9 +2,15 @@ class NursesController < ApplicationController
 
 
 
+  before_filter :is_nurse_allowed_here
+  skip_before_filter :is_nurse_allowed_here, only: []
   skip_before_filter :verify_authenticity_token, :only => [:send_mail]
 
   respond_to :html, :xml, :js
+
+  def is_nurse_allowed_here
+    redirect_to '/403.html' unless logged_in_nurse.validator? || params[:id] == logged_in_nurse.id
+  end
 
   # GET /nurses
   # GET /nurses.json

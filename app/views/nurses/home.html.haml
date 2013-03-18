@@ -35,8 +35,9 @@
     %br
     %a#resume (Link to resume goes here)
 
+    -# Spinner is hidden again by ajax response in update.js.coffee
     :javascript
-      $('#updateMe').hide();
+       $('#updateMe').hide();
       $('.watchMe').change( function() { 
         $('#updateMe').show();
         $(this).parents('form:first').submit();
