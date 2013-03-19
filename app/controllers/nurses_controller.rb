@@ -9,7 +9,9 @@ class NursesController < ApplicationController
   respond_to :html, :xml, :js
 
   def is_nurse_allowed_here
-    redirect_to '/403.html' unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
+    unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
+      redirect_to '/403.html' 
+    end
   end
 
   # GET /nurses
@@ -61,7 +63,7 @@ class NursesController < ApplicationController
 
   def send_mail
     @nurse = Nurse.find(params[:id])
-    DailyValidations.send_pendings_to_nurse(@nurse).deliver
+    DailyValidations.pending_validations_mail(@nurse).deliver
     redirect_to request.referer
   end
   

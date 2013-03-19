@@ -40,9 +40,10 @@ RSpec.configure do |config|
 
   #clear out the database
   config.before :each do
-   Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
-   #Some would say it's a bad move to load seeds, but these are effectively constants
+    Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+    #Some would say it's a bad move to load seeds, but these are effectively constants
     load "#{Rails.root}/db/seeds.rb"
+    Mail::TestMailer::deliveries.clear
   end
 
 end

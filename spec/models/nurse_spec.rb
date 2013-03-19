@@ -9,7 +9,7 @@ require 'spec_helper'
 describe "Nurse" do
 
   describe 'fabricators' do
-      it '(:nurse) fabricates nurses with different usernames' do
+    it '(:nurse) fabricates nurses with different usernames' do
       nurse0 = Fabricate(:nurse)
       nurse1 = Fabricate(:nurse)
       nurse0.username.should_not  eq(nurse1.username)
@@ -99,6 +99,5 @@ describe "Nurse" do
       n.completed_procs_total.should eq total
     end
   end
-
 end #Nurse
 

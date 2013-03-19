@@ -8,12 +8,10 @@
  Proper logging, especially mails.
  Record who validated procedure.
  Summary of completed procedures by date with y axis showing quantity?
- Validate all in mail should be a link, for disfunctional email clients.
  Record year started in application.
  Abbreviation search.
  Nurse should be attached to section in hospital and get appropriate procedures.
  If procedure has options then chosing an option should be compulsory.
  Completed procs should be clickable, take through to information about each procedure.
  'Proper' checking for validate in params, removal if they are spoofed.
- Nurse should not be allowed to look at other nurse unless validator.
  Nurse photos.

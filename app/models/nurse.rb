@@ -60,4 +60,10 @@ class Nurse
     end
   end
 
+  def self.send_all_pending_validation_mails
+    Nurse.where(validator: true, wants_mail: true).each do |n| 
+      DailyValidations.pending_validations_mail(n).deliver
+    end
+  end
+
 end # class

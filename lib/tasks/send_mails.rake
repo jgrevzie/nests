@@ -5,6 +5,6 @@
 
 namespace :nest do
   task send_pendings: :environment do
-    DailyValidations.send_pendings
+    Nurse.send_all_pending_validation_mails
   end
 end
