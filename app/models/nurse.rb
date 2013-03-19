@@ -19,6 +19,10 @@ class Nurse
   has_many :completed_procs, dependent: :delete, autosave: true
   belongs_to :nurse
 
+  def role
+    if self.validator? then :validator else :default end
+  end
+
   def procs_I_submitted
      CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
   end

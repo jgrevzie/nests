@@ -14,7 +14,6 @@ class CompletedProc
 	INVALID = REJECTED
 	ACK_REJECT = 'ack_reject'
 
-
 	attr_accessor :check_date
 
 	field :comments
@@ -33,6 +32,8 @@ class CompletedProc
 																			 message: 'unknown' }
 	validates :date_start, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
 												 if: :check_date
+
+ 	attr_protected :status
 
 	def proc_name=(proc_name)
 		self.procedure = Procedure.where(name: proc_name).first

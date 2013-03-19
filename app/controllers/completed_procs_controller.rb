@@ -45,11 +45,8 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs.json
   def create
     @nurse = logged_in_nurse
-    
     # prevents sneaky nurses from posting validated procs
-    params[:completed_proc].except!('status') unless logged_in_nurse.validator?
-
-    @completed_proc = CompletedProc.new(params[:completed_proc])
+    @completed_proc = CompletedProc.new params[:completed_proc], as: @nurse.role
     setup_date_validation @completed_proc
 
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
@@ -71,11 +68,8 @@ class CompletedProcsController < ApplicationController
     setup_date_validation @completed_proc
 
     #prevent sneaky nurse hackers from PUTting validated procs
-    if params[:completed_proc][:status]==CompletedProc::VALID && !logged_in_nurse.validator
-      params[:completed_proc].except!('status')
-    end
-
-    flash[:notice] = 'Updated proc'  if @completed_proc.update_attributes(params[:completed_proc])
+    flash[:notice] = 'Updated proc' if @completed_proc.update_attributes params[:completed_proc], 
+                                                                         as: @nurse.role
 
     if ack
       next_page = home_nurse_path logged_in_nurse
