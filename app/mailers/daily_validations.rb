@@ -14,6 +14,7 @@ class DailyValidations < ActionMailer::Base
   add_template_helper MailHelper
 
   def pending_validations_mail(nurse)
+      logger.info "Preparing mail for nurse #{nurse.username} (#{nurse.email})."
       @nurse = nurse
       mail to: @nurse.email, subject: "Daily validations"
   end

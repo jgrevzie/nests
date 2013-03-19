@@ -99,5 +99,7 @@ describe "Nurse" do
       n.completed_procs_total.should eq total
     end
   end
+  # Nurse.send_all_pending_validation_mails
+  # tests are in spec for mailer
 end #Nurse
 
