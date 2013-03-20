@@ -10,7 +10,7 @@ class NursesController < ApplicationController
 
   def is_nurse_allowed_here
     unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
-      redirect_to '/403.html' 
+      render file: "#{Rails.root}/public/403", status: :forbidden, layout: false
     end
   end
 

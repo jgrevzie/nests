@@ -12,7 +12,7 @@ describe "security checks for nurse access" do
     n1 = login Fabricate :nurse
     n2 = Fabricate :nurse
     visit home_nurse_path n2
-    current_path.should eq "/403.html"
+    page.status_code.should eq Rack::Utils::SYMBOL_TO_STATUS_CODE[:forbidden]
   end
   it "let validating nurses sneak all over the damn show" do
     n1 = login Fabricate :v_nurse
