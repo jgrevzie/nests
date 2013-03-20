@@ -17,7 +17,7 @@ class Nurse
   has_secure_password
 
   has_many :completed_procs, dependent: :delete, autosave: true
-  belongs_to :nurse
+  has_many :validations, class_name: 'CompletedProc'
 
   def role
     if self.validator? then :validator else :default end
@@ -41,10 +41,8 @@ class Nurse
                           status: CompletedProc::VALID).each do |cp|
         count += cp.quantity
       end
-
       summary[proc.name] = count.to_i 
     end
-
     return summary
   end
 
@@ -59,7 +57,7 @@ class Nurse
   def vdate(completed_procs)
     raise "ordinary nurse tried to validate a proc!!" unless self.validator?
     completed_procs.each do |i|
-      i.vdate
+      i.vdate self
       i.save
     end
   end

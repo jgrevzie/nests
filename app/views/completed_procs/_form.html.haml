@@ -25,7 +25,7 @@
       Valid
       = f.radio_button :status, CompletedProc::VALID
     %label
-      Invalid
+      Reject
       = f.radio_button :status, CompletedProc::REJECTED
 
   = f.submit 'Acknowledge', id: 'ack' if @completed_proc.rejected?

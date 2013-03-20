@@ -23,7 +23,8 @@ class CompletedProc
 	field :status, default: PENDING
 
 	belongs_to :procedure
-	belongs_to :nurse
+	belongs_to :nurse, inverse_of: :completed_procs
+	belongs_to :validated_by, inverse_of: :validations, class_name: 'Nurse'
 
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
@@ -35,36 +36,25 @@ class CompletedProc
 
  	attr_protected :status
 
-	def proc_name=(proc_name)
-		self.procedure = Procedure.where(name: proc_name).first
-	end
+	def proc_name=(proc_name) self.procedure = Procedure.where(name: proc_name).first end
 
-	def proc_name
-		self.procedure.name if self.procedure
-	end
+	def proc_name ; self.procedure.name if self.procedure end
 
-	def vdate
-		self.status = VALID
+	def update_status(status, nurse)
+		self.status = status
+		self.validated_by = nurse
 	end
-	def vdated?
-		self.status == VALID
-	end
+	alias_method :set_status, :update_status
 
-	def reject
-		self.status = INVALID
-	end
-	def rejected?
-		self.status == REJECTED
-	end
+	def vdate(nurse) self.update_status VALID, nurse end
+	def vdated? ; self.status == VALID end
 
-	def self.pending_validations
-		CompletedProc.where(status: PENDING)
-	end
+	def reject(nurse) self.update_status REJECTED, nurse end
+	def rejected? ; self.status == REJECTED end
 
-	def ack_reject
-		self.status = ACK_REJECT
-		self.save
-	end
+	def self.pending_validations ; CompletedProc.where(status: PENDING) end
+
+	def ack_reject ; self.status = ACK_REJECT end
 
 	class << CompletedProc
 		alias_method :pending, :pending_validations

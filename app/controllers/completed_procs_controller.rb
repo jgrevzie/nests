@@ -38,6 +38,7 @@ class CompletedProcsController < ApplicationController
   end
 
   def setup_date_validation(cp)
+    # Validators can put in any date they please, regular nurses are constrained.
     cp.check_date = true unless logged_in_nurse.validator?
   end
 
@@ -62,14 +63,22 @@ class CompletedProcsController < ApplicationController
     @nurse = logged_in_nurse
     @completed_proc = CompletedProc.find params[:id]
 
+    # Is nurse acking a reject?
+    # Or is nurse a vn validating or rejecting a proc?
+    # Or is nurse simply updating a proc prior to validation?
+
     ack = params[:commit]=="Acknowledge"
-    @completed_proc.ack_reject if ack
+    status = params[:completed_proc][:status]
+    if ack
+      @completed_proc.ack_reject 
+    elsif @nurse.validator? && [CP::VALID, CP::REJECTED].include?(status)
+      @completed_proc.set_status status, @nurse
+    end
      
     setup_date_validation @completed_proc
-
+                    
     #prevent sneaky nurse hackers from PUTting validated procs
-    flash[:notice] = 'Updated proc' if @completed_proc.update_attributes params[:completed_proc], 
-                                                                         as: @nurse.role
+    flash[:notice] = 'Updated proc' if @completed_proc.update_attributes params[:completed_proc]                                                                
 
     if ack
       next_page = home_nurse_path logged_in_nurse

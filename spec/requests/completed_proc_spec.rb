@@ -129,6 +129,9 @@ describe "'Submit proc for validation' page" do
     page.should have_text ApplicationHelper::PENDING_VALIDATIONS
     CompletedProc.pending.size.should eq 0
   end
+  it "let VN reject a proc, provding comments"
+  it "saves VN as the validator of comp proc"
+  it "lets nurse acknowledge a rejected proc"
   it "shows error message if proc name is invalid, disappears if it is valid", js: true do
     Fabricate :procedure, name: 'PROC'
     login Fabricate :nurse
