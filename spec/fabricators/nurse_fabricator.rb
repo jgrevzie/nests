@@ -6,8 +6,8 @@
 
 
 Fabricator(:nurse) do
-	first_name 'nancy'
-	username { sequence(:username) { |i| "nancy#{i}" }}
+	first_name {sequence {|i| "nancy#{i}"}}
+	username {|me| "#{me[:first_name]}_username" }
 	password 'password'
 end
 
@@ -20,6 +20,8 @@ Fabricator(:nurse_5_pending, from: :nurse, aliases: [:nurse_5_pendings]) do
 																														 status: CompletedProc::PENDING) }}
 end
 
+# Fabricates a nurse with 1 pending completed proc.
+# Client can pass in (q: set quantity in completed proc), (proc_name: name of proc in cp) 
 Fabricator(:nurse_1_proc, from: :nurse) do
 	transient :proc_name, :q
 	after_create do |me, t| 

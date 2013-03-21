@@ -13,6 +13,7 @@ Fabricator(:completed_proc, aliases: [:cp]) do
     params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
     Fabricate :procedure, Hash[params]
   end
+  nurse { Fabricate :nurse }
 end
 
 Fabricator(:comp_proc_seq, from: :completed_proc) do

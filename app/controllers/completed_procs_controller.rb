@@ -2,8 +2,16 @@ class CompletedProcsController < ApplicationController
 
 
 
+  before_filter :is_nurse_allowed_here
+  skip_before_filter :is_nurse_allowed_here, only: [:index, :new, :options, :create]
+
   respond_to :html, :xml
   respond_to :js
+
+  def is_nurse_allowed_here
+    cp = CompletedProc.find(params[:id])
+    forbid unless logged_in_nurse.validator? or cp.nurse.id==logged_in_nurse.id
+  end
 
   # GET /completed_procs
   # GET /completed_procs.json

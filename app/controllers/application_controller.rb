@@ -24,5 +24,7 @@ class ApplicationController < ActionController::Base
     return login_path unless n = logged_in_nurse
     n.validator? ? pending_validations_nurse_path(n): new_completed_proc_path
   end
+
+  def forbid ; render file: "#{Rails.root}/public/403", status: :forbidden, layout: false end
   
 end

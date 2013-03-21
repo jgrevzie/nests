@@ -7,9 +7,12 @@
   = content_for :header do
     %h1 Edit procedure submitted by #{@completed_proc.nurse.first_name}
 
-  %pre.rejected
-    = "This procedure was invalidated, please read comments and resubmit, " + |
-      "or acknowledge" if @completed_proc.rejected?                           |
+  - if @completed_proc.rejected? 
+    .rejected
+      This procedure was invalidated 
+      = "(by #{@completed_proc.validated_by.first_name})" if @completed_proc.validated_by
+      \- please read comments and resubmit, or acknowledge.
+
   = render 'form'
 
 - else @completed_proc.validated
@@ -17,5 +20,9 @@
 
 :css
   .rejected {
-    color: red
+    color: red;
+    background-color: lightgrey;
+    margin: 0.5em;
+    padding: 0.5em;
+    font-family: monospace
   }

@@ -43,6 +43,7 @@ class CompletedProc
 	def update_status(status, nurse)
 		self.status = status
 		self.validated_by = nurse
+		self
 	end
 	alias_method :set_status, :update_status
 
@@ -55,9 +56,11 @@ class CompletedProc
 	def self.pending_validations ; CompletedProc.where(status: PENDING) end
 
 	def ack_reject ; self.status = ACK_REJECT end
+	def ackd? ; self.status == ACK_REJECT end
 
 	class << CompletedProc
 		alias_method :pending, :pending_validations
+		alias_method :pendings, :pending_validations
 		alias_method :pending_validation, :pending_validations
 	end
 

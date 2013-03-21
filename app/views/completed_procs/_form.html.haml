@@ -22,11 +22,12 @@
   - if @nurse.validator? then
     Validate this procedure?
     %label
-      Valid
+      Validate
       = f.radio_button :status, CompletedProc::VALID
     %label
       Reject
       = f.radio_button :status, CompletedProc::REJECTED
+    %br
 
   = f.submit 'Acknowledge', id: 'ack' if @completed_proc.rejected?
   = f.submit id: 'submit'

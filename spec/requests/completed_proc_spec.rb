@@ -129,9 +129,28 @@ describe "'Submit proc for validation' page" do
     page.should have_text ApplicationHelper::PENDING_VALIDATIONS
     CompletedProc.pending.size.should eq 0
   end
-  it "let VN reject a proc, provding comments"
-  it "saves VN as the validator of comp proc"
-  it "lets nurse acknowledge a rejected proc"
+  it "let VN reject a proc, provding comments and saving VN as validator" do
+    cp = comp_proc
+    (Fabricate :nurse).completed_procs << cp
+    vn = login Fabricate :v_nurse
+    visit edit_completed_proc_path(cp)
+    find_field('Comments').value.should eq cp.comments
+    fill_in 'Comments', with: 'Nurse should not use chainsaw so recklessly.'
+    choose 'Reject'
+    click_on 'submit'
+    cp.reload.rejected?.should be_true
+    cp.comments.should match /chainsaw/
+    cp.validated_by.id.should eq vn.id
+  end
+  it "lets nurse acknowledge a rejected proc, page should contain name of validator" do 
+    (cp = comp_proc).reject vn=Fabricate(:v_nurse)
+    (n = login Fabricate(:nurse)).completed_procs << cp
+    visit edit_completed_proc_path cp
+    find('.rejected').text.should match /#{vn.first_name}/
+    click_on 'Acknowledge'
+    CP.pendings.count.should eq 0
+    cp.reload.ackd?.should be_true
+  end
   it "shows error message if proc name is invalid, disappears if it is valid", js: true do
     Fabricate :procedure, name: 'PROC'
     login Fabricate :nurse

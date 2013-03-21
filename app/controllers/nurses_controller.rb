@@ -9,9 +9,7 @@ class NursesController < ApplicationController
   respond_to :html, :xml, :js
 
   def is_nurse_allowed_here
-    unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
-      render file: "#{Rails.root}/public/403", status: :forbidden, layout: false
-    end
+    forbid unless logged_in_nurse.validator? or params[:id]==logged_in_nurse.id.to_s
   end
 
   # GET /nurses
@@ -68,7 +66,7 @@ class NursesController < ApplicationController
   end
   
   def home
-    @nurse = logged_in_nurse
+    @nurse = Nurse.find(params[:id]) 
     respond_with @nurse
   end
 
