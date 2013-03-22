@@ -29,11 +29,12 @@ class CompletedProc
 
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
-	validates :procedure, presence: { message: "isn't known to CathTraq" }
+	validates :procedure, presence: { message: "isn't known to CliniTraq" }
 	validates :status, inclusion: { in: [PENDING, VALID, REJECTED, ACK_REJECT], 
-																			 message: 'unknown' }
+																	message: 'unknown' }
 	validates :date_start, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
 												 if: :check_date
+	validates :validated_by, presence: true, if: 'status==REJECTED || status==VALID'
 
  	attr_protected :status
 
