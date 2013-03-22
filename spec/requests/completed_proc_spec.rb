@@ -15,7 +15,7 @@ def login_new_nurse
 end  
 
 def comp_proc
-  p = Fabricate :procedure, name: PROC_NAME, options: "option1, option2"
+  p = Fabricate :procedure, name: PROC_NAME, options: "option1,option2"
   cp = Fabricate :completed_proc, quantity: 7, date_start: Date.today-1, comments:'Hello', 
                  options: 'option1', procedure: p
 end
@@ -57,7 +57,7 @@ describe "'Submit proc for validation' page" do
     page.should have_text PROC_NAME
   end
   it "updates page with proc options, once a proc name is chosen from menu", js: true do 
-    Fabricate :procedure, name: PROC_NAME, options: "option1, option2"
+    Fabricate :procedure, name: PROC_NAME, options: "option1,option2"
     Fabricate :procedure, name: PROC_NAME2, options: "checkbox?"
 
     login_new_nurse
@@ -99,7 +99,9 @@ describe "'Submit proc for validation' page" do
     n.completed_procs << cp
     visit edit_completed_proc_path(cp)
     page.should have_content "Edit procedure"
-    fill_in_proc_form cp
+    find_field('Comments').value.should eq cp.comments
+    find_field('How many of these procedures').value.should eq cp.quantity.to_s
+    page.has_checked_field? cp.options
     all("#options input[type='radio']").size.should eq cp.procedure.options.split(',').size
   end
   it "updates proc, and saves new values", js: true do
@@ -107,7 +109,7 @@ describe "'Submit proc for validation' page" do
     cp = comp_proc
     n.completed_procs << cp
     
-    p2 = Fabricate :procedure, name: PROC_NAME2, options: "option4, option5"
+    p2 = Fabricate :procedure, name: PROC_NAME2, options: "option4,option5"
     cp_2 = Fabricate :completed_proc, quantity: 1, date_start: Date.today-2, comments:'Later', 
                  options: 'option4', procedure: p2    
     

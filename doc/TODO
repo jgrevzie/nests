@@ -5,13 +5,10 @@
 
 
 
-Test for names of validating nurses next to procs on home screen (other places?).
-Stop nurse updating a proc that's already been validated.
-Record who validated procedure.
+Need to check if it's ok to have spaces in options.
 Summary of completed procedures by date with y axis showing quantity?
 Record year started in application.
 Abbreviation search.
 Nurse should be attached to section in hospital and get appropriate procedures.
-If procedure has options then chosing an option should be compulsory.
 Completed procs should be clickable, take through to information about each procedure.
 Nurse photos.

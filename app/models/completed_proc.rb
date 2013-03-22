@@ -35,6 +35,8 @@ class CompletedProc
 	validates :date_start, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
 												 if: :check_date
 	validates :validated_by, presence: true, if: 'status==REJECTED || status==VALID'
+	validates :options, presence: {message: "must be selected for this type of procedure."}, 
+											if: 'procedure && procedure.options && procedure.options.length>0'
 
  	attr_protected :status
 

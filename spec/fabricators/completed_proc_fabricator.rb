@@ -6,10 +6,17 @@
 
 
 class CP
-  def rand_validated_by!
+  def after_build!
+    # Setup a validator if necessary.
     if [CP::VALID, CP::REJECTED].include? self.status
       vn = Nurse.where(validator: true).to_ary.sample || Fabricate(:v_nurse)
       self.validated_by = vn
+    end
+
+    # Setup options if necessary.
+    if self.procedure && (opts=self.procedure.options) && opts.size>0
+      if opts[-1]=='?' then self.options=[opts.chop, '0'].sample
+      else self.options=opts.split(',').sample end
     end
   end
 end
@@ -23,7 +30,7 @@ Fabricator(:completed_proc, aliases: [:cp]) do
     Fabricate :procedure, Hash[params]
   end
   nurse { Fabricate :nurse }
-  after_build {|cp| cp.rand_validated_by! }
+  after_build {|cp| cp.after_build! }
 end
 
 Fabricator(:comp_proc_seq, from: :completed_proc) do

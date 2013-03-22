@@ -28,7 +28,7 @@ Procedure.create(:name => "Structural Heart - Left Atrial Appendage", :abbrev =>
 Procedure.create(:name => "Valvuloplasty", :abbrev => "", :options => "Mitral, Aortic, Pulmonary, Tricuspid")
 Procedure.create(:name => "Exercise Stress Test", :abbrev => "", :options => "")
 Procedure.create(:name => "Dobutamine Stress Echo", :abbrev => "DSE", :options => "")
-Procedure.create(:name => "Transoesophageal Echogardiography", :abbrev => "TOE", :options => "Bubble study?")
+Procedure.create(:name => "Transoesophageal Echogardiography", :abbrev => "TOE", :options => "Bubble Study?")
 Procedure.create(:name => "Elective DCR", :abbrev => "", :options => "")
 Procedure.create(:name => "Temporary  Pacing Wire ", :abbrev => "Temp wire", :options => "")
 Procedure.create(:name => "Emergency Intubation", :abbrev => "", :options => "")
