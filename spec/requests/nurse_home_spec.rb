@@ -132,7 +132,7 @@ describe "Nurse's home page" do
     it "shows rejected procs, red row for each reject with name of validator" do 
       visit_home
       page.all("table##{@TABLE} a.rejected").count.should eq @q[CP::REJECTED]
-      p name = CP.where(status: CP::REJECTED).first.validated_by.first_name
+      name = CP.where(status: CP::REJECTED).first.validated_by.first_name
       page.first("table##{@TABLE} td.val_by").text.should match /#{name}/
     end
     it "when link is clicked, update page should allow proc to be acknowledged" do
