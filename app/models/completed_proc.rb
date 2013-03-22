@@ -13,6 +13,7 @@ class CompletedProc
 	REJECTED = 'rejected'
 	INVALID = REJECTED
 	ACK_REJECT = 'ack_reject'
+	ACK_REJECTED = ACK_REJECT
 
 	attr_accessor :check_date
 

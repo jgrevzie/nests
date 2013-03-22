@@ -9,7 +9,7 @@
 
   - if @completed_proc.rejected? 
     .rejected
-      This procedure was invalidated 
+      This procedure was rejected
       = "(by #{@completed_proc.validated_by.first_name})" if @completed_proc.validated_by
       \- please read comments and resubmit, or acknowledge.
 

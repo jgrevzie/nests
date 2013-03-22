@@ -4,6 +4,13 @@ require 'spec_helper'
 
 
 describe "completed_proc" do
+  describe "fabricators" do
+    it "(random_completed_proc) will use random existing validator if status VALID or REJECTED" do
+      vn_1, vn_2 = Fabricate(:v_nurse), Fabricate(:v_nurse)
+      cp = Fabricate :random_completed_proc, status: CP::VALID
+      [vn_1.id, vn_2.id].should include cp.validated_by.id
+    end
+  end
 
   describe '#pending_validations' do 
     it "gets all non-validated procs" do 

@@ -6,7 +6,6 @@
 
 
 Test for names of validating nurses next to procs on home screen (other places?).
-Default comp procs need to have validators, if rejected or valid.
 Stop nurse updating a proc that's already been validated.
 Record who validated procedure.
 Summary of completed procedures by date with y axis showing quantity?
