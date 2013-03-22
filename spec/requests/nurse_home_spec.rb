@@ -21,13 +21,14 @@ def count_rows(id)
 end
 
 describe "Nurse's home page" do
+  # Excessive - change if tests get slow
   before (:each) do
     @n = Fabricate :nurse
     
     #Adds completed procs to nurse.  @q hash contains number of procs for a given status
     @q = {}
     [CP::PENDING, CP::REJECTED, CP::ACK_REJECT].each do |status|
-      (@q[status] = rand 1..10).times { 
+      (@q[status] = rand 1..5).times { 
         @n.completed_procs << Fabricate(:comp_proc_seq, status: status) }
     end
 
@@ -38,7 +39,7 @@ describe "Nurse's home page" do
     (@q_valid[:n_procs] = rand 1..10).times do |i|
       proc_name = "VALID#{i}"
       proc = Fabricate :procedure, name: proc_name
-      (@q_valid[proc_name] = rand 1..10).times do
+      (@q_valid[proc_name] = rand 1..5).times do
         @n.completed_procs << Fabricate(:completed_proc, 
                                         procedure: proc, 
                                         status: CP::VALID)
@@ -128,9 +129,11 @@ describe "Nurse's home page" do
       visit_home
       find('#rejectedHeader').should have_text "(#{@q[CP::REJECTED]})"
     end
-    it "shows rejected procs, red row for each reject" do 
+    it "shows rejected procs, red row for each reject with name of validator" do 
       visit_home
       page.all("table##{@TABLE} a.rejected").count.should eq @q[CP::REJECTED]
+      p name = CP.where(status: CP::REJECTED).first.validated_by.first_name
+      page.first("table##{@TABLE} td.val_by").text.should match /#{name}/
     end
     it "when link is clicked, update page should allow proc to be acknowledged" do
       visit_home @n

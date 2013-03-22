@@ -5,6 +5,15 @@
 
 
 
+class CP
+  def rand_validated_by!
+    if [CP::VALID, CP::REJECTED].include? self.status
+      vn = Nurse.where(validator: true).to_ary.sample || Fabricate(:v_nurse)
+      self.validated_by = vn
+    end
+  end
+end
+
 Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date_start { Date.today }
@@ -14,18 +23,11 @@ Fabricator(:completed_proc, aliases: [:cp]) do
     Fabricate :procedure, Hash[params]
   end
   nurse { Fabricate :nurse }
+  after_build {|cp| cp.rand_validated_by! }
 end
 
 Fabricator(:comp_proc_seq, from: :completed_proc) do
   procedure { Fabricate :proc_seq }
-end
-
-def get_random_validator
-  if (validators = Nurse.where(validator: true)).count
-    validators.to_ary.sample
-  else
-    Fabricate :v_nurse
-  end
 end
 
 Fabricator(:random_completed_proc, from: :completed_proc) do
@@ -33,5 +35,4 @@ Fabricator(:random_completed_proc, from: :completed_proc) do
   quantity { Random.rand(5..20) }
   procedure { Fabricate :random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
-  validated_by {|a| get_random_validator if [CP::VALID, CP::REJECTED].include? a[:status]}
 end
