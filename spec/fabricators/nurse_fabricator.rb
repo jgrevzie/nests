@@ -7,6 +7,7 @@
 
 Fabricator(:nurse) do
 	first_name {sequence {|i| "nancy#{i}"}}
+	last_name {|me| "#{me[:first_name]}_lastname" }
 	username {|me| "#{me[:first_name]}_username" }
 	password 'password'
 end

@@ -58,4 +58,5 @@ group :test do
   gem "capybara"
   gem "guard-rspec"
   gem "capybara-webkit"
+  gem 'simplecov', require: false
 end

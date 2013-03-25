@@ -12,8 +12,12 @@ class Nurse
   field :designation
   field :email
   field :wants_mail, type: Boolean
+  field :dept
 
   validates :username, presence: true, uniqueness:true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  #validates :dept, presence: true
   has_secure_password
 
   has_many :completed_procs, dependent: :delete, autosave: true

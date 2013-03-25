@@ -2,7 +2,6 @@
 
 
 
-!!! 5
 %html
   %head
   %title CliniTraq
@@ -10,6 +9,8 @@
   = javascript_include_tag "application" 
   = csrf_meta_tags 
 
+  - n=logged_in_nurse and is_vn=logged_in_nurse.validator?
+  
   %body
     .container
       .header
@@ -17,18 +18,21 @@
         = yield :header
 
 
-      .left
-        - if logged_in_nurse
+      .left        
+        - if n
           %br
-          .link= link_to 'Home Page', home_nurse_path(logged_in_nurse)
+          .link= link_to 'Home Page', home_nurse_path(n)
           .link= link_to 'Submit Proc', new_completed_proc_path
-          - if logged_in_nurse.validator?
-            .link= link_to 'Pending Validations', pending_validations_nurse_path(logged_in_nurse)
-            .link= link_to 'Send Mail', send_mail_nurse_path(logged_in_nurse)
+          - if is_vn
+            .link= link_to 'Pending Validations', pending_validations_nurse_path(n)
+            .link= link_to 'Send Mail', send_mail_nurse_path(n)
           .link= link_to 'Logout', logout_path, method: :delete 
       .content
         = yield
-      .footer      
+      .footer
+        = "#{n.first_name} #{n.last_name}" if n
+        = "(validating nurse)" if is_vn
+
 
   :css
     #logo {
