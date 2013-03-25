@@ -16,11 +16,11 @@ describe "application layout" do
       end
     end
   end
-  describe "Footer" do
+  describe "(footer)" do
     let(:footer_text) { find('.footer').text }
     it "displays name of logged in nurse" do
       n = login Fabricate :nurse
-      footer_text.should match /#{n.first_name} #{n.last_name}/
+      footer_text.should match /#{n.name}/
     end
     it "indicates if nurse is a validator" do 
       vn = login Fabricate :v_nurse

@@ -19,6 +19,6 @@ describe "security checks for nurse access" do
     n2 = Fabricate :nurse
     visit home_nurse_path n2
     page.should have_text 'Home'
-    page.should have_text n2.first_name
+    find_field('Name').value.should eq n2.name
   end
 end

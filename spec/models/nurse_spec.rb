@@ -99,6 +99,26 @@ describe "Nurse" do
       n.completed_procs_total.should eq total
     end
   end
+  describe "#first_name" do
+    it "gets first name of nurse (weird right?)" do
+      n = Fabricate :nurse, name: 'Pewee Herman'
+      n.first_name.should eq 'Pewee'
+    end
+    it "handles long names with grace" do
+      n = Fabricate :nurse, name: 'Josef Abernet Capitulo Mazzenia'
+      n.first_name.should eq 'Josef'
+    end
+  end
+  describe "#last_name" do
+    it "gets last name of nurse, doesn't try to rub your face in it" do
+      n = Fabricate :nurse, name: 'Great Scott'
+      n.last_name.should eq 'Scott'
+    end
+    it "doesn't care about silly names, that are epic in magnitude" do
+      n = Fabricate :nurse, name: "James Fredrick Mulberry Fortesque D'Angelo"
+      n.last_name.should eq "D'Angelo"
+    end
+  end
   # Nurse.send_all_pending_validation_mails
   # tests are in spec for mailer
 end #Nurse

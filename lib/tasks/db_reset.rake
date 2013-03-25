@@ -15,22 +15,22 @@ def load_procs(seeds_file)
 	csv = CSV.foreach(DB_DIR+'/procedures.csv', 
 										headers: true, 
 										converters: lambda {|field| field.nil? ? "" : field}) do |row|
-		p row
 		create_proc = %Q/Procedure.create(name: "#{row['name'].strip}", 
 										abbrev: "#{row['abbrev'].strip}", 
 										options: "#{row['options'].gsub(', ',',').strip}")/
 		seeds_file.puts create_proc
 	end
 end
+
+
 def load_nurses
 	csv = CSV.foreach(DB_DIR+'/nurses.csv', headers: true) do |row|
-		row['username'] = 
-			row['first_name'][0].lc_alpha + row['last_name'].lc_alpha unless row['username']
+		fn, ln = row['name'].split[0].lc_alpha, row['name'].split[-1].lc_alpha
+		row['username'] = fn[0] + ln unless row['username']
 		row['validator'] = row['validator'] ? row['validator'].downcase.include?('y') : false
-		row['email'] = 
-			"#{row['first_name'].lc_alpha}.#{row['last_name'].lc_alpha}@svpm.org.au" unless row['email']
-		row['password'] = 'password'
-
+		row['email'] = "#{fn}.#{ln}@svpm.org.au" unless row['email']
+		row['password'] = 'password'		
+		
 		n = Fabricate :nurse, row.to_hash # CSV::Row needs to be converted to hash
 		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
 	end

@@ -3,10 +3,8 @@ class Nurse
   include ActiveModel::SecurePassword 
 
   field :username
-  field :admin, type: Boolean, default: false
   field :validator, type: Boolean, default: false
-  field :first_name
-  field :last_name
+  field :name
   field :password_digest
   field :comments
   field :designation
@@ -15,17 +13,16 @@ class Nurse
   field :dept
 
   validates :username, presence: true, uniqueness:true
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates :name, presence: true
   #validates :dept, presence: true
   has_secure_password
 
   has_many :completed_procs, dependent: :delete, autosave: true
   has_many :validations, class_name: 'CompletedProc'
-
-  def role
-    if self.validator? then :validator else :default end
-  end
+ 
+  def role; (self.validator?) ? :validator : :default end
+  def first_name ; name.split[0] end
+  def last_name ; name.split[-1] end
 
   def procs_I_submitted
      CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
