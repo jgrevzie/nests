@@ -9,6 +9,7 @@ Fabricator(:nurse) do
 	name {sequence {|i| "Nancy Jones#{i}"}}
 	username {sequence {|i| "nancy#{i}" }}
 	password 'password'
+	dept {Fabricate :dept}
 end
 
 Fabricator(:nurse_5_procs, from: :nurse) do

@@ -2,6 +2,9 @@ Nests::Application.routes.draw do
   
 
 
+  resources :depts
+
+
   root controller: :sessions, action: :home
 
   controller :sessions do

@@ -10,19 +10,19 @@ class Nurse
   field :designation
   field :email
   field :wants_mail, type: Boolean
-  field :dept
-
-  validates :username, presence: true, uniqueness:true
-  validates :name, presence: true
-  #validates :dept, presence: true
-  has_secure_password
 
   has_many :completed_procs, dependent: :delete, autosave: true
   has_many :validations, class_name: 'CompletedProc'
+  belongs_to :dept
  
+  validates :username, presence: true, uniqueness:true
+  validates :name, presence: true
+  validates :dept, presence: true
+  has_secure_password
+
   def role; (self.validator?) ? :validator : :default end
-  def first_name ; name.split[0] end
-  def last_name ; name.split[-1] end
+  def first_name; name.split[0] end
+  def last_name; name.split[-1] end
 
   def procs_I_submitted
      CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
