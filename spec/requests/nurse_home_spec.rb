@@ -21,7 +21,7 @@ def count_rows(id)
 end
 
 describe "Nurse's home page" do
-  # Excessive - change if tests get slow
+  # EXCESSIVE - be more specific about what procs are generated if tests get slow
   before (:each) do
     @n = Fabricate :nurse
     
@@ -60,6 +60,7 @@ describe "Nurse's home page" do
   end
 
   def click_and_wait_for_ajax
+    # Click on something outside of auto-update fields
     find('h1').click
     page.has_no_css?('#topHeader img', visible: true).should be_true
   end
@@ -92,8 +93,8 @@ describe "Nurse's home page" do
       vn = visit_home Fabricate(:v_nurse)
       check 'Receive daily emails?'
       find('#topHeader img').visible?.should be_true
-      sleep 1 # Brittle.
-      find('#topHeader img').visible?.should be_false
+      # Wait till image disappears.
+      page.has_no_css?('#topHeader img', visible: true).should be_true
     end
   end
 

@@ -24,14 +24,16 @@ end
 
 
 def load_nurses
+	dept = Fabricate :dept
 	csv = CSV.foreach(DB_DIR+'/nurses.csv', headers: true) do |row|
 		fn, ln = row['name'].split[0].lc_alpha, row['name'].split[-1].lc_alpha
 		row['username'] = fn[0] + ln unless row['username']
 		row['validator'] = row['validator'] ? row['validator'].downcase.include?('y') : false
 		row['email'] = "#{fn}.#{ln}@svpm.org.au" unless row['email']
-		row['password'] = 'password'		
+		row['password'] = 'password'
 		
-		n = Fabricate :nurse, row.to_hash # CSV::Row needs to be converted to hash
+		# CSV::Row needs to be converted to hash
+		n = Fabricate :nurse, row.to_hash.merge(dept: dept)
 		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
 	end
 end

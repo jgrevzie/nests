@@ -12,6 +12,8 @@ class Dept
 
   has_many :nurses
 
+  validates :name, uniqueness: {scope: [:hospital, :location]}
+
 
 
 

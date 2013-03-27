@@ -5,7 +5,7 @@
 
 
 
-class CP
+class CompletedProc
   def after_build!
     # Setup a validator if necessary.
     if [CP::VALID, CP::REJECTED].include? self.status
@@ -25,11 +25,12 @@ Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date_start { Date.today }
 	quantity 1
-	procedure do |a| 
+	# Check if proc_name: was specified and assigns to procedure.
+  procedure do |a| 
     params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
     Fabricate :procedure, Hash[params]
   end
-  nurse { Fabricate :nurse }
+  #nurse { Fabricate :nurse }
   after_build {|cp| cp.after_build! }
 end
 
