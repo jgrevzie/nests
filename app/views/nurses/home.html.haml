@@ -26,7 +26,7 @@
     .watchMe= f.text_field :designation
 
     = f.label :dept
-    .watchMe= f.collection_select :dept, Dept.all, :id, :full_name
+    .watchMe= f.collection_select :dept_id, Dept.all, :id, :full_name
 
     = f.label :comments, "Previous Experience & Other Comments"
     .watchMe= f.text_area :comments, cols: 40, rows: 4
