@@ -73,6 +73,16 @@ describe "Nurse's home page" do
       click_and_wait_for_ajax
       vn.reload.designation.should eq 'Test Designation'
 
+      old_dept, new_dept = vn.dept.id.to_s
+      # Choose something that's not selected.
+      within '#nurse_dept_id' do
+        new_dept = (all('option').map {|i| i[:value]} - [old_dept]).sample
+        p new_dept
+        find("option[value='#{new_dept}']").select_option
+      end
+      click_and_wait_for_ajax
+      vn.reload.dept.id.to_s.should eq new_dept
+
       fill_in 'nurse_comments', with: 'Test Comments'
       click_and_wait_for_ajax
       vn.reload.comments.should eq 'Test Comments'

@@ -25,7 +25,7 @@
     = f.label :designation
     .watchMe= f.text_field :designation
 
-    = f.label :dept
+    = f.label :dept_id
     .watchMe= f.collection_select :dept_id, Dept.all, :id, :full_name
 
     = f.label :comments, "Previous Experience & Other Comments"

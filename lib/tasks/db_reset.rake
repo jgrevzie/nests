@@ -22,9 +22,10 @@ def load_procs(seeds_file)
 	end
 end
 
-
 def load_nurses
-	dept = Fabricate :dept
+	dept1 = Fabricate :dept, name: 'CathLab', hospital: "St V's Private", location: 'Vict'
+	dept2 = Fabricate :dept, name: 'Theatre', hospital: "St V's Private", location: 'Vict'
+
 	csv = CSV.foreach(DB_DIR+'/nurses.csv', headers: true) do |row|
 		fn, ln = row['name'].split[0].lc_alpha, row['name'].split[-1].lc_alpha
 		row['username'] = fn[0] + ln unless row['username']
@@ -33,7 +34,7 @@ def load_nurses
 		row['password'] = 'password'
 		
 		# CSV::Row needs to be converted to hash
-		n = Fabricate :nurse, row.to_hash.merge(dept: dept)
+		n = Fabricate :nurse, row.to_hash.merge(dept: dept1)
 		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
 	end
 end
