@@ -77,7 +77,6 @@ describe "Nurse's home page" do
       # Choose something that's not selected.
       within '#nurse_dept_id' do
         new_dept = (all('option').map {|i| i[:value]} - [old_dept]).sample
-        p new_dept
         find("option[value='#{new_dept}']").select_option
       end
       click_and_wait_for_ajax

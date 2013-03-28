@@ -46,13 +46,11 @@ gem "mongoid"
 gem 'bcrypt-ruby'
 gem 'thin'
 gem 'validates_timeliness'
-
-
+gem 'simple_xlsx_reader'
+gem "fabrication"
 gem 'haml'
 
 gem "rspec-rails", :group => [:test, :development]
-
-gem "fabrication"
 
 group :test do
   gem "capybara"

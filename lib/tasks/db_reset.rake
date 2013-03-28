@@ -2,52 +2,19 @@
 
 
 
-require 'csv'
-require 'fabrication'
 
-DB_DIR = ENV['DIR'] || File.join(Rails.root, 'db')
-
-class String
-	def lc_alpha; self ? self.downcase.gsub(/[^a-z]/, '') : '' end
-end		
-
-def load_procs(seeds_file)
-	csv = CSV.foreach(DB_DIR+'/procedures.csv', 
-										headers: true, 
-										converters: lambda {|field| field.nil? ? "" : field}) do |row|
-		create_proc = %Q/Procedure.create(name: "#{row['name'].strip}", 
-										abbrev: "#{row['abbrev'].strip}", 
-										options: "#{row['options'].gsub(', ',',').strip}")/
-		seeds_file.puts create_proc
-	end
-end
-
-def load_nurses
-	dept1 = Fabricate :dept, name: 'CathLab', hospital: "St V's Private", location: 'Vict'
-	dept2 = Fabricate :dept, name: 'Theatre', hospital: "St V's Private", location: 'Vict'
-
-	csv = CSV.foreach(DB_DIR+'/nurses.csv', headers: true) do |row|
-		fn, ln = row['name'].split[0].lc_alpha, row['name'].split[-1].lc_alpha
-		row['username'] = fn[0] + ln unless row['username']
-		row['validator'] = row['validator'] ? row['validator'].downcase.include?('y') : false
-		row['email'] = "#{fn}.#{ln}@svpm.org.au" unless row['email']
-		row['password'] = 'password'
-		
-		# CSV::Row needs to be converted to hash
-		n = Fabricate :nurse, row.to_hash.merge(dept: dept1)
-		50.times { n.completed_procs << Fabricate(:random_completed_proc) }
-	end
-end
+require "#{Rails.root}/app/helpers/application_helper"
+include ApplicationHelper
 
 namespace :nest do
 
 	desc 'reset database with seed data from csv'
 	task reset: :environment do
 		Mongoid.purge!
-		open(DB_DIR + '/seeds.rb', 'w') { |seeds| load_procs seeds }
-		Rake::Task['db:seed'].invoke		
-		load_nurses if Rails.env.development? || Rails.env.production?
-	end #task
+		Procedure.load_procs_from_spreadsheet PROC_FILE
+		Nurse.load_nurses_from_spreadsheet(NURSE_FILE) \
+			if Rails.env.development? || Rails.env.production?
+	end
 
 	task show_env: :environment do
 		p ENV
