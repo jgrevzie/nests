@@ -46,10 +46,9 @@ gem "mongoid"
 gem 'bcrypt-ruby'
 gem 'thin'
 gem 'validates_timeliness'
-gem 'simple_xlsx_reader'
 gem "fabrication"
 gem 'haml'
-
+gem 'spreadsheet'
 gem "rspec-rails", :group => [:test, :development]
 
 group :test do

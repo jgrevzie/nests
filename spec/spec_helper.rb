@@ -50,7 +50,7 @@ RSpec.configure do |config|
   config.before :each do
     Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
     #Some would say it's a bad move to load seeds, but these are effectively constants
-    Procedure.load_procs_from_spreadsheet ApplicationHelper::PROC_FILE
+    Procedure.load_procs_from_spreadsheet ApplicationHelper::CATHLAB_DATA
     Mail::TestMailer::deliveries.clear
   end
 

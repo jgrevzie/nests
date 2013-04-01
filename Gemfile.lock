@@ -143,6 +143,7 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
+    ruby-ole (1.2.11.6)
     rubyzip (0.9.9)
     sass (3.2.7)
     sass-rails (3.2.6)
@@ -154,14 +155,13 @@ GEM
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
-    simple_xlsx_reader (0.9.3)
-      nokogiri
-      rubyzip
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
     slop (3.4.4)
+    spreadsheet (0.8.3)
+      ruby-ole (>= 1.0)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -208,8 +208,8 @@ DEPENDENCIES
   rb-fsevent (~> 0.9.1)
   rspec-rails
   sass-rails (~> 3.2.3)
-  simple_xlsx_reader
   simplecov
+  spreadsheet
   teabag
   thin
   uglifier (>= 1.0.3)
