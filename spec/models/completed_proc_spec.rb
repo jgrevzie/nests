@@ -3,7 +3,7 @@ require 'spec_helper'
 
 
 
-describe "completed_proc" do
+describe CompletedProc do
   describe "fabricators" do
     it "(random_completed_proc) will use random existing validator if status VALID or REJECTED" do
       vn_1, vn_2 = Fabricate(:v_nurse), Fabricate(:v_nurse)

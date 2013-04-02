@@ -79,21 +79,4 @@ class Nurse
     end
   end
 
-  def self.load_nurses_from_spreadsheet(file_name)
-    dept1 = Fabricate :dept, name: 'CathLab', hospital: "St V's Private", location: 'Vict'
-    dept2 = Fabricate :dept, name: 'Theatre', hospital: "St V's Private", location: 'Vict'
-
-    csv = CSV.foreach(file_name, headers: true) do |row|
-      fn, ln = row['name'].split[0].lc_alpha, row['name'].split[-1].lc_alpha
-      row['username'] = fn[0] + ln unless row['username']
-      row['validator'] = row['validator'] ? row['validator'].downcase.start_with?('y', 't') : false
-      row['email'] = "#{fn}.#{ln}@svpm.org.au" unless row['email']
-      row['password'] = 'password'
-      
-      # CSV::Row needs to be converted to hash
-      n = Fabricate :nurse, row.to_hash.merge(dept: dept1)
-      50.times { n.completed_procs << Fabricate(:random_completed_proc) }
-    end
-  end
-
 end # class

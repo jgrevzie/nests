@@ -6,7 +6,7 @@ require 'spec_helper'
 
 
 
-describe "Nurse" do
+describe Nurse do
 
   describe 'fabricators' do
     it '(:nurse) fabricates nurses with different usernames' do

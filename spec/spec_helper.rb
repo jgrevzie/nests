@@ -49,8 +49,8 @@ RSpec.configure do |config|
   #clear out the database
   config.before :each do
     Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
-    #Some would say it's a bad move to load seeds, but these are effectively constants
-    Procedure.load_procs_from_spreadsheet ApplicationHelper::CATHLAB_DATA
+    SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_DATA \
+      unless example.metadata[:skip_procs]
     Mail::TestMailer::deliveries.clear
   end
 
@@ -69,3 +69,5 @@ def login(nurse, *args)
   click_button 'Login' unless args.include? :no_submit
   nurse
 end
+
+

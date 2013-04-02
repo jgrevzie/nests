@@ -4,15 +4,11 @@ require 'spec_helper'
 
 
 
-describe 'Procedure' do
-  describe 'database seeds' do
-  	it 'there are procs seeded in the database' do
-  		Procedure.count.should > 0
-  	end
+
+describe Procedure do
+
+  describe "seed data" do
+  	specify { Procedure.count.should > 0 }
   end
 
-
-
-
-  describe '::load_procs_from_spreadsheet(file_name)'
 end
