@@ -8,16 +8,20 @@
 require 'spec_helper'
 
 describe SpreadsheetLoader, skip_procs: true, no_clear: true do
+  before(:all) do
+    clear_db
+    SL.load_procs TEST_XLS
+    SL.load_nurses TEST_XLS, Fabricate(:dept, name: 'Disco Dept')
+  end
 
   TEST_XLS = "#{File.dirname __FILE__}/test.xls"
   SL = SpreadsheetLoader
   
   describe "::load_procs" do
-    before(:all) {clear_db; SL.load_procs TEST_XLS}
     def proc_by_name(name) Procedure.where(name: name).first end 
 
     it "saves correct number of procs"  do
-      Procedure.count.should eq SL::load_sheet(TEST_XLS, 'procedures').row_count-1
+      Procedure.count.should eq SL::get_sheet(TEST_XLS, 'procedures').row_count-1
     end
     it "removes spaces between options" do
       (proc_by_name "Space between the options").options.should eq "Orange,Red"
@@ -44,10 +48,51 @@ describe SpreadsheetLoader, skip_procs: true, no_clear: true do
     specify {SL.get_dept_name("FunkyCaps.xls").should eq "FunkyCaps"}
   end
 
-  describe "::load_sheet" do
+  describe "::get_sheet" do
     it "finds a sheet called 'procedures' with procs in it" do
-      SL::load_sheet(TEST_XLS, 'procedures').first[0].downcase.should eq 'name'
+      SL::get_sheet(TEST_XLS, 'procedures').first[0].downcase.should eq 'name'
     end
-  end  
+  end 
+
+
+
+
+  describe "::load_nurses" do
+    def nurse_by_name(name) Nurse.where(name: name).first end
+
+    it "saves correct number of nurses" do
+      Nurse.count.should eq 5
+    end
+
+    context "assigns all fields correctly" do
+      subject {nurse_by_name "Jackie Everything"}
+      its(:name) {should eq "Jackie Everything"}
+      its(:username) {should eq "jackie"}
+      its(:validator) {should be_true}
+      its(:email) {should eq "japple@random.com"}
+      its(:designation) {should eq "Dominator"}
+      its(:comments) {should eq "Excellent nurse."}
+      its('dept.name') {should eq "Disco Dept"}
+    end
+
+    it "handles boolean value TRUE for validator" do
+      nurse_by_name("Jenny Banana").validator.should be_true
+    end
+    it "builds username" do
+      nurse_by_name("Jenny Banana").username.should eq 'jbanana'
+    end
+     it "builds email" do
+      nurse_by_name("Jenny Banana").email.should eq 'jenny.banana@svpm.org.au'
+    end
+    it "builds non-validator by default" do
+      nurse_by_name("Jennifer Cantelope").validator.should be_false
+    end
+    it "handles boolean value false for validator" do
+      nurse_by_name("Jody Dragonfruit").validator.should be_false
+    end
+    it "handles n as false for validator" do
+      nurse_by_name("Josephine Eggplant").validator.should be_false
+    end
+ end
 
 end
