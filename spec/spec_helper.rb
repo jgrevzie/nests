@@ -46,9 +46,8 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
 
-  #clear out the database
   config.before :each do
-    Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+     clear_db unless example.metadata[:no_clear]
     SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_DATA \
       unless example.metadata[:skip_procs]
     Mail::TestMailer::deliveries.clear
@@ -57,6 +56,10 @@ RSpec.configure do |config|
 end
 
 Capybara.javascript_driver = :webkit
+
+def clear_db
+  Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+end
 
 def login(nurse, *args)
   options = args.extract_options!

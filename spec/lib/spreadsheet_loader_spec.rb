@@ -7,13 +7,13 @@
 
 require 'spec_helper'
 
-describe SpreadsheetLoader do
+describe SpreadsheetLoader, skip_procs: true, no_clear: true do
 
   TEST_XLS = "#{File.dirname __FILE__}/test.xls"
   SL = SpreadsheetLoader
   
-  describe "::load_procs", skip_procs: true do
-    before(:each) {SL.load_procs TEST_XLS}
+  describe "::load_procs" do
+    before(:all) {clear_db; SL.load_procs TEST_XLS}
     def proc_by_name(name) Procedure.where(name: name).first end 
 
     it "saves correct number of procs"  do
@@ -24,6 +24,9 @@ describe SpreadsheetLoader do
     end
     it "handles spaces within options, while still removing spaces between options" do
       (proc_by_name "Options can include spaces").options.should eq "Option 1,Option 2"
+    end
+    it "handles question marks in options" do
+      (proc_by_name "Question mark in options").options.should eq "What?"
     end
 
     subject {proc_by_name "Everything"}
