@@ -3,6 +3,5 @@ module ApplicationHelper
   VALIDATION_CONTENT = 'Pending Validations'
   PENDING_VALIDATIONS = VALIDATION_CONTENT
   DB_DIR = ENV['DIR'] || File.join(Rails.root, 'db')
-  CATHLAB_DATA = "#{DB_DIR}/CathLab.xls"
-  NURSE_FILE = "#{DB_DIR}/nurses.csv"
+  CATHLAB_XLS = "#{DB_DIR}/CathLab.xls"
 end

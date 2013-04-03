@@ -5,6 +5,8 @@
 
 
 
+load_procs_and_nurses
+application helper constants belong elsewhere?
 Home page before block could be replaced by let ?
 Many things should validate against not being empty.
 Summary of completed procedures by date with y axis showing quantity?

@@ -11,8 +11,8 @@ namespace :nest do
 	desc 'reset database with seed data from csv'
 	task reset: :environment do
 		Mongoid.purge!
-		Procedure.load_procs_from_spreadsheet PROC_FILE
-		Nurse.load_nurses_from_spreadsheet(NURSE_FILE) \
+		SpreadsheetLoader.load_procs CATHLAB_XLS
+		SpreadsheetLoader.load_nurses(CATHLAB_XLS, Fabricate(:dept, name: 'CathLab')) \
 			if Rails.env.development? || Rails.env.production?
 	end
 
