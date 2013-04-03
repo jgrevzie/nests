@@ -7,7 +7,7 @@
 
 require 'spreadsheet'
 class Object
-  def nil_or_strip!; self.nil? || self.strip! end
+  def nil_or_strip!; self.nil? || self.strip! ; self end
 end
 
 module SpreadsheetLoader
@@ -26,7 +26,7 @@ module SpreadsheetLoader
   def self.get_sheet(file_name, sheet_name) self.load_sheet(file_name, sheet_name) end
 
   def self.get_headers sheet    
-    headers = sheet.first.map {|i| i.downcase}
+    headers = sheet.first.map &:downcase
     unless headers[0] && headers[0] == "name"
       raise "Couldn't find start of table (looking for 'n/Name' in column A)"
     end
@@ -45,7 +45,7 @@ module SpreadsheetLoader
   def self.load_procs file_name
     self.load_worksheet file_name, :procedure, lambda { |h|
       %w(name, abbrev, comments).map {|i| h[i].nil_or_strip!}
-      h[:options].nil? || ( h[:options].strip! ; h[:options].gsub!(', ',',') )
+      h[:options].nil_or_strip! && h[:options].gsub!(', ',',')
     }
   end
 
