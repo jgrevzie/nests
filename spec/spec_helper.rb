@@ -48,7 +48,7 @@ RSpec.configure do |config|
 
   config.before :each do
      clear_db unless example.metadata[:no_clear]
-    SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_DATA \
+    SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_XLS \
       unless example.metadata[:skip_procs]
     Mail::TestMailer::deliveries.clear
   end
@@ -70,7 +70,7 @@ def login(nurse, *args)
 
   #click button unless args have :no_submit
   click_button 'Login' unless args.include? :no_submit
-  nurse
+  return nurse
 end
 
 

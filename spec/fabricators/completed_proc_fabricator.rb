@@ -31,6 +31,7 @@ Fabricator(:completed_proc, aliases: [:cp]) do
     Fabricate :procedure, Hash[params]
   end
   #nurse { Fabricate :nurse }
+  role CP::SCRUBBED
   after_build {|cp| cp.after_build! }
 end
 
@@ -43,4 +44,6 @@ Fabricator(:random_completed_proc, from: :completed_proc) do
   quantity { Random.rand(5..20) }
   procedure { Fabricate :random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
+  role CP::ROLES.sample
+  emergency [true, false].sample
 end

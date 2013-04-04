@@ -15,6 +15,11 @@ class CompletedProc
 	ACK_REJECT = 'ack_reject'
 	ACK_REJECTED = ACK_REJECT
 
+	SCRUBBED= 'Scrubbed'
+	SCOUT= 'Scout'
+	TECH= 'Tech'
+	ROLES = [SCRUBBED, SCOUT, TECH]
+
 	attr_accessor :check_date
 
 	field :comments
@@ -22,6 +27,8 @@ class CompletedProc
 	field :quantity, type: Integer, default: 1
 	field :options
 	field :status, default: PENDING
+	field :emergency, type: Boolean, default: false
+	field :role
 
 	belongs_to :procedure
 	belongs_to :nurse, inverse_of: :completed_procs
@@ -37,6 +44,7 @@ class CompletedProc
 	validates :validated_by, presence: true, if: 'status==REJECTED || status==VALID'
 	validates :options, presence: {message: "must be selected for this type of procedure."}, 
 											if: 'procedure && procedure.options && procedure.options.length>0'
+	validates :role, presence: true
 
  	attr_protected :status
 

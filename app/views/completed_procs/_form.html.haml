@@ -17,6 +17,14 @@
     .fields= f.number_field :quantity, in: 1..CompletedProc::MAX_PROCS_PER_DAY
     .fields= f.label :comments
     .fields= f.text_area :comments, cols: 40, rows: 4
+    = f.label :emergency, 'Emergency?'
+    = f.check_box :emergency
+    .fields#role
+      Role in this proc:
+      - CP::ROLES.each do |r|
+        %label
+          = r
+          = f.radio_button :role, r
     #options
       = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
   - if @nurse.validator? then
