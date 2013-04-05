@@ -20,31 +20,35 @@ def count_rows(id)
   page.all("table##{id} tr").count
 end
 
-describe "Nurse's home page" do
-  # EXCESSIVE - be more specific about what procs are generated if tests get slow
-  before (:each) do
-    @n = Fabricate :nurse
-    
-    #Adds completed procs to nurse.  @q hash contains number of procs for a given status
+describe "Nurse's home page", reset_db: false do
+  before (:all) do
+    reset_db
+
+    # Builds sample completed procs.  @q hash contains number of procs for a given status
     @q = {}
+    @comp_procs = []
     [CP::PENDING, CP::REJECTED, CP::ACK_REJECT].each do |status|
-      (@q[status] = rand 1..5).times { 
-        @n.completed_procs << Fabricate(:comp_proc_seq, status: status) }
+      (@q[status] = rand 1..5).times { @comp_procs << Fabricate(:comp_proc_seq, status: status) }
     end
 
-    #Adds a bunch of valid procs.  
-    # @q_valid contains counts for each proc
-    # q_valid[:nprocs] is number of different procs
+    # Adds a large number of valid procs.  
+    # @q_valid contains counts for each proc type (n = @q_valid[proc_name])
     @q_valid = {}
-    (@q_valid[:n_procs] = rand 1..10).times do |i|
+    (rand 1..10).times do |i|
       proc_name = "VALID#{i}"
       proc = Fabricate :procedure, name: proc_name
       (@q_valid[proc_name] = rand 1..5).times do
-        @n.completed_procs << Fabricate(:completed_proc, 
-                                        procedure: proc, 
-                                        status: CP::VALID)
+        @comp_procs << Fabricate(:completed_proc, procedure: proc, status: CP::VALID)
       end
     end
+  end
+  before (:each) {(@n = Fabricate :nurse).completed_procs << @comp_procs}
+
+  def nurse_without status
+    n = Fabricate :nurse
+    (rand 1..10).times {n.completed_procs <<
+        Fabricate(:rand_cp, status: (CP::STATUSES-[status]).sample)}
+    return n
   end
 
   it "shows title for signed in nurse" do
@@ -111,7 +115,7 @@ describe "Nurse's home page" do
     end
   end
 
-  describe "(completed proc table)" do
+  describe "(pending proc table)" do
     before (:each) do
       @TABLE = 'pendingValidationsTable'
     end
@@ -128,9 +132,8 @@ describe "Nurse's home page" do
       visit_home
       count_rows(@TABLE).should eq @q[CP::PENDING]+1
     end
-    it "doesn't show table if no completed procs" do
-      @n.completed_procs.delete_all status: CP::PENDING
-      visit_home
+    it "doesn't show table if no pending procs" do
+      visit_home nurse_without CP::PENDING
       count_rows(@TABLE).should eq 0
     end
   end
@@ -156,8 +159,7 @@ describe "Nurse's home page" do
       page.has_css?('input [value="Acknowledge"]').should be_true
     end
     it "doesn't show table if no rejected procs" do
-      @n.completed_procs.delete_all status: CP::REJECTED
-      visit_home
+      visit_home nurse_without CP::REJECTED
       count_rows(@TABLE).should eq 0
     end
   end
@@ -168,8 +170,8 @@ describe "Nurse's home page" do
     end
     it "shows count of each validated proc" do
       visit_home
-      count_rows(@TABLE).should eq @q_valid[:n_procs]+1
-      #This is kind of brittle
+      count_rows(@TABLE).should eq @q_valid.keys.count+1
+      #This is kind of brittle, will change if table format changes.
       @n.completed_procs_summary.each do |proc_name, q|
         next unless q>0
         find("##{@TABLE}").text.should match /#{proc_name} +#{q}/
@@ -181,8 +183,7 @@ describe "Nurse's home page" do
       find("##{@TABLE}").text.should_not include name
     end
     it "doesn't show summary if no validated procs" do
-      @n.completed_procs.delete_all status: CP::VALID
-      visit_home
+      visit_home nurse_without CP::VALID
       count_rows(@TABLE).should eq 0
     end
   end

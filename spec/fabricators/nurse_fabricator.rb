@@ -12,7 +12,7 @@ Fabricator(:nurse) do
 	dept {Fabricate :dept}
 end
 
-Fabricator(:nurse_5_procs, from: :nurse) do
+Fabricator(:nurse_5_random_procs, from: :nurse) do
 	after_create {|n| 5.times { n.completed_procs << Fabricate(:random_completed_proc) }}
 end
 

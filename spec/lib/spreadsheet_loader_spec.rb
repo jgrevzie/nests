@@ -7,7 +7,7 @@
 
 require 'spec_helper'
 
-describe SpreadsheetLoader, skip_procs: true, no_clear: true do
+describe SpreadsheetLoader, reset_db: false do
   before(:all) do
     clear_db
     SL.load_procs TEST_XLS
@@ -15,7 +15,6 @@ describe SpreadsheetLoader, skip_procs: true, no_clear: true do
   end
 
   TEST_XLS = "#{File.dirname __FILE__}/test.xls"
-  SL = SpreadsheetLoader
   
   describe "::load_procs" do
     def proc_by_name(name) Procedure.where(name: name).first end 
@@ -53,9 +52,6 @@ describe SpreadsheetLoader, skip_procs: true, no_clear: true do
       SL::get_sheet(TEST_XLS, 'procedures').first[0].downcase.should eq 'name'
     end
   end 
-
-
-
 
   describe "::load_nurses" do
     def nurse_by_name(name) Nurse.where(name: name).first end

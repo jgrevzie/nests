@@ -47,15 +47,18 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 
   config.before :each do
-     clear_db unless example.metadata[:no_clear]
-    SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_XLS \
-      unless example.metadata[:skip_procs]
+    reset_db unless example.metadata[:reset_db]==false
     Mail::TestMailer::deliveries.clear
   end
 
 end
 
 Capybara.javascript_driver = :webkit
+
+def reset_db
+  clear_db
+  SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_XLS
+end
 
 def clear_db
   Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)

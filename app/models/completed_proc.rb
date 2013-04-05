@@ -14,6 +14,7 @@ class CompletedProc
 	INVALID = REJECTED
 	ACK_REJECT = 'ack_reject'
 	ACK_REJECTED = ACK_REJECT
+	STATUSES = [PENDING, VALID, REJECTED, ACK_REJECT]
 
 	SCRUBBED= 'Scrubbed'
 	SCOUT= 'Scout'

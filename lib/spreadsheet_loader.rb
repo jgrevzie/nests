@@ -60,3 +60,5 @@ module SpreadsheetLoader
   end
       
 end
+
+SL = SpreadsheetLoader

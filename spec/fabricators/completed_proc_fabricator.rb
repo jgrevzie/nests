@@ -39,7 +39,7 @@ Fabricator(:comp_proc_seq, from: :completed_proc) do
   procedure { Fabricate :proc_seq }
 end
 
-Fabricator(:random_completed_proc, from: :completed_proc) do
+Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) do
   date_start { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
   procedure { Fabricate :random_proc}
