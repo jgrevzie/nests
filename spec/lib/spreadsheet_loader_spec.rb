@@ -79,7 +79,7 @@ describe SpreadsheetLoader, skip_procs: true, no_clear: true do
       nurse_by_name("Jenny Banana").validator.should be_true
     end
     it "builds username" do
-      nurse_by_name("Jenny Banana").username.should eq 'jbanana'
+      nurse_by_name("Jenny Banana").username.should eq 'jennyb'
     end
      it "builds email" do
       nurse_by_name("Jenny Banana").email.should eq 'jenny.banana@svpm.org.au'

@@ -52,11 +52,15 @@ describe "Nurse's home page" do
     page.should have_text 'Home'
     page.should have_text n.first_name
   end
-  #Fragile?  Needs something to check z-index issues, showed up as a bug previously.
+  #Fragile?  Needs something to check z-index issues (have already shown up as bugs).
   it "closes top accordion if header is clicked" do
     n = visit_home
     find('#topHeader').click
     find('#topHeader').should_not have_text 'Designation'
+  end
+  it "on_pending_vn_page? won't detect 'Pending Validations' on horizontal toolbar" do
+    visit_home
+    on_pending_vn_page?.should be_false
   end
 
   def click_and_wait_for_ajax

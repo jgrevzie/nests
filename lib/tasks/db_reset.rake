@@ -14,7 +14,8 @@ namespace :nest do
 		SpreadsheetLoader.load_procs CATHLAB_XLS
 		SpreadsheetLoader.load_nurses(CATHLAB_XLS, Fabricate(:dept, name: 'CathLab')) \
 			if Rails.env.development? || Rails.env.production?
-		Nurse.all.each {|n| 50.times { n.completed_procs << Fabricate(:random_completed_proc) }}
+		Nurse.all.each {|n| 50.times { n.completed_procs << Fabricate(:random_completed_proc) }} \
+			if Rails.env.development?
 	end
 
 	task show_env: :environment do

@@ -10,7 +10,7 @@ describe "'Pending validations for nurse' screen" do
     n_procs_pending_validation = CompletedProc.pending_validations.size
 
     login vn
-    page.should have_content ApplicationHelper::PENDING_VALIDATIONS_HEADER
+    on_pending_vn_page?.should be_true
     page.all('table#pendingValidationsTable tr').count.should eq n_procs_pending_validation+1
     page.should have_content "PROC_NAME (5)"
   end
@@ -20,13 +20,13 @@ describe "'Pending validations for nurse' screen" do
     
     CompletedProc.pending_validations.count.should eq 5
     login vn
-    page.should have_content ApplicationHelper::PENDING_VALIDATIONS_HEADER
+    on_pending_vn_page?.should be_true
     click_button 'Validate Checked'
     CompletedProc.pending_validations.count.should eq 0
   end
   it "shouldn't give an error screen if there's nothing to validate" do
     login Fabricate :v_nurse
-    page.should have_content ApplicationHelper::PENDING_VALIDATIONS_HEADER
+    on_pending_vn_page?.should be_true
     click_button 'Validate Checked'
   end
   it "validates a subset of total procs" do
@@ -36,7 +36,7 @@ describe "'Pending validations for nurse' screen" do
     orig_pending = CompletedProc.pending_validations.count
 
     login vn
-    page.should have_content ApplicationHelper::PENDING_VALIDATIONS_HEADER
+    on_pending_vn_page?.should be_true
 
     CompletedProc.pending_validations[1..orig_pending/2].each do |proc|
       uncheck "proc_ids[#{proc._id}]"

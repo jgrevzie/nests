@@ -52,10 +52,10 @@ module SpreadsheetLoader
   def self.load_nurses file_name, dept
     load_from_spreadsheet file_name, symbol: :nurse, dept: dept, munger: lambda { |h|
       fn, ln = h['name'].split[0].lc_alpha, h['name'].split[-1].lc_alpha
-      h['username'] = fn[0] + ln unless h['username']
+      h['username'] = fn + ln[0] unless h['username']
       h['validator'] = h['validator'] ? h['validator'].to_s.downcase.start_with?('y', 't') : false
       h['email'] = "#{fn}.#{ln}@svpm.org.au" unless h['email']
-      h['password'] = 'password'
+      h['password'] = ln
     }
   end
       

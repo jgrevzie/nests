@@ -73,4 +73,7 @@ def login(nurse, *args)
   return nurse
 end
 
+def on_pending_vn_page?
+  page.has_css?('.header h1', text: ApplicationHelper::PENDING_VALIDATIONS_HEADER)
+end
 

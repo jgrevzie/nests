@@ -76,7 +76,6 @@ describe "'Submit proc for validation' page" do
 
     CompletedProc.pending.count.should eq 2    
     cp_out = CompletedProc.pending[1]
-    p cp_out
     procs_equiv?(cp, cp_out).should be_true
   end
   it "submits proc with unknown name, gets error" do
@@ -122,7 +121,7 @@ describe "'Submit proc for validation' page" do
     visit edit_completed_proc_path(cp)
     choose 'Valid'
     click_button 'submit'
-    page.should have_text ApplicationHelper::PENDING_VALIDATIONS_HEADER
+    on_pending_vn_page?.should be_true
     CompletedProc.pending.size.should eq 0
   end
   it "let VN reject a proc, provding comments and saving VN as validator" do
