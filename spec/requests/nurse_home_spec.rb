@@ -22,7 +22,7 @@ end
 
 describe "Nurse's home page", reset_db: false do
   before (:all) do
-    reset_db
+    clear_db
 
     # Builds sample completed procs.  @q hash contains number of procs for a given status
     @q = {}
@@ -46,7 +46,7 @@ describe "Nurse's home page", reset_db: false do
 
   def nurse_without status
     n = Fabricate :nurse
-    (rand 1..10).times {n.completed_procs <<
+    (rand 1..5).times {n.completed_procs <<
         Fabricate(:rand_cp, status: (CP::STATUSES-[status]).sample)}
     return n
   end

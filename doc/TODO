@@ -5,6 +5,13 @@
 
 
 
+group by role in sumarry screen for procs
+spreadsheet export for procs
+search procs by comment
+summary of procs by emergency
+professional development shows what sessions nurse went to
+date / duration / comment
+email format
 load_procs_and_nurses
 application helper constants belong elsewhere?
 Home page before block could be replaced by let ?
