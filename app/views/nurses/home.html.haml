@@ -53,66 +53,38 @@
   %h3 Professional Development
 
   %em Info about professional development goes here.
+  
+  = render partial: table_maker, 
+           title: "Procedures awaiting validation",
+           total: @nurse.pending_procs.count,
+           headers: %w[Procedure, Date],
+           collection: @nurse.pending_procs,
+           row_partial: valid_proc,
+           owise: 'Nothing waiting for validation.'
 
-  %h3#pendingHeader Procedures awaiting validation (#{@nurse.pending_procs.count})
-  - if @nurse.pending_procs.count>0
-    %table#pendingValidationsTable{border: 1}
-      %tr
-        %th Procedure
-        %th Date
-      - @nurse.pending_procs.each do |comp_proc|
-        %tr
-          %td 
-            %a{href: edit_completed_proc_path(comp_proc)}
-              = comp_proc.procedure.name
-              = "(#{comp_proc.quantity})" if comp_proc.quantity>1
+  = render partial: table_maker,
+           title: "Invalid procedures",
+           total: @nurse.rejected_procs.count,
+           headers: %w[Procedure, Date],
+           collection: @nurse.rejected_procs,
+           row_partial: rejected_proc,
+           owise: 'No invalid procedures.'
 
-          %td= comp_proc.date_start
-  - else
-    %em Nothing waiting for validation.
+  = render partial: table_maker,
+           title: "Summary of completed procs",
+           total: @nurse.completed_procs_total,
+           headers: %w[Procedure, Quantity],
+           collection: @nurse.completed_procs_summary,
+           row_partial: completed_proc,
+           owise: 'No completed procedures yet.'
 
-  %h3#rejectedHeader Invalid procedures (#{@nurse.rejected_procs.count})
-  - if @nurse.rejected_procs.count>0
-    %table#rejectedTable{border: 1}
-      %tr
-        %th Procedure
-        %th Date
-      - @nurse.rejected_procs.each do |comp_proc|
-        %tr
-          %td
-            %a.rejected{href: edit_completed_proc_path(comp_proc)}
-              = comp_proc.procedure.name
-              = "(#{comp_proc.quantity})" if comp_proc.quantity>1
-          %td= comp_proc.date_start
-          %td.val_by= "(#{comp_proc.validated_by.first_name})" if comp_proc.validated_by
-  - else
-    %em None of your procedures are invalid.
-
-  %h3#summaryHeader Summary of your completed procs (#{@nurse.completed_procs_total})
-  #completedProcs
-    - if @nurse.completed_procs_total>0
-      %table#summaryTable{border: 1}
-        %tr
-          %th Procedure
-          %th How many
-        - @nurse.completed_procs_summary.each do |proc_name, count|
-          - next unless count>0
-          %tr
-            %td #{proc_name}
-            %td #{count}
-      - if @nurse.completed_procs_total(emergency: true)>0      
-        %table#emergencyTable{border: 1}
-          %caption Emergency Procs
-          %tr
-            %th Procedure
-            %th How many
-          - @nurse.completed_procs_summary(emergency: true).each do |proc_name, count|
-            - next unless count>0
-            %tr
-              %td #{proc_name}
-              %td #{count}
-      - else
-        %em No completed procedures yet.
+  = render partial: table_maker,
+           title: "Procedures carried out in an emergency",
+           total: @nurse.completed_procs_total(emergency: true),
+           headers: %w[Procedure, Quantity],
+           collection: @nurse.completed_procs_summary(emergency: true),
+           row_partial: emergency_proc,
+           owise: 'No procedures carried out in an emergency (yet).'
  
 :css
   a.rejected  {
