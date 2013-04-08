@@ -44,6 +44,6 @@ Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) d
   quantity { Random.rand(5..20) }
   procedure { Fabricate :random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
-  role CP::ROLES.sample
-  emergency [true, false].sample
+  role {CP::ROLES.sample}
+  emergency {[true, false].sample}
 end

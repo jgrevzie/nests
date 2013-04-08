@@ -56,4 +56,5 @@ group :test do
   gem "guard-rspec"
   gem "capybara-webkit"
   gem 'simplecov', require: false
+  gem 'rb-inotify'
 end

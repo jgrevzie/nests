@@ -43,22 +43,25 @@ class Nurse
     CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED).desc(:date_start)
   end
 
-  def completed_procs_summary
+  def completed_procs_summary *args
+    options = args.extract_options!
+    logger.info 'beebo'
+    logger.info options.inspect
     summary = {}
     Procedure.asc(:name).each do |proc|
       count = 0
-      CompletedProc.where(nurse_id: self.id, 
-                          procedure_id: proc.id, 
-                          status: CompletedProc::VALID).each do |cp|
-        count += cp.quantity
-      end
+      CompletedProc.where(options.merge(
+        nurse_id: self.id, 
+        procedure_id: proc.id, 
+        status: CompletedProc::VALID)).each {|cp| count += cp.quantity}
       summary[proc.name] = count.to_i 
     end
     return summary
   end
 
-  def completed_procs_total
-    completed_procs_summary.values.inject :+
+  def completed_procs_total *args
+    # Inefficient!
+    completed_procs_summary(*args).values.inject :+
   end
 
   def validate_by_id(completed_proc_ids)

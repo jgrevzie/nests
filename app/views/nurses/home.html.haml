@@ -89,19 +89,31 @@
     %em None of your procedures are invalid.
 
   %h3#summaryHeader Summary of your completed procs (#{@nurse.completed_procs_total})
-  - if @nurse.completed_procs_total>0
-    %table#summaryTable{border: 1}
-      %tr
-        %th Procedure
-        %th How many
-      - @nurse.completed_procs_summary.each do |proc_name, count|
-        - next unless count>0
+  #completedProcs
+    - if @nurse.completed_procs_total>0
+      %table#summaryTable{border: 1}
         %tr
-          %td #{proc_name}
-          %td #{count}
-  - else
-    %em No completed procedures yet.
-
+          %th Procedure
+          %th How many
+        - @nurse.completed_procs_summary.each do |proc_name, count|
+          - next unless count>0
+          %tr
+            %td #{proc_name}
+            %td #{count}
+      - if @nurse.completed_procs_total(emergency: true)>0      
+        %table#emergencyTable{border: 1}
+          %caption Emergency Procs
+          %tr
+            %th Procedure
+            %th How many
+          - @nurse.completed_procs_summary(emergency: true).each do |proc_name, count|
+            - next unless count>0
+            %tr
+              %td #{proc_name}
+              %td #{count}
+      - else
+        %em No completed procedures yet.
+ 
 :css
   a.rejected  {
     color: red;

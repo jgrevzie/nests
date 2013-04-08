@@ -24,3 +24,4 @@ pickle-email-*.html
 .project
 ~*
 .DS_Store
+/nbproject/private/
