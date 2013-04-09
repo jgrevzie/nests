@@ -117,7 +117,7 @@ describe "Nurse's home page", reset_db: false do
 
   describe "(pending proc table)" do
     before (:each) do
-      @TABLE = 'pendingValidationsTable'
+      @TABLE = 'pendingTable'
     end
     it "has a header displaying total pending" do
       visit_home
@@ -166,7 +166,7 @@ describe "Nurse's home page", reset_db: false do
 
   describe "(summary table)" do
     before (:each) do
-      @TABLE = 'summaryTable'
+      @TABLE = 'completedTable'
     end
     it "shows count of each validated proc" do
       visit_home

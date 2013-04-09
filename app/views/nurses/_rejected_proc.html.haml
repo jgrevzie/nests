@@ -1,0 +1,12 @@
+
+
+
+
+
+%tr
+  %td
+    %a.rejected{href: edit_completed_proc_path(rejected_proc)}
+      = rejected_proc.procedure.name
+      = "(#{rejected_proc.quantity})" if rejected_proc.quantity>1
+  %td= rejected_proc.date_start
+  %td.val_by= "(#{rejected_proc.validated_by.first_name})" if rejected_proc.validated_by

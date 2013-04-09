@@ -54,36 +54,40 @@
 
   %em Info about professional development goes here.
 
-  = render partial: 'table_maker', 
+  = render 'table_maker', 
+           id: 'pending',
            title: "Procedures awaiting validation",
            total: @nurse.pending_procs.count,
-           headers: %w[Procedure, Date],
+           headers: %w[Procedure Date],
            collection: @nurse.pending_procs,
            row_partial: 'valid_proc',
            owise: 'Nothing waiting for validation.'
 
-  = render partial: 'table_maker',
+  = render 'table_maker',
+           id: 'rejected',
            title: "Invalid procedures",
            total: @nurse.rejected_procs.count,
-           headers: %w[Procedure, Date],
+           headers: %w[Procedure Date],
            collection: @nurse.rejected_procs,
            row_partial: 'rejected_proc',
            owise: 'No invalid procedures.'
 
-  = render partial: 'table_maker',
+  = render 'table_maker',
+           id: 'completed',
            title: "Summary of completed procs",
            total: @nurse.completed_procs_total,
-           headers: %w[Procedure, Quantity],
-           collection: @nurse.completed_procs_summary,
+           headers: %w[Procedure Quantity],
+           collection: @nurse.completed_procs_summary.to_a,
            row_partial: 'completed_proc',
            owise: 'No completed procedures yet.'
 
-  = render partial: 'table_maker',
+  = render 'table_maker',
+           id: 'emergency',
            title: "Procedures carried out in an emergency",
            total: @nurse.completed_procs_total(emergency: true),
-           headers: %w[Procedure, Quantity],
-           collection: @nurse.completed_procs_summary(emergency: true),
-           row_partial: 'emergency_proc',
+           headers: %w[Procedure Quantity],
+           collection: @nurse.completed_procs_summary(emergency: true).to_a,
+           row_partial: 'completed_proc',
            owise: 'No procedures carried out in an emergency (yet).'
  
 :css

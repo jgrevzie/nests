@@ -1,0 +1,11 @@
+
+
+
+
+
+%tr
+  %td 
+    %a{href: edit_completed_proc_path(valid_proc)}
+      = valid_proc.procedure.name
+      = "(#{valid_proc.quantity})" if valid_proc.quantity>1
+  %td= valid_proc.date_start
