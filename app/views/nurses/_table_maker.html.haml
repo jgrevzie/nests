@@ -2,12 +2,12 @@
 
 
 
-%h3{id: "#{id}Header"} #{title} (#{total})
+%h3{id: id} #{title} (#{total})
 - if total>0
-  %table{id: "#{id}Table", border: 1}
+  %table{id: id, border: 1}
     %tr
       - headers.each do |header|
         %th #{header}
     = render partial: row_partial, collection: collection
 - else
-  %em #{owise}
+  .otherwise #{owise}

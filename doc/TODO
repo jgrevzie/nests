@@ -5,6 +5,11 @@
 
 
 
+home page tests should setup different nurse, procs shouldn't show up
+share tests for correct section header in nurse home spec
+also share tests about not showing table, but showing message instead
+home page tests should check for text if table is missing ('sorry you have no completed procs')
+home page tests should use let
 group by role in sumarry screen for procs
 spreadsheet export for procs
 search procs by comment

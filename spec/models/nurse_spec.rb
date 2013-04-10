@@ -92,7 +92,7 @@ describe Nurse do
       n.completed_procs_total.should eq n.completed_procs.inject(0) {|accu, cp| accu+cp.quantity}
     end
     it "doesn't include rejected or pending procs" do
-      n = Fabricate :nurse_5_random_procs
+      n = Fabricate :nurse_random_procs, n_procs: 5
       total = n.completed_procs.inject(0) do |accu, cp| 
         cp.status==CompletedProc::VALID ? accu+cp.quantity : accu
       end
