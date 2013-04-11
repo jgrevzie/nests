@@ -31,6 +31,12 @@ describe SpreadsheetLoader, reset_db: false do
     it "handles question marks in options" do
       (proc_by_name "Question mark in options").options.should eq "What?"
     end
+    it "removes spaces at beginning and end of name" do
+      (proc_by_name "Spaces at either side of name").should be
+    end
+    it "removes spaces in the middle of name" do
+      (proc_by_name "Spaces in the middle of name").should be
+    end
 
     subject {proc_by_name "Everything"}
     its(:name) {should eq 'Everything'}

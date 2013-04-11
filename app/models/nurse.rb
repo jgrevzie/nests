@@ -34,14 +34,15 @@ class Nurse
   def first_name; name.split[0] end
   def last_name; name.split[-1] end
 
-  def procs_I_submitted
+  def pendings
      CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
   end
-  alias_method :pending_procs, :procs_I_submitted
+  alias_method :pending_procs, :pendings
 
   def rejected_procs
     CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED).desc(:date_start)
   end
+  alias_method :rejects, :rejected_procs
 
   def completed_procs_summary *args
     options = args.extract_options!
@@ -53,14 +54,14 @@ class Nurse
         nurse_id: self.id, 
         procedure_id: proc.id, 
         status: CompletedProc::VALID)).each {|cp| count += cp.quantity}
-      summary[proc.name] = count.to_i unless zeroes==false && count==0
+      summary[proc.name] = count.to_i unless count==0 && zeroes!=true
     end
     return summary
   end
 
   def completed_procs_total *args
     # Inefficient!
-    completed_procs_summary(*args).values.inject :+
+    completed_procs_summary(*args).values.inject(0, :+)
   end
 
   def validate_by_id(completed_proc_ids)

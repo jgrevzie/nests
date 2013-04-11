@@ -7,7 +7,13 @@
 
 require 'spreadsheet'
 class Object
-  def nil_or_strip!; self.nil? || self.strip! ; self end
+  def nil_or_strip!
+    unless self.nil? 
+      self.strip!
+      self.squeeze!(' ')
+    end
+    return self
+  end
 end
 
 module SpreadsheetLoader
@@ -44,7 +50,7 @@ module SpreadsheetLoader
 
   def self.load_procs file_name
     load_from_spreadsheet file_name, symbol: :procedure, munger: lambda { |h|
-      %w(name, abbrev, comments).map {|i| h[i].nil_or_strip!}
+      %w(name abbrev comments).map {|i| h[i].nil_or_strip!}
       h[:options].nil_or_strip! && h[:options].gsub!(', ',',')
     }
   end

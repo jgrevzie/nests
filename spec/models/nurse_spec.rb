@@ -21,15 +21,15 @@ describe Nurse do
     end
   end
 
-  describe '#procs_I_submitted' do 
+  describe '#pendings' do 
     it "gets an enumeration of procedures for a nurse that have't been.vdated" do     
       n = Fabricate :nurse_5_pendings
-      n.procs_I_submitted.count.should == 5
+      n.pendings.count.should == 5
     end
     it "won't get procs that belong to another nurse" do
       n1 = Fabricate :nurse_5_pendings
       n2 = Fabricate :nurse_5_pendings
-      n2.procs_I_submitted.should_not include n1.procs_I_submitted
+      n2.pendings.should_not include n1.pendings
     end
   end
 
@@ -80,7 +80,23 @@ describe Nurse do
       n = Fabricate :nurse
       n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 5) 
 
-      n.completed_procs_summary['PROC1'].should eq 0
+      n.completed_procs_summary['PROC1'].should be_nil
+    end
+    context "procedures with zero quantity" do
+      before(:each) do
+        @n = Fabricate :nurse
+        @n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 7)
+        Fabricate :procedure, name: 'PROC2'
+
+        vn = Fabricate :v_nurse
+        vn.vdate @n.completed_procs      
+      end
+      it "doesn't return procs with zero quantity" do
+        @n.completed_procs_summary['PROC2'].should be_nil
+      end
+      it "does return procs with zero quantity if zeroes:true is specified" do
+        @n.completed_procs_summary(zeroes:true)['PROC2'].should eq 0
+      end
     end
   end
   describe "#completed_procs_total" do
@@ -98,6 +114,28 @@ describe Nurse do
       end
       n.completed_procs_total.should eq total
     end
+    it "no procs gives count of zero" do
+      n = Fabricate :nurse
+      n.completed_procs_total.should eq 0
+    end
+  end
+  describe "filters" do
+    before(:each) do
+      @n = Fabricate :nurse
+      @n.completed_procs << Fabricate(:cp, proc_name: 'PROC1', quantity: 5)
+      @n.completed_procs << Fabricate(:cp, proc_name: 'PROC2', quantity: 7, emergency: true)
+      
+      vn = Fabricate :v_nurse
+      vn.vdate @n.completed_procs
+    end
+    it "#completed_procs_summary"  do
+      @n.completed_procs_summary(emergency: true)['PROC1'].should be_nil
+      @n.completed_procs_summary(emergency: true)['PROC2'].should eq 7
+    end
+    it "#completed_procs_total" do
+      @n.completed_procs_total(emergency: true).should eq 7
+    end
+
   end
   describe "#first_name" do
     it "gets first name of nurse (weird right?)" do

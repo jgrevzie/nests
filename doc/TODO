@@ -5,6 +5,11 @@
 
 
 
+completed proc summary needs test for zeroes
+visit_home should go in before(:each / :all)?
+skipping zeroes in completed proc counts no longer necessary
+Should you be able to log in while someone else is logged in ?
+validated_by = val_by
 home page tests should setup different nurse, procs shouldn't show up
 share tests for correct section header in nurse home spec
 also share tests about not showing table, but showing message instead
