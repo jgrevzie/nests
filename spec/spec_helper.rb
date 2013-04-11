@@ -80,3 +80,8 @@ def on_pending_vn_page?
   page.has_css?('.header h1', text: ApplicationHelper::PENDING_VALIDATIONS_HEADER)
 end
 
+def visit_home nurse
+  login nurse
+  visit home_nurse_path nurse
+end
+

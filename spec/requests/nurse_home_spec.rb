@@ -2,67 +2,31 @@
 
 
 
-
 require 'spec_helper'
-
-
-
-
-
-
 
 describe "Nurse's home page", reset_db: false do
 
-  def visit_home(*args)
-    options = args.extract_options!
-    n = args[0] || @n
-    login n
-    visit home_nurse_path n
-    return n
-  end
-
-  before (:all) do
-    puts "BEEBO!"
-    clear_db
-
-    # Builds sample completed procs.  @q hash contains number of procs for a given status
-    @q = {}
-    @comp_procs = []
-    [CP::PENDING, CP::REJECTED, CP::ACK_REJECT].each do |status|
-      (@q[status] = rand 1..5).times { @comp_procs << Fabricate(:comp_proc_seq, status: status) }
-    end
-
-    # Adds a large number of valid procs.  
-    # @q_valid contains counts for each proc type (n = @q_valid[proc_name])
-    @q_valid = {}
-    (rand 1..10).times do |i|
-      proc_name = "VALID#{i}"
-      proc = Fabricate :procedure, name: proc_name
-      (@q_valid[proc_name] = rand 1..5).times do
-        @comp_procs << Fabricate(:completed_proc, procedure: proc, status: CP::VALID)
-      end
-    end
-  end
-  before (:each) {(@n = Fabricate :nurse).completed_procs << @comp_procs}
+  before(:all) {clear_db}
 
   it "shows title for signed in nurse" do
-    n = visit_home
+    visit_home n=Fabricate(:nurse)
     page.should have_text 'Home'
     page.should have_text n.first_name
   end
   #Fragile?  Needs something to check z-index issues (have already shown up as bugs).
   it "closes top accordion if header is clicked" do
-    n = visit_home
+    visit_home n=Fabricate(:nurse)
     find('#topHeader').click
     find('#topHeader').should_not have_text 'Designation'
   end
   it "on_pending_vn_page? won't detect 'Pending Validations' on horizontal toolbar" do
-    visit_home
+    visit_home Fabricate(:v_nurse)
     on_pending_vn_page?.should be_false
   end
 
   describe "(personal info)", js: true do
-    let(:vn) {visit_home Fabricate(:v_nurse)}
+    let(:vn) {Fabricate(:v_nurse)}
+    before(:each) { visit_home vn }
     def click_and_wait_for_ajax
       # Click on something outside of auto-update fields.
       find('h1').click
@@ -77,7 +41,6 @@ describe "Nurse's home page", reset_db: false do
     end
 
     it "updates if fields are changed" do
-      visit_home vn
       check_autoupdate_field label: 'Name', with: 'Naughty Nurse', attr: :name
       check_autoupdate_field label: 'Designation', with: 'Test Desig', attr: :designation
 
@@ -98,17 +61,15 @@ describe "Nurse's home page", reset_db: false do
       vn.reload.wants_mail.should be_true
     end
     it "doesn't show checkbox to receive mail, unless validator" do
-      n = visit_home
+      visit_home Fabricate :nurse
       page.should have_no_css('#wants_mail')
     end
     it "shows spinning wheel while changes are being made", js: true do
-      vn = visit_home Fabricate(:v_nurse)
       check 'Receive daily emails?'
       find('#topHeader img').visible?.should be_true
       # Wait till image disappears.
       page.has_no_css?('#topHeader img', visible: true).should be_true
     end
   end
-
 
 end

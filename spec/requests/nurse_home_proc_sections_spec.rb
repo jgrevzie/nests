@@ -5,10 +5,6 @@
 
 require 'spec_helper'
 
-
-
-
-
 shared_examples "a proc section" do
 
   let(:header_selector) {"h3##{o[:cp_type]}"}
@@ -25,7 +21,9 @@ shared_examples "a proc section" do
   end
   it "(has table with appropriate data)" do
     visit_home @the_nurse
-    o[:collection].each {|i| find(table_selector).text.should include "#{i[0]} #{i[1]}"}
+    o[:collection].each do |i| 
+      find(table_selector).text.should match /#{i[0]}(\s+\(\d+\))?\s+#{i[1]}/
+    end
   end
   it "(doesn't show table, instead shows some text if there's no rows)" do
     visit_home o[:owise_nurse]
@@ -34,16 +32,11 @@ shared_examples "a proc section" do
   end
 end
 
-def visit_home nurse
-  login nurse
-  visit home_nurse_path nurse
-end
-
 describe "Nurse home page", reset_db: false do 
   before(:all) do
     reset_db
     @the_nurse = Fabricate :nurse
-    50.times { @the_nurse.completed_procs << Fabricate(:rand_cp, quantity: 1) }
+    50.times { @the_nurse.completed_procs << Fabricate(:rand_cp) }
     # Ensure we have at least one of each type of proc
     CP::STATUSES.each { |i| @the_nurse.completed_procs << Fabricate(:rand_cp, status: i) }
     @the_nurse.completed_procs <<  Fabricate(:rand_cp, status: CP::VALID, emergency: true)
