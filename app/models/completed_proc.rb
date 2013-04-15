@@ -37,7 +37,7 @@ class CompletedProc
 
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
-	validates :proc, presence: { message: "isn't known to CliniTraq" }
+	validates :proc, presence: { message: "name isn't known to CliniTraq" }
 	validates :status, inclusion: { in: [PENDING, VALID, REJECTED, ACK_REJECT], 
 																	message: 'unknown' }
 	validates :date, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
@@ -70,6 +70,8 @@ class CompletedProc
 
 	def ack_reject ; self.status = ACK_REJECT end
 	def ackd? ; self.status == ACK_REJECT end
+
+	def to_s ; self.proc.name + (self.quantity>1 ? " (#{self.quantity})" : '') + " #{self.date}" end
 
 	class << CompletedProc
 		alias_method :pending, :pending_validations

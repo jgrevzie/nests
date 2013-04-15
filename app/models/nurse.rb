@@ -2,12 +2,6 @@
 
 
 
-
-require 'csv'
-class String
-  def lc_alpha; self ? self.downcase.gsub(/[^a-z]/, '') : '' end
-end   
-
 class Nurse
   include Mongoid::Document
   include ActiveModel::SecurePassword 

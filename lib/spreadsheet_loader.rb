@@ -2,9 +2,6 @@
 
 
 
-
-
-
 require 'spreadsheet'
 class Object
   def nil_or_strip!
@@ -15,6 +12,9 @@ class Object
     return self
   end
 end
+class String
+  def lc_alpha; self ? self.downcase.gsub(/[^a-z]/, '') : '' end
+end   
 
 module SpreadsheetLoader
 

@@ -20,9 +20,7 @@ shared_examples "a proc section" do
   end
   it "(has table with appropriate data)" do
     visit_home @the_nurse
-    o[:collection].each do |i| 
-      find(table_selector).text.should match /#{i[0]}(\s+\(\d+\))?\s+#{i[1]}/
-    end
+    o[:collection].each {|i| find(table_selector).text.should include i.to_s}
   end
   it "(doesn't show table, instead shows some text if there's no rows)" do
     visit_home o[:owise_nurse]
@@ -53,7 +51,7 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do      
       let(:o) { {cp_type: 'pending',
        header: 'Procedures awaiting validation',
-       collection: @the_nurse.pendings.map {|cp| [cp.proc.name, cp.date]},
+       collection: @the_nurse.pendings,
        owise_nurse: nurse_without(CP::PENDING),
        owise_text: 'Nothing waiting for validation.'} }
      end
@@ -63,7 +61,7 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do 
       let(:o) { {cp_type: 'rejected',
        header: 'Invalid procedures',
-       collection: @the_nurse.rejects.map {|cp| [cp.proc.name, cp.date]},
+       collection: @the_nurse.rejects,
        owise_nurse: nurse_without(CP::REJECTED),
        owise_text: 'No invalid procedures.'} }
     end
@@ -83,12 +81,17 @@ describe "Nurse home page", reset_db: false do
     end
   end
 
+  def cp_summary(*filter)
+    @the_nurse.completed_procs_summary(*filter).map {|name, n| "#{name} #{n}"}
+  end
+  def cp_total(*filter) @the_nurse.completed_procs_total(*filter) end
+
   describe "(validated proc summary) -" do
     it_behaves_like "a proc section" do 
       let (:o) {{cp_type: 'completed',
        header: 'ummary',
-       total: @the_nurse.completed_procs_total,
-       collection: @the_nurse.completed_procs_summary,
+       total: cp_total,
+       collection: cp_summary,
        owise_nurse: nurse_without(CP::VALID),
        owise_text: 'No completed procedures yet.'}}
      end
@@ -104,13 +107,12 @@ describe "Nurse home page", reset_db: false do
       @no_emergencies = Fabricate :nurse
       10.times { @no_emergencies.completed_procs << Fabricate(:rand_cp, emergency: false) }
     end
-    let(:summary) {@the_nurse.completed_procs_summary(emergency: true)}
 
     it_behaves_like "a proc section" do
       let(:o) {{cp_type: 'emergency',
        header: 'emergency',
-       total: @the_nurse.completed_procs_total(emergency: true),
-       collection: summary,
+       total: cp_total(emergency: true),
+       collection: cp_summary(emergency: true),
        owise_nurse: @no_emergencies,
        owise_text: 'emergency'}}
     end

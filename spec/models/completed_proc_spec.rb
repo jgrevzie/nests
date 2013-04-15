@@ -36,4 +36,15 @@ describe CompletedProc do
     end
   end
 
+  describe "#to_s" do
+    it "returns summary with quantity if quantity>1" do
+      cp = Fabricate :cp, proc_name: 'Slash', quantity: 2, date: Date.today
+      cp.to_s.should eq "Slash (2) #{Date.today}"
+    end
+    it "returns summary without quantity if quantity==1" do
+      cp = Fabricate :cp, proc_name: 'Burn', quantity: 1, date: Date.today
+      cp.to_s.should eq "Burn #{Date.today}"
+    end
+  end
+
 end
