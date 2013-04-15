@@ -34,7 +34,7 @@ class CompletedProcsController < ApplicationController
   def new
     @nurse = logged_in_nurse
     @completed_proc = CompletedProc.new 
-    @completed_proc.procedure = Procedure.new
+    @completed_proc.proc = Procedure.new
     respond_with @completed_proc
   end
 

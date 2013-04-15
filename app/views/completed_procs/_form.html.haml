@@ -11,8 +11,8 @@
     .fields= f.label :proc_name, "Procedure Name"
     .fields= f.text_field :proc_name
     #procError Choose a valid procedure name
-    .fields= f.label :date_start, 'Date'
-    .fields= f.text_field :date_start
+    .fields= f.label :date, 'Date'
+    .fields= f.text_field :date
     .fields= f.label :quantity, 'How many of these procedures?'
     .fields= f.number_field :quantity, in: 1..CompletedProc::MAX_PROCS_PER_DAY
     .fields= f.label :comments
@@ -26,7 +26,7 @@
           = r
           = f.radio_button :role, r
     #options
-      = render 'options', options: @completed_proc.procedure.options if @completed_proc.procedure
+      = render 'options', options: @completed_proc.proc.options if @completed_proc.proc
   - if @nurse.validator? then
     Validate this procedure?
     %label
@@ -84,6 +84,6 @@
   
   $(PROCID).change( loadOptions )
   
-  $("#completed_proc_date_start").datepicker({
+  $("#completed_proc_date").datepicker({
     #{@nurse.validator ? '' : 'minDate: -8, maxDate: +1,'}
     dateFormat: "dd/mm/yy" });

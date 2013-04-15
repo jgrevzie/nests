@@ -14,7 +14,7 @@ class CompletedProc
     end
 
     # Setup options if necessary.
-    if self.procedure && (opts=self.procedure.options) && opts.size>0
+    if self.proc && (opts=self.proc.options) && opts.size>0
       if opts[-1]=='?' then self.options=[opts.chop, '0'].sample
       else self.options=opts.split(',').sample end
     end
@@ -23,10 +23,10 @@ end
 
 Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
-  date_start { Date.today }
+  date { Date.today }
 	quantity 1
-	# Check if proc_name: was specified and assigns to procedure.
-  procedure do |a| 
+	# Check if proc_name: was specified, other build defulat procedure.
+  proc do |a| 
     params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
     Fabricate :procedure, Hash[params]
   end
@@ -36,13 +36,13 @@ Fabricator(:completed_proc, aliases: [:cp]) do
 end
 
 Fabricator(:comp_proc_seq, from: :completed_proc) do
-  procedure { Fabricate :proc_seq }
+  proc { Fabricate :proc_seq }
 end
 
 Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) do
-  date_start { Date.today-Random.rand(1..6) } 
+  date { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
-  procedure { Fabricate :random_proc}
+  proc { Fabricate :random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
   role {CP::ROLES.sample}
   emergency {[true, false].sample}

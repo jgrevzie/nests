@@ -6,7 +6,6 @@
 
 
 Home page tests should look for Procedure (17)
-skipping zeroes in completed proc counts no longer necessary
 Should you be able to log in while someone else is logged in ?
 validated_by = val_by
 home page tests should setup different nurse, procs shouldn't show up
@@ -15,7 +14,7 @@ spreadsheet export for procs
 search procs by comment
 summary of procs by emergency
 professional development shows what sessions nurse went to
-date / duration / comment
+  date / duration / comment
 email format
 load_procs_and_nurses
 application helper constants belong elsewhere?
@@ -28,4 +27,4 @@ Nurse should be attached to section in hospital and get appropriate procedures.
 Completed procs should be clickable, take through to information about each procedure.
 Nurse photos.
 Nurse needs to be able to change password.
-Validating nurse can only validate for his/her hospital.
+Validating nurse can only validate for his/her dept.

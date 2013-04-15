@@ -24,34 +24,34 @@ class CompletedProc
 	attr_accessor :check_date
 
 	field :comments
-	field :date_start, type: Date, default: Date.current
+	field :date, type: Date, default: Date.current
 	field :quantity, type: Integer, default: 1
 	field :options
 	field :status, default: PENDING
 	field :emergency, type: Boolean, default: false
 	field :role
 
-	belongs_to :procedure
+	belongs_to :proc, class_name: 'Procedure'
 	belongs_to :nurse, inverse_of: :completed_procs
 	belongs_to :validated_by, inverse_of: :validations, class_name: 'Nurse'
 
 	validates :quantity, numericality: { greater_than_or_equal_to: 1,
 																			 less_than_or_equal_to: MAX_PROCS_PER_DAY }
-	validates :procedure, presence: { message: "isn't known to CliniTraq" }
+	validates :proc, presence: { message: "isn't known to CliniTraq" }
 	validates :status, inclusion: { in: [PENDING, VALID, REJECTED, ACK_REJECT], 
 																	message: 'unknown' }
-	validates :date_start, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
+	validates :date, timeliness: { before: Date.today+2, after: OLDEST_NEW_PROC },
 												 if: :check_date
 	validates :validated_by, presence: true, if: 'status==REJECTED || status==VALID'
 	validates :options, presence: {message: "must be selected for this type of procedure."}, 
-											if: 'procedure && procedure.options && procedure.options.length>0'
+											if: 'proc && proc.options && proc.options.length>0'
 	validates :role, presence: true
 
  	attr_protected :status
 
-	def proc_name=(proc_name) self.procedure = Procedure.where(name: proc_name).first end
+	def proc_name=(proc_name) self.proc = Procedure.where(name: proc_name).first end
 
-	def proc_name ; self.procedure.name if self.procedure end
+	def proc_name ; self.proc.name if self.proc end
 
 	def update_status(status, nurse)
 		self.status = status

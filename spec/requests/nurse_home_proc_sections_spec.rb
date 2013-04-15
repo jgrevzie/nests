@@ -2,7 +2,6 @@
 
 
 
-
 require 'spec_helper'
 
 shared_examples "a proc section" do
@@ -12,12 +11,12 @@ shared_examples "a proc section" do
 
   subject { visit_home @the_nurse ; find(header_selector).text }
   it { should include o[:header] }
-  it { should include o[:total].to_s }
+  it { should include (o[:total] || o[:collection].count).to_s }
 
   # Check number of rows to make sure there isn't too much data in the table.
   it "(has table with correct number of rows)" do
     visit_home @the_nurse
-    page.all("#{table_selector} tr").count.should eq (o[:n_rows] || o[:total])+1
+    page.all("#{table_selector} tr").count.should eq o[:collection].count+1
   end
   it "(has table with appropriate data)" do
     visit_home @the_nurse
@@ -54,8 +53,7 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do      
       let(:o) { {cp_type: 'pending',
        header: 'Procedures awaiting validation',
-       total: @the_nurse.pendings.count,
-       collection: @the_nurse.pendings.map {|cp| [cp.procedure.name, cp.date_start]},
+       collection: @the_nurse.pendings.map {|cp| [cp.proc.name, cp.date]},
        owise_nurse: nurse_without(CP::PENDING),
        owise_text: 'Nothing waiting for validation.'} }
      end
@@ -65,8 +63,7 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do 
       let(:o) { {cp_type: 'rejected',
        header: 'Invalid procedures',
-       total: @the_nurse.rejects.count,
-       collection: @the_nurse.rejects.map {|cp| [cp.procedure.name, cp.date_start]},
+       collection: @the_nurse.rejects.map {|cp| [cp.proc.name, cp.date]},
        owise_nurse: nurse_without(CP::REJECTED),
        owise_text: 'No invalid procedures.'} }
     end
@@ -92,7 +89,6 @@ describe "Nurse home page", reset_db: false do
        header: 'ummary',
        total: @the_nurse.completed_procs_total,
        collection: @the_nurse.completed_procs_summary,
-       n_rows: @the_nurse.completed_procs_summary.size,
        owise_nurse: nurse_without(CP::VALID),
        owise_text: 'No completed procedures yet.'}}
      end
@@ -115,7 +111,6 @@ describe "Nurse home page", reset_db: false do
        header: 'emergency',
        total: @the_nurse.completed_procs_total(emergency: true),
        collection: summary,
-       n_rows: summary.size,
        owise_nurse: @no_emergencies,
        owise_text: 'emergency'}}
     end

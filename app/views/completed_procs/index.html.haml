@@ -15,7 +15,7 @@
       %tr
         %td 
           %a{href: edit_completed_proc_path(comp_proc)}
-            = comp_proc.procedure.name
+            = comp_proc.proc.name
             = "(#{comp_proc.quantity})" if comp_proc.quantity>1
 
-        %td= comp_proc.date_start
+        %td= comp_proc.date

@@ -35,12 +35,12 @@ class Nurse
   def last_name; name.split[-1] end
 
   def pendings
-     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date_start)
+     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date)
   end
   alias_method :pending_procs, :pendings
 
   def rejected_procs
-    CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED).desc(:date_start)
+    CompletedProc.all(nurse_id: self.id, status: CompletedProc::REJECTED).desc(:date)
   end
   alias_method :rejects, :rejected_procs
 
@@ -52,7 +52,7 @@ class Nurse
       count = 0
       CompletedProc.where(options.merge(
         nurse_id: self.id, 
-        procedure_id: proc.id, 
+        proc_id: proc.id, 
         status: CompletedProc::VALID)).each {|cp| count += cp.quantity}
       summary[proc.name] = count.to_i unless count==0 && zeroes!=true
     end

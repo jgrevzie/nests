@@ -16,8 +16,8 @@ end
 
 def fill_in_proc_form(cp, *args)
   options = args.extract_options!
-  fill_in 'Procedure Name', with: cp.procedure.name
-  fill_in 'Date', with: cp.date_start
+  fill_in 'Procedure Name', with: cp.proc.name
+  fill_in 'Date', with: cp.date
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
   check 'Emergency?' if cp.emergency?
@@ -34,8 +34,8 @@ end
 describe "'Submit proc for validation' page" do
   let(:comp_proc) do
     p = Fabricate :procedure, name: PROC_NAME, options: "option1,option2"
-    Fabricate :completed_proc, quantity: 7, date_start: Date.today-1, comments:'Hello', 
-              options: 'option1', emergency: true, role: CP::SCOUT, procedure: p
+    Fabricate :completed_proc, quantity: 7, date: Date.today-1, comments:'Hello', 
+              options: 'option1', emergency: true, role: CP::SCOUT, proc: p
   end
   let(:logged_in_nurse) { login Fabricate :nurse }
 
@@ -81,10 +81,10 @@ describe "'Submit proc for validation' page" do
   it "submits proc with unknown name, gets error" do
     logged_in_nurse
     cp = Fabricate :completed_proc
-    cp.procedure.name = 'NON-EXIST'
+    cp.proc.name = 'NON-EXIST'
 
     fill_in_proc_form cp, submit: true
-    page.should have_selector '#errorExplanation', text: 'Procedure'
+    page.should have_selector '#errorExplanation', text: 'Proc'
   end
   it 'when updating, shows fields of previously entered completed proc' do 
     n = logged_in_nurse
@@ -95,7 +95,7 @@ describe "'Submit proc for validation' page" do
     find_field('Comments').value.should eq cp.comments
     find_field('How many of these procedures').value.should eq cp.quantity.to_s
     page.has_checked_field? cp.options
-    all("#options input[type='radio']").size.should eq cp.procedure.options.split(',').size
+    all("#options input[type='radio']").size.should eq cp.proc.options.split(',').size
   end
   it "updates proc, and saves new values", js: true do
     n = logged_in_nurse
@@ -103,8 +103,8 @@ describe "'Submit proc for validation' page" do
     n.completed_procs << cp
     
     p2 = Fabricate :procedure, name: PROC_NAME2, options: "option4,option5"
-    cp_2 = Fabricate :completed_proc, quantity: 1, date_start: Date.today-2, comments:'Later', 
-                 options: 'option4', emergency: true, role: CP::SCOUT, procedure: p2    
+    cp_2 = Fabricate :completed_proc, quantity: 1, date: Date.today-2, comments:'Later', 
+                 options: 'option4', emergency: true, role: CP::SCOUT, proc: p2    
     
     visit edit_completed_proc_path(cp)
     fill_in_proc_form cp_2, submit: true
@@ -173,11 +173,11 @@ describe "'Submit proc for validation' page" do
     click_button 'submit'
   end
 
-  DATE_ERROR = 'Date start must be after'
+  DATE_ERROR = 'Date must be after'
 
   describe "invokes timliness checks that" do
     before(:each) do
-      @old_proc = Fabricate :cp, date_start: CP::OLDEST_NEW_PROC-1, nurse: (Fabricate :nurse)
+      @old_proc = Fabricate :cp, date: CP::OLDEST_NEW_PROC-1, nurse: (Fabricate :nurse)
     end
     it "don't allow the creation of an old procedure by regular nurse" do
       login Fabricate :nurse
