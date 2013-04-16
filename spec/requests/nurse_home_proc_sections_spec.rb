@@ -28,7 +28,7 @@ shared_examples "a proc section" do
   end
 end
 
-shared_examples "a summary section" do
+shared_examples "a summary section" do |section_name|
   it "(procs that the nurse hasn't done don't appear)" do
     visit_home the_nurse
     Fabricate :procedure, name: 'Slice!'
@@ -109,7 +109,7 @@ describe "Nurse home page", reset_db: false do
        owise_nurse: nurse_without(CP::VALID),
        owise_text: 'No completed procedures yet.'}}
     end
-    it_behaves_like "a summary section" do let(:section_name) {'completed'} end
+    it_behaves_like "a summary section", 'completed'
   end
 
   describe "(emergency proc summary) -" do
@@ -127,6 +127,6 @@ describe "Nurse home page", reset_db: false do
        owise_nurse: no_emergencies,
        owise_text: 'emergency'}}
     end
-    it_behaves_like "a summary section" do let(:section_name) {'emergency'} end
+    it_behaves_like "a summary section", 'emergency'
   end
 end
