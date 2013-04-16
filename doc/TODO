@@ -5,26 +5,25 @@
 
 
 
-Home page tests should look for Procedure (17)
-Should you be able to log in while someone else is logged in ?
 validated_by = val_by
 home page tests should setup different nurse, procs shouldn't show up
-group by role in sumarry screen for procs
-spreadsheet export for procs
-search procs by comment
-summary of procs by emergency
-professional development shows what sessions nurse went to
-  date / duration / comment
-email format
 load_procs_and_nurses
 application helper constants belong elsewhere?
 Home page before block could be replaced by let ?
 Many things should validate against not being empty.
+
+FEATURES
+Nurse needs to be able to change password.
 Summary of completed procedures by date with y axis showing quantity?
 Record year started in application.
 Abbreviation search.
 Nurse should be attached to section in hospital and get appropriate procedures.
 Completed procs should be clickable, take through to information about each procedure.
 Nurse photos.
-Nurse needs to be able to change password.
+professional development shows what sessions nurse went to
+  date / duration / comment
+should be able to specify email format for each dept
 Validating nurse can only validate for his/her dept.
+spreadsheet export for procs
+search procs by comment
+group by role in summary screen for procs

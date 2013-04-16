@@ -37,6 +37,8 @@ describe "Nurse home page", reset_db: false do
     # Ensure we have at least one of each type of proc
     CP::STATUSES.each { |i| @the_nurse.completed_procs << Fabricate(:rand_cp, status: i) }
     @the_nurse.completed_procs <<  Fabricate(:rand_cp, status: CP::VALID, emergency: true)
+    # Fabricate another nurse to test whether it's procs appear (they shouldn't).
+    (Fabricate :nurse).completed_procs.concat Array.new(25){Fabricate :rand_cp}
   end
 
   def nurse_without status
@@ -72,7 +74,7 @@ describe "Nurse home page", reset_db: false do
     it "shows name of rejector in reject table" do
       visit_home @the_nurse
       name = CP.where(status: CP::REJECTED).first.validated_by.first_name
-      page.first("table#rejected td.val_by").text.should match /#{name}/
+      page.first("table#rejected td.validated_by").text.should match /#{name}/
     end
     it "when link is clicked, update page should allow proc to be acknowledged" do
       visit_home @the_nurse

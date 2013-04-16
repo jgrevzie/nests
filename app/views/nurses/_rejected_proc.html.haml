@@ -9,4 +9,4 @@
       = rejected_proc.proc.name
       = "(#{rejected_proc.quantity})" if rejected_proc.quantity>1
   %td= rejected_proc.date
-  %td.val_by= "(#{rejected_proc.validated_by.first_name})" if rejected_proc.validated_by
+  %td.validated_by= "(#{rejected_proc.validated_by.first_name})" if rejected_proc.validated_by
