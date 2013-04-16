@@ -5,21 +5,20 @@
 require 'spec_helper'
 
 shared_examples "a proc section" do
-
   let(:header_selector) {"h3##{o[:cp_type]}"}
   let(:table_selector) {"table##{o[:cp_type]}"}
 
-  subject { visit_home @the_nurse ; find(header_selector).text }
+  subject { visit_home the_nurse ; find(header_selector).text }
   it { should include o[:header] }
   it { should include (o[:total] || o[:collection].count).to_s }
 
   # Check number of rows to make sure there isn't too much data in the table.
   it "(has table with correct number of rows)" do
-    visit_home @the_nurse
+    visit_home the_nurse
     page.all("#{table_selector} tr").count.should eq o[:collection].count+1
   end
   it "(has table with appropriate data)" do
-    visit_home @the_nurse
+    visit_home the_nurse
     o[:collection].each {|i| find(table_selector).text.should include i.to_s}
   end
   it "(doesn't show table, instead shows some text if there's no rows)" do
@@ -29,16 +28,29 @@ shared_examples "a proc section" do
   end
 end
 
+shared_examples "a summary section" do
+  it "(procs that the nurse hasn't done don't appear)" do
+    visit_home the_nurse
+    Fabricate :procedure, name: 'Slice!'
+    find("table##{section_name}").text.should_not include 'Slice'
+  end
+end
+
 describe "Nurse home page", reset_db: false do 
-  before(:all) do
+  let!(:the_nurse) do
     reset_db
-    @the_nurse = Fabricate :nurse
-    50.times { @the_nurse.completed_procs << Fabricate(:rand_cp) }
+  
+    # This nurse's procs shouldn't appear, unless there's some problem with the code.
+    #(Fabricate :nurse).completed_procs.concat Array.new(10){Fabricate :rand_cp}
+
     # Ensure we have at least one of each type of proc
-    CP::STATUSES.each { |i| @the_nurse.completed_procs << Fabricate(:rand_cp, status: i) }
-    @the_nurse.completed_procs <<  Fabricate(:rand_cp, status: CP::VALID, emergency: true)
-    # Fabricate another nurse to test whether it's procs appear (they shouldn't).
-    (Fabricate :nurse).completed_procs.concat Array.new(25){Fabricate :rand_cp}
+    (the_nurse=Fabricate :nurse).completed_procs << 
+      Fabricate(:rand_cp, status: CP::VALID, emergency: true)
+    CP::STATUSES.each { |i| the_nurse.completed_procs << Fabricate(:rand_cp, status: i) }
+
+    # Plus a bunch of randoms
+    the_nurse.completed_procs.concat Array.new(50){Fabricate :rand_cp}
+    return the_nurse
   end
 
   def nurse_without status
@@ -53,7 +65,7 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do      
       let(:o) { {cp_type: 'pending',
        header: 'Procedures awaiting validation',
-       collection: @the_nurse.pendings,
+       collection: the_nurse.pendings,
        owise_nurse: nurse_without(CP::PENDING),
        owise_text: 'Nothing waiting for validation.'} }
      end
@@ -63,30 +75,30 @@ describe "Nurse home page", reset_db: false do
     it_behaves_like "a proc section" do 
       let(:o) { {cp_type: 'rejected',
        header: 'Invalid procedures',
-       collection: @the_nurse.rejects,
+       collection: the_nurse.rejects,
        owise_nurse: nurse_without(CP::REJECTED),
        owise_text: 'No invalid procedures.'} }
     end
     it "has red rows in reject table" do
-      visit_home @the_nurse
+      visit_home the_nurse
       page.should have_css "table#rejected a.rejected"
     end
     it "shows name of rejector in reject table" do
-      visit_home @the_nurse
+      visit_home the_nurse
       name = CP.where(status: CP::REJECTED).first.validated_by.first_name
       page.first("table#rejected td.validated_by").text.should match /#{name}/
     end
     it "when link is clicked, update page should allow proc to be acknowledged" do
-      visit_home @the_nurse
+      visit_home the_nurse
       first("table#rejected a").click
       page.has_css?('input [value="Acknowledge"]').should be_true
     end
   end
 
   def cp_summary(*filter)
-    @the_nurse.completed_procs_summary(*filter).map {|name, n| "#{name} #{n}"}
+    the_nurse.completed_procs_summary(*filter).map {|name, n| "#{name} #{n}"}
   end
-  def cp_total(*filter) @the_nurse.completed_procs_total(*filter) end
+  def cp_total(*filter) the_nurse.completed_procs_total(*filter) end
 
   describe "(validated proc summary) -" do
     it_behaves_like "a proc section" do 
@@ -96,18 +108,15 @@ describe "Nurse home page", reset_db: false do
        collection: cp_summary,
        owise_nurse: nurse_without(CP::VALID),
        owise_text: 'No completed procedures yet.'}}
-     end
-    it "procs that the nurse hasn't done don't appear" do
-      visit_home @the_nurse
-      Fabricate :procedure, name: 'Slice!'
-      find("table#completed").text.should_not include 'Slice'
     end
+    it_behaves_like "a summary section" do let(:section_name) {'completed'} end
   end
 
   describe "(emergency proc summary) -" do
-    before(:all) do
-      @no_emergencies = Fabricate :nurse
-      10.times { @no_emergencies.completed_procs << Fabricate(:rand_cp, emergency: false) }
+    let(:no_emergencies) do
+      (n= Fabricate :nurse).completed_procs.concat Array.new(10){
+        Fabricate(:rand_cp, emergency: false)}
+      return n
     end
 
     it_behaves_like "a proc section" do
@@ -115,13 +124,9 @@ describe "Nurse home page", reset_db: false do
        header: 'emergency',
        total: cp_total(emergency: true),
        collection: cp_summary(emergency: true),
-       owise_nurse: @no_emergencies,
+       owise_nurse: no_emergencies,
        owise_text: 'emergency'}}
     end
-    it "procs that the nurse hasn't done don't appear" do
-      visit_home @the_nurse
-      Fabricate :procedure, name: 'Dice!!'
-      find("table#emergency").text.should_not include 'Dice!!'
-    end
+    it_behaves_like "a summary section" do let(:section_name) {'emergency'} end
   end
 end
