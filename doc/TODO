@@ -5,7 +5,7 @@
 
 
 
-application helper constants belong elsewhere?
+remove precompile of assets
  Many things should validate against not being empty.
 
 FEATURES

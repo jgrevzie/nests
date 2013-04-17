@@ -57,7 +57,7 @@ Capybara.javascript_driver = :webkit
 
 def reset_db
   clear_db
-  SpreadsheetLoader::load_procs ApplicationHelper::CATHLAB_XLS
+  SpreadsheetLoader::load_procs CATHLAB_XLS
 end
 
 def clear_db
@@ -77,7 +77,7 @@ def login(nurse, *args)
 end
 
 def on_pending_vn_page?
-  page.has_css?('.header h1', text: ApplicationHelper::PENDING_VALIDATIONS_HEADER)
+  page.has_css?('.header h1', text: PENDING_VALIDATIONS_HEADER)
 end
 
 def visit_home nurse
