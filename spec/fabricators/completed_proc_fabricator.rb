@@ -2,9 +2,6 @@
 
 
 
-
-
-
 class CompletedProc
   def after_build!
     # Setup a validator if necessary.

@@ -11,8 +11,9 @@ class Procedure
   field :options
   field :comments
 
-  validates :name, presence: true, uniqueness: true
-
   has_many :completed_procs
-  #belongs_to :dept
+  belongs_to :dept
+
+  validates :name, presence: true, uniqueness: true
+  validates :dept, presence: true
 end

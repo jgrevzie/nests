@@ -5,8 +5,10 @@
 
 
 
-remove precompile of assets
- Many things should validate against not being empty.
+remove precompile of assets?
+maybe get rid of crazy initialization code in fabricators (could try model options to auto-generate or ! option in Fabrication)
+move after_build! out of CompletedProc in completed_proc_fabricator.rb
+Array.new(50) {fabricate.cp.call} .call could be replaced because it may be possible to pass a block in directly
 
 FEATURES
 Nurse needs to be able to change password.

@@ -3,6 +3,7 @@
 
 
 require 'spreadsheet'
+
 class Object
   def nil_or_strip!
     unless self.nil? 
@@ -42,14 +43,14 @@ module SpreadsheetLoader
     sheet = get_sheet(file_name, opts[:symbol].to_s.pluralize)
 
     sheet.each sheet.first.idx+1 do |row|
-      return if row[0].nil? # Found end of table
+      next if row[0].nil? # Blank line in middle of table.
       opts[:munger].call( h=HashWithIndifferentAccess[get_headers(sheet).zip row] )
       Fabricate opts[:symbol], h.merge(dept: opts[:dept])
     end
   end
 
-  def self.load_procs file_name
-    load_from_spreadsheet file_name, symbol: :procedure, munger: lambda { |h|
+  def self.load_procs file_name, dept
+    load_from_spreadsheet file_name, symbol: :procedure, dept: dept, munger: lambda { |h|
       %w(name abbrev comments).map {|i| h[i].nil_or_strip!}
       h[:options].nil_or_strip! && h[:options].gsub!(', ',',')
     }

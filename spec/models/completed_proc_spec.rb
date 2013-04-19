@@ -5,10 +5,17 @@ require 'spec_helper'
 
 describe CompletedProc do
   describe "fabricators" do
-    it "(random_completed_proc) will use random existing validator if status VALID or REJECTED" do
-      vn_1, vn_2 = Fabricate(:v_nurse), Fabricate(:v_nurse)
-      cp = Fabricate :random_completed_proc, status: CP::VALID
-      [vn_1.id, vn_2.id].should include cp.validated_by.id
+    describe ":random_completed_proc" do
+      it "uses random existing validator if status VALID or REJECTED" do
+        vn_1, vn_2 = Fabricate(:v_nurse), Fabricate(:v_nurse)
+        cp = Fabricate :random_completed_proc, status: CP::VALID
+        [vn_1.id, vn_2.id].should include cp.validated_by.id
+      end
+      it "is able to fabricate lots of procs, and they can be added to a nurse" do
+        fabricate_cp = lambda {Fabricate(:rand_cp, 
+                                         status: CP::STATUSES.sample)}
+        (Fabricate :nurse).completed_procs.concat Array.new(50) {fabricate_cp.call}
+      end
     end
   end
 

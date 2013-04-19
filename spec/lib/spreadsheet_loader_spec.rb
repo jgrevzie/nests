@@ -10,8 +10,9 @@ require 'spec_helper'
 describe SpreadsheetLoader, reset_db: false do
   before(:all) do
     clear_db
-    SL.load_procs TEST_XLS
-    SL.load_nurses TEST_XLS, Fabricate(:dept, name: 'Disco Dept')
+    dept = Fabricate(:dept, name: 'Disco Dept')
+    SL.load_procs TEST_XLS, dept
+    SL.load_nurses TEST_XLS, dept
   end
 
   TEST_XLS = "#{File.dirname __FILE__}/test.xls"
@@ -20,7 +21,8 @@ describe SpreadsheetLoader, reset_db: false do
     def proc_by_name(name) Procedure.where(name: name).first end 
 
     it "saves correct number of procs"  do
-      Procedure.count.should eq SL::get_sheet(TEST_XLS, 'procedures').row_count-1
+      n_nonblanks = SL::get_sheet(TEST_XLS, 'procedures').inject(0) {|accu, i| i[0].nil? ? accu : accu+1}
+      Procedure.count.should eq n_nonblanks-1
     end
     it "removes spaces between options" do
       (proc_by_name "Space between the options").options.should eq "Orange,Red"

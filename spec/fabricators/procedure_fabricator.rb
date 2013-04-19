@@ -3,14 +3,15 @@
 
 
 Fabricator(:random_proc, from: :procedure) do
-	initialize_with { Procedure.all.sample }
+	initialize_with { p = Procedure.all.sample ; puts p.name ; puts p.dept.name ; p}
 end
 
-Fabricator(:procedure) do
+Fabricator(:procedure, aliases: [:proc]) do
 	name 'Blaster'
+  dept Dept.create name: 'laser'
 end
 
 Fabricator(:proc_seq, from: :procedure) do
-	name { sequence(:proc_names) { |i| "procedure#{i}" } }
+	name { sequence { |i| "procedure#{i}" } }
 end
 

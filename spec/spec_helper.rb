@@ -57,7 +57,7 @@ Capybara.javascript_driver = :webkit
 
 def reset_db
   clear_db
-  SpreadsheetLoader::load_procs CATHLAB_XLS
+  SpreadsheetLoader::load_procs CATHLAB_XLS, Fabricate(:dept, name: 'CathLab')
 end
 
 def clear_db

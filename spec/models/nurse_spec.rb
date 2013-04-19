@@ -1,10 +1,8 @@
+
+
+
+
 require 'spec_helper'
-
-
-
-
-
-
 
 describe Nurse do
 

@@ -39,6 +39,7 @@ end
 describe "Nurse home page", reset_db: false do 
   before(:all) do
     reset_db
+    Procedure.each {|i| p i.dept}
   
     # This nurse's procs shouldn't appear, unless there's some problem with the code.
     (Fabricate :nurse).completed_procs.concat Array.new(10){Fabricate :rand_cp}
@@ -53,10 +54,9 @@ describe "Nurse home page", reset_db: false do
   end
 
   def nurse_without status
-    n = Fabricate :nurse
-    (rand 1..5).times do
-      n.completed_procs << Fabricate(:rand_cp, status: (CP::STATUSES-[status]).sample)
-    end
+    fabricate_cp = lambda {Fabricate(:rand_cp, 
+                                    status: (CP::STATUSES-[status]).sample)}
+    (n=Fabricate :nurse).completed_procs.concat Array.new(rand 1..50) {fabricate_cp.call}
     return n
   end
 
@@ -114,7 +114,7 @@ describe "Nurse home page", reset_db: false do
   describe "(emergency proc summary) -" do
     let(:no_emergencies) do
       (n= Fabricate :nurse).completed_procs.concat Array.new(10){
-        Fabricate(:rand_cp, emergency: false)}
+        cp = Fabricate(:rand_cp, emergency: false)}
       return n
     end
 
