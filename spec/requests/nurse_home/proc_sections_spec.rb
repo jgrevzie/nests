@@ -94,10 +94,13 @@ describe "Nurse home page", reset_db: false do
     end
   end
 
+  # Might be able to do the following without map, using hash as an array.
   def cp_summary(*filter)
     @the_nurse.completed_procs_summary(*filter).map {|name, n| "#{name} #{n}"}
   end
-  def cp_total(*filter) @the_nurse.completed_procs_total(*filter) end
+  def cp_total(*filter) 
+    @the_nurse.completed_procs_total(*filter) 
+  end
 
   describe "(validated proc summary) -" do
     it_behaves_like "a proc section" do 

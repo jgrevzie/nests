@@ -1,7 +1,8 @@
+
+
+
+
 require 'spec_helper'
-
-
-
 
 describe CompletedProc do
   describe "fabricators" do
@@ -11,10 +12,11 @@ describe CompletedProc do
         cp = Fabricate :random_completed_proc, status: CP::VALID
         [vn_1.id, vn_2.id].should include cp.validated_by.id
       end
-      it "is able to fabricate lots of procs, and they can be added to a nurse" do
-        fabricate_cp = lambda {Fabricate(:rand_cp, 
-                                         status: CP::STATUSES.sample)}
-        (Fabricate :nurse).completed_procs.concat Array.new(50) {fabricate_cp.call}
+      it "uses procs that are already in the db" do
+        clear_db
+        Fabricate(:proc_seq)
+        Fabricate(:random_proc)
+        Procedure.count.should eq 1
       end
     end
   end

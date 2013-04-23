@@ -22,12 +22,11 @@ Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date { Date.today }
 	quantity 1
-	# Check if proc_name: was specified, other build defulat procedure.
+	# If proc_name: was specified, use that as proc name.
   proc do |a| 
     params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
     Fabricate :procedure, Hash[params]
   end
-  #nurse { Fabricate :nurse }
   role CP::SCRUBBED
   after_build {|cp| cp.after_build! }
 end

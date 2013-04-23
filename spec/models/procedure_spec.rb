@@ -30,4 +30,12 @@ describe Procedure do
     end
   end
 
+  describe "Fabricate :random_proc" do
+    it "should return random existing proc" do
+      proc_count = Procedure.count
+      10.times { Fabricate :random_proc }
+      Procedure.count.should eq proc_count
+    end
+  end
+
 end
