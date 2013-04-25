@@ -55,7 +55,7 @@
 
 :javascript
   PROCID = '#completed_proc_proc_name'
-  proc_list = #{render 'autocomplete_list'}
+  proc_list = #{render 'autocomplete_list', nurse: @nurse}
 
   function loadOptions() {
     $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",

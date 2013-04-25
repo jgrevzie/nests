@@ -39,7 +39,6 @@ end
 describe "Nurse home page", reset_db: false do 
   before(:all) do
     reset_db
-    Procedure.each {|i| p i.dept}
   
     # This nurse's procs shouldn't appear, unless there's some problem with the code.
     (Fabricate :nurse).completed_procs.concat Array.new(10){Fabricate :rand_cp}

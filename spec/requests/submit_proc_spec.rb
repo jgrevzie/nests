@@ -37,10 +37,11 @@ describe "'Submit proc for validation' page" do
     Fabricate :completed_proc, quantity: 7, date: Date.today-1, comments:'Hello', 
               options: 'option1', emergency: true, role: CP::SCOUT, proc: p
   end
-  let(:logged_in_nurse) { login Fabricate :nurse }
+  let(:dept) {Fabricate :dept}
+  let(:logged_in_nurse) { login Fabricate :nurse, dept: dept }
 
   it "includes a shiny drop-down menu with known proc names", :js => true do
-    Fabricate :procedure, name: PROC_NAME
+    Fabricate :procedure, name: PROC_NAME, dept: dept
     
     logged_in_nurse
 
@@ -147,8 +148,8 @@ describe "'Submit proc for validation' page" do
     cp.reload.ackd?.should be_true
   end
   it "shows error message if proc name is invalid, disappears if it is valid", js: true do
-    Fabricate :procedure, name: 'PROC'
-    login Fabricate :nurse
+    Fabricate :procedure, name: 'PROC', dept: dept
+    login Fabricate :nurse, dept: dept
     fill_in 'Procedure Name', with: 'this is not a procedure name'
     fill_in 'Comments', with: 'Look at that gorgeous error message.'
     find('#procError').should  be_visible
@@ -157,8 +158,7 @@ describe "'Submit proc for validation' page" do
     find('#procError').should_not  be_visible
   end
   it "fixes proc name up a little, if it's on the dodgy side", js: true do
-    Fabricate :procedure, name: 'Procedure Test'
-    login Fabricate :nurse
+    login Fabricate :nurse, dept: (Fabricate :procedure, name: 'Procedure Test').dept
     fill_in 'Procedure Name', with: 'procedure test'
     fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
     find_field('Procedure Name').value.should eq 'Procedure Test'

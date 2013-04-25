@@ -26,24 +26,22 @@ module SpreadsheetLoader
 
   def self.get_sheet(file_name, sheet_name)
     spready = Spreadsheet.open file_name
-    spready.worksheets.find {|w| w.name.downcase==sheet_name.downcase} ||
-      raise("Couldn't find sheet '#{sheet_name}'")
+    spready.worksheets.find {|w| w.name.downcase==sheet_name.downcase} or
+      puts "Couldn't find sheet '#{sheet_name}' in #{file_name}"
   end
 
   def self.get_headers sheet    
     headers = sheet.first.map &:downcase
-    unless headers[0] && headers[0] == "name"
-      raise "Couldn't find start of table (looking for 'n/Name' in column A)"
-    end
+    raise "Couldn't find 'n/Name' at top of a column" unless headers.include? "name"
     return headers
   end    
 
   def self.load_from_spreadsheet file_name, *args
     opts = args.extract_options!
-    sheet = get_sheet(file_name, opts[:symbol].to_s.pluralize)
+    return unless sheet = get_sheet(file_name, opts[:symbol].to_s.pluralize)
 
     sheet.each sheet.first.idx+1 do |row|
-      next if row[0].nil? # Blank line in middle of table.
+         next unless row.any? {|i| !i.nil? } # Blank line in middle of table.
       opts[:munger].call( h=HashWithIndifferentAccess[get_headers(sheet).zip row] )
       Fabricate opts[:symbol], h.merge(dept: opts[:dept])
     end
@@ -64,6 +62,13 @@ module SpreadsheetLoader
       h['email'] = "#{fn}.#{ln}@svpm.org.au" unless h['email']
       h['password'] = ln
     }
+  end
+
+  def self.load_dept file_name, *args
+    opts = args.extract_options!
+    dept = Fabricate :dept, {name: get_dept_name(file_name)}.merge(opts)
+    load_procs file_name, dept
+    load_nurses file_name, dept
   end
       
 end

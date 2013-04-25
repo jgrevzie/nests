@@ -9,7 +9,7 @@ Fabricator(:nurse) do
 	name {sequence {|i| "Nancy Jones#{i}"}}
 	username {sequence {|i| "nancy#{i}" }}
 	password 'password'
-	dept
+	dept(fabricator: :dept_singleton)
 	email {sequence {|i| "nancy#{i}@example.com"}}
 end
 

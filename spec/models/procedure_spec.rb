@@ -12,29 +12,28 @@ describe Procedure do
 
   describe "fabricators" do
     describe "Fabricate :procedure" do
-      it "makes a few procs with the same dept" do
+      it "if dept: is specified, then dept is set in procedure" do
         dept = Fabricate :dept, name: 'Dept'
-        p1 = Fabricate :proc, name: 'PROC1', dept: dept
-        p2 = Fabricate :proc, name: 'PROC2', dept: dept
-        p1.dept.name.should eq p2.dept.name
+        p = Fabricate :proc, dept: dept
+        p.dept.name.should eq dept.name
       end
     end
-  end
 
-  describe "Fabricate :proc_seq" do
-    it "makes a sequence of procs" do
-      p1 = Fabricate :proc_seq
-      p2 = Fabricate :proc_seq
-      p1.name.should_not eq p2.name
-      p1.dept.should eq p2.dept
+    describe "Fabricate :proc_seq" do
+      it "makes a sequence of procs" do
+        p1 = Fabricate :proc_seq
+        p2 = Fabricate :proc_seq
+        p1.name.should_not eq p2.name
+        p1.dept.should eq p2.dept
+      end
     end
-  end
 
-  describe "Fabricate :random_proc" do
-    it "should return random existing proc" do
-      proc_count = Procedure.count
-      10.times { Fabricate :random_proc }
-      Procedure.count.should eq proc_count
+    describe "Fabricate :random_proc" do
+      it "returns random existing proc" do
+        proc_count = Procedure.count
+        10.times { Fabricate :random_proc }
+        Procedure.count.should eq proc_count
+      end
     end
   end
 

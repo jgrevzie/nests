@@ -2,7 +2,5 @@
 
 
 
-
-
-
-[ <%= Procedure.asc(:name).collect {|i| '"' + i.name + '"'}.join(',').html_safe %> ]
+[ <%= Procedure.where(dept_id: nurse.dept.id).asc(:name).
+    collect {|i| '"' + i.name + '"'}.join(',').html_safe %> ]
