@@ -42,7 +42,6 @@ class Nurse
 
   def completed_procs_summary *args
     options = args.extract_options!
-    zeroes = options.delete(:zeroes)
     summary = {}
     Procedure.asc(:name).each do |proc|
       count = 0
@@ -50,7 +49,7 @@ class Nurse
         nurse_id: self.id, 
         proc_id: proc.id, 
         status: CompletedProc::VALID)).each {|cp| count += cp.quantity}
-      summary[proc.name] = count.to_i unless count==0 && zeroes!=true
+      summary[proc.name] = count.to_i unless count==0
     end
     return summary
   end

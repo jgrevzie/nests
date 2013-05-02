@@ -39,7 +39,7 @@ class NursesController < ApplicationController
   # POST /nurses.json
   def create
     @nurse = Nurse.new(params[:nurse])
-    flash[:notice] = 'Nurse was successfully created.' if @nurse.save
+    flash[:notice] = 'Created Nurse.' if @nurse.save
     respond_with @nurse
   end
 
@@ -47,7 +47,7 @@ class NursesController < ApplicationController
   # PUT /nurses/1.json
   def update
     @nurse = Nurse.find(params[:id])
-    flash[:notice] = 'Nurse was successfully updated.' if @nurse.update_attributes(params[:nurse])
+    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse])
     respond_with @nurse
   end
 

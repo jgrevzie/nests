@@ -61,7 +61,7 @@ def reset_db
 end
 
 def clear_db
-  Mongoid::Sessions.default.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+  Mongoid.purge!
 end
 
 def login(nurse, *args)

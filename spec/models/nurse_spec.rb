@@ -4,7 +4,8 @@
 
 require 'spec_helper'
 
-describe Nurse do
+describe Nurse, reset_db: false do
+  before(:all) { clear_db }
 
   describe 'fabricators' do
     it '(:nurse) fabricates nurses with different usernames' do
@@ -13,9 +14,10 @@ describe Nurse do
       nurse0.username.should_not  eq(nurse1.username)
     end
     it '(:nurse_5_pendings) fabricates nurse with completed procs' do
+      n_comp_procs = CompletedProc.all.count
       n = Fabricate :nurse_5_pendings
       n.completed_procs.size.should == 5
-      CompletedProc.all.count.should == 5
+      CompletedProc.all.count.should == n_comp_procs+5
     end
   end
 
@@ -33,11 +35,12 @@ describe Nurse do
 
   describe '.vdate' do
     it "does pretty much what you'd expect :)" do
+      n_pendings = CompletedProc.pending_validations.size
       5.times { Fabricate :nurse_5_pendings }
       vn = Fabricate :v_nurse
 
       comp_procs = CompletedProc.pending_validations
-      comp_procs.size.should eq 25
+      comp_procs.size.should eq n_pendings+25
       vn.vdate comp_procs
       CompletedProc.pending_validations.size.should eq 0
     end
@@ -49,13 +52,15 @@ describe Nurse do
   end
   describe ".vdate_by_id" do
     it "takes a list of comp proc ids and.vdates the heck out of them" do
+      n_pending = CompletedProc.pending_validations.count
+
       n = Fabricate :nurse_5_pendings
       vn = Fabricate :v_nurse
 
-      CompletedProc.pending_validations.count.should eq 5
-      cp_ids = n.completed_procs.collect {|i| i._id }
+      CompletedProc.pending_validations.count.should eq n_pending+5
+      cp_ids = n.completed_procs.collect &:_id
       vn.validate_by_id cp_ids
-      CompletedProc.pending_validations.count.should eq 0
+      CompletedProc.pending_validations.count.should eq n_pending
     end
     it "throws if nurse is not validator" do
       n = Fabricate :nurse
@@ -65,36 +70,26 @@ describe Nurse do
   describe "#completed_procs_summary" do
     it "returns an array of totals of.vdated proc types for a given nurse" do
       n = Fabricate :nurse
-      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 5)
-      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC2', quantity: 7)
+      n.completed_procs << (cp_1=Fabricate(:comp_proc_seq, quantity: 5))
+      n.completed_procs << (cp_2=Fabricate(:comp_proc_seq, quantity: 7))
 
       vn = Fabricate :v_nurse
       vn.vdate n.completed_procs
 
-      n.completed_procs_summary['PROC1'].should eq 5
-      n.completed_procs_summary['PROC2'].should eq 7
+      n.completed_procs_summary[cp_1.proc.name].should eq 5
+      n.completed_procs_summary[cp_2.proc.name].should eq 7
     end
     it "doesn't include procs that haven't been.vdated" do
       n = Fabricate :nurse
-      n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 5) 
+      n.completed_procs << (cp=Fabricate(:comp_proc_seq, quantity: 5))
 
-      n.completed_procs_summary['PROC1'].should be_nil
+      n.completed_procs_summary[cp.proc.name].should be_nil
     end
-    context "procedures with zero quantity" do
-      before(:each) do
-        @n = Fabricate :nurse
-        @n.completed_procs << Fabricate(:completed_proc, proc_name: 'PROC1', quantity: 7)
-        Fabricate :procedure, name: 'PROC2'
-
-        vn = Fabricate :v_nurse
-        vn.vdate @n.completed_procs      
-      end
-      it "doesn't return procs with zero quantity" do
-        @n.completed_procs_summary['PROC2'].should be_nil
-      end
-      it "does return procs with zero quantity if zeroes:true is specified" do
-        @n.completed_procs_summary(zeroes:true)['PROC2'].should eq 0
-      end
+    it "doesn't return procs with zero quantity" do
+      (n = Fabricate :nurse).completed_procs << Fabricate(:comp_proc_seq, quantity: 7)
+      (Fabricate :v_nurse).vdate n.completed_procs
+      stray_proc = Fabricate :proc_seq
+      n.completed_procs_summary[stray_proc.name].should be_nil
     end
   end
   describe "#completed_procs_total" do
@@ -119,6 +114,7 @@ describe Nurse do
   end
   describe "filters" do
     before(:each) do
+      reset_db
       @n = Fabricate :nurse
       @n.completed_procs << Fabricate(:cp, proc_name: 'PROC1', quantity: 5)
       @n.completed_procs << Fabricate(:cp, proc_name: 'PROC2', quantity: 7, emergency: true)
