@@ -5,7 +5,7 @@
 require 'spec_helper'
 
 describe Nurse, reset_db: false do
-  before(:all) { clear_db }
+  before(:all) { reset_db }
 
   describe 'fabricators' do
     it '(:nurse) fabricates nurses with different usernames' do
