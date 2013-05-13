@@ -12,7 +12,7 @@ describe SpreadsheetLoader, reset_db: false do
   let(:n_nonblank_rows) {SL::get_sheet(TEST_XLS, 'procedures').inject(0) {|accu, i| 
           i[0].nil? ? accu : accu+1}}
   # Have to split tests into two sections, because need to clear the database twice.
-  describe "load procs and nurses" do
+  describe "" do
     before(:all) do
       clear_db
       dept = Fabricate(:dept, name: 'Disco Dept')

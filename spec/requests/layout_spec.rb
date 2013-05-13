@@ -2,7 +2,7 @@ require 'spec_helper'
 
 
 
-describe "application layout" do
+describe "application layout", reset_db: false do
   describe "(toolbar)" do
     describe "'Send Mail' link" do
       it "when clicked, sends that user a mail" do

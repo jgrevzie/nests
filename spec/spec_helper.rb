@@ -46,8 +46,9 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
 
+  config.before :all do clear_db end
   config.before :each do
-    reset_db unless example.metadata[:reset_db]==false
+    load_cathlab_procs unless example.metadata[:reset_db]==false
     Mail::TestMailer::deliveries.clear
   end
 
@@ -55,7 +56,7 @@ end
 
 Capybara.javascript_driver = :webkit
 
-def reset_db
+def load_cathlab_procs
   clear_db
   SpreadsheetLoader::load_procs "#{DB_DIR}/CathLab.xls", Fabricate(:dept, name: 'CathLab')
 end

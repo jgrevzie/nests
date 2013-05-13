@@ -19,7 +19,9 @@ shared_examples "a proc section" do
   end
   it "(has table with appropriate data)" do
     visit_home @the_nurse
-    o[:collection].each {|i| find(table_selector).text.should include i.to_s}
+    counts = o[:collection] 
+    # Only tests that about 1/4 of the counts are there, for speed.
+    counts.sample(counts.size/4).each {|i| find(table_selector).text.should include i.to_s}
   end
   it "(doesn't show table, instead shows some text if there's no rows)" do
     visit_home o[:owise_nurse]
@@ -38,7 +40,7 @@ end
 
 describe "Nurse home page", reset_db: false do 
   before(:all) do
-    reset_db
+    load_cathlab_procs
   
     # This nurse's procs shouldn't appear, unless there's some problem with the code.
     (Fabricate :nurse).completed_procs.concat Array.new(10){Fabricate :rand_cp}
