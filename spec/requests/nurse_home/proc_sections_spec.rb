@@ -57,7 +57,7 @@ describe "Nurse home page", reset_db: false do
   def nurse_without status
     fabricate_cp = lambda {Fabricate(:rand_cp, 
                                     status: (CP::STATUSES-[status]).sample)}
-    (n=Fabricate :nurse).completed_procs.concat Array.new(rand 1..50) {fabricate_cp.call}
+    (n=Fabricate :nurse).completed_procs.concat Array.new(rand 1..10) {fabricate_cp.call}
     return n
   end
 

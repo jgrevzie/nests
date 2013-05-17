@@ -49,7 +49,6 @@ RSpec.configure do |config|
   config.before :all do clear_db end
   config.before :each do
     load_cathlab_procs unless example.metadata[:reset_db]==false
-    Mail::TestMailer::deliveries.clear
   end
 
 end

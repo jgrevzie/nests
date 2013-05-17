@@ -33,14 +33,14 @@ describe Nurse, reset_db: false do
     end
   end
 
-  describe '.vdate' do
+  describe '#vdate' do
     it "does pretty much what you'd expect :)" do
       n_pendings = CompletedProc.pending_validations.size
-      5.times { Fabricate :nurse_5_pendings }
+      2.times { Fabricate :nurse_5_pendings }
       vn = Fabricate :v_nurse
 
       comp_procs = CompletedProc.pending_validations
-      comp_procs.size.should eq n_pendings+25
+      comp_procs.size.should eq n_pendings+10
       vn.vdate comp_procs
       CompletedProc.pending_validations.size.should eq 0
     end
@@ -50,7 +50,7 @@ describe Nurse, reset_db: false do
       expect { n2.vdate(CompletedProc.pending_validations) }.to raise_error
     end
   end
-  describe ".vdate_by_id" do
+  describe "#vdate_by_id" do
     it "takes a list of comp proc ids and.vdates the heck out of them" do
       n_pending = CompletedProc.pending_validations.count
 

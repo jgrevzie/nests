@@ -5,6 +5,7 @@
 
 
 
+fabricators shouldn't need to have procs loaded (should load procs themselves if necessary)
 reset_db should not be true by default
 remove precompile of assets?
 maybe get rid of crazy initialization code in fabricators (could try model options to auto-generate or ! option in Fabrication)

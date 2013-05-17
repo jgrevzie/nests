@@ -4,44 +4,49 @@
 
 require 'spec_helper'
 
-describe CompletedProc do
+def pv ; CompletedProc.pending_validations.count end
+
+describe CompletedProc, reset_db: false do
+  before(:all) {load_cathlab_procs}
   describe "fabricators" do
+    before(:each) {Nurse.delete_all}
     describe ":random_completed_proc" do
       it "uses random existing validator if status VALID or REJECTED" do
-        vn_1, vn_2 = Fabricate(:v_nurse), Fabricate(:v_nurse)
+        vn_1, vn_2 = Array.new(2) {Fabricate(:v_nurse)}
         cp = Fabricate :random_completed_proc, status: CP::VALID
         [vn_1.id, vn_2.id].should include cp.validated_by.id
       end
-      it "uses procs that are already in the db" do
-        clear_db
-        Fabricate(:proc_seq)
-        Fabricate(:random_proc)
-        Procedure.count.should eq 1
+      it "makes new validator if there aren't any in db (and status is VALID or REJECTED)" do
+        cp = Fabricate :random_completed_proc, status: CP::REJECTED
+        cp.validated_by.id.should_not be_nil
       end
     end
   end
 
   describe '#pending_validations' do 
     it "gets all non-validated procs" do 
+      pv_orig = pv
       n = Fabricate :nurse_5_pending
-      CompletedProc.pending_validations.count.should eq 5
+      pv.should eq pv_orig+5
     end
     it "doesn't get validated procs" do
+      pv_orig = pv
       n1 = Fabricate :nurse_5_pending
       n2 = Fabricate :nurse_5_pending
       vn = Fabricate :v_nurse
       vn.vdate n1.completed_procs
-      CompletedProc.pending_validations.count.should eq 5
+      pv.should eq pv_orig+5
     end
   end
 
   describe "#ack_reject" do
     it "changes status of comp proc to acknowleged" do
+      pv_orig = pv
       cp = Fabricate :completed_proc
-      CompletedProc.pending.count.should eq 1
+      pv.should eq pv_orig+1
       cp.ack_reject
       cp.save
-      CompletedProc.pending.count.should eq 0
+      pv.should eq pv_orig
     end
   end
 

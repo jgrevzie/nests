@@ -6,7 +6,10 @@ require 'spec_helper'
 
 describe "Nurse's home page", reset_db: false do
 
-  before(:all) {clear_db}
+  before(:all) {
+    clear_db
+    dept = Fabricate :dept, name: 'Hankerchief Dept'
+  }
 
   it "shows title for signed in nurse" do
     visit_home n=Fabricate(:nurse)
@@ -44,12 +47,9 @@ describe "Nurse's home page", reset_db: false do
       check_autoupdate_field label: 'Name', with: 'Naughty Nurse', attr: :name
       check_autoupdate_field label: 'Designation', with: 'Test Desig', attr: :designation
 
-      old_dept, new_dept = vn.dept.id.to_s
-      # Choose something that's not selected.
-      within '#nurse_dept_id' do
-        new_dept = (all('option').map {|i| i[:value]} - [old_dept]).sample
-        find("option[value='#{new_dept}']").select_option
-      end
+      # Choose dept that's not already selected.
+      new_dept = (all('option').map {|i| i[:value]} - [vn.dept.id.to_s]).sample
+      find("option[value='#{new_dept}']").select_option
       click_and_wait_for_ajax
       vn.reload.dept.id.to_s.should eq new_dept
 
