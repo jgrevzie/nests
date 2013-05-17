@@ -4,8 +4,7 @@
 
 require 'spec_helper'
 
-describe Nurse, reset_db: false do
-  before(:all) { load_cathlab_procs }
+describe Nurse do
 
   describe 'fabricators' do
     it '(:nurse) fabricates nurses with different usernames' do
@@ -114,7 +113,7 @@ describe Nurse, reset_db: false do
   end
   describe "filters" do
     before(:each) do
-      load_cathlab_procs
+      clear_db
       @n = Fabricate :nurse
       @n.completed_procs << Fabricate(:cp, proc_name: 'PROC1', quantity: 5)
       @n.completed_procs << Fabricate(:cp, proc_name: 'PROC2', quantity: 7, emergency: true)

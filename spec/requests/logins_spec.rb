@@ -3,7 +3,7 @@ require 'spec_helper'
 
 
 
-describe 'login page', reset_db: false do
+describe 'login page' do
 
 	it 'after successful sign in, takes regular nurse to submit procedure page' do
 		nurse = Fabricate :nurse

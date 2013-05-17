@@ -7,7 +7,7 @@
 
 require 'spec_helper'
 
-describe SpreadsheetLoader, reset_db: false do
+describe SpreadsheetLoader do
   TEST_XLS = "#{File.dirname __FILE__}/test.xls"
   let(:n_nonblank_rows) {SL::get_sheet(TEST_XLS, 'procedures').inject(0) {|accu, i| 
           i[0].nil? ? accu : accu+1}}

@@ -2,8 +2,7 @@ require 'spec_helper'
 
 
 
-describe 'completed_procs/_autocomplete_list', reset_db: false do
-  before(:all) {clear_db}
+describe 'completed_procs/_autocomplete_list' do
   it 'renders correct list of procedures' do
     dept1 = Fabricate :dept, name: 'Mail Dept'
     dept2 = Fabricate :dept, name: 'Microwave Ovens'

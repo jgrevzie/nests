@@ -38,10 +38,8 @@ shared_examples "a summary section" do |section_name|
   end
 end
 
-describe "Nurse home page", reset_db: false do 
+describe "Nurse home page" do 
   before(:all) do
-    load_cathlab_procs
-  
     # This nurse's procs shouldn't appear, unless there's some problem with the code.
     (Fabricate :nurse).completed_procs.concat Array.new(10){Fabricate :rand_cp}
 

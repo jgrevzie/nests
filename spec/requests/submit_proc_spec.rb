@@ -31,7 +31,7 @@ def procs_equiv?(cp_1, cp_2)
   cp_1.attributes.except(*ignore_attrs) == cp_2.attributes.except(*ignore_attrs)
 end
 
-describe "'Submit proc for validation' page", reset_db: false do
+describe "'Submit proc for validation' page" do
   before(:each) { clear_db }
   let(:comp_proc) do
     p = Fabricate :procedure, name: PROC_NAME, options: "option1,option2"

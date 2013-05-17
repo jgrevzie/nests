@@ -5,8 +5,7 @@
 
 require 'spec_helper'
 
-describe CompletedProcsController, reset_db: false do
-  before(:all) { load_cathlab_procs }
+describe CompletedProcsController do
   before(:each) {@pv_before = pv}
   
   def pv ; CompletedProc.pending.count end

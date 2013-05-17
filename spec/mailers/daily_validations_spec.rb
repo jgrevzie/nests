@@ -13,9 +13,8 @@ def check_mail_content(mail, *args)
   mail.body.encoded.should match /http:.*pending_validations/
 end
 
-describe DailyValidations, reset_db: false do
+describe DailyValidations do
   before(:all) do 
-    load_cathlab_procs
     Fabricate :nurse_5_pendings
     @vn = Fabricate :v_nurse, email: 'nurse@example.org', wants_mail: true
     4.times { Fabricate :v_nurse }

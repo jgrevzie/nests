@@ -6,8 +6,7 @@ require 'spec_helper'
 
 def pv ; CompletedProc.pending_validations.count end
 
-describe CompletedProc, reset_db: false do
-  before(:all) {load_cathlab_procs}
+describe CompletedProc do
   describe "fabricators" do
     before(:each) {Nurse.delete_all}
     describe ":random_completed_proc" do

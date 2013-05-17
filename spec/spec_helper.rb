@@ -46,9 +46,8 @@ RSpec.configure do |config|
 
   config.include Capybara::DSL
 
-  config.before :all do clear_db end
-  config.before :each do
-    load_cathlab_procs unless example.metadata[:reset_db]==false
+  config.before :all do
+    load_cathlab_procs
   end
 
 end

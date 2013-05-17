@@ -4,7 +4,7 @@
 
 require 'spec_helper'
 
-describe "Nurse's home page", reset_db: false do
+describe "Nurse's home page" do
 
   before(:all) {
     clear_db

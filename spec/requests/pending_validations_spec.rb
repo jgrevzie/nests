@@ -2,8 +2,7 @@ require 'spec_helper'
 
 
 
-describe "'Pending validations for nurse' screen", reset_db: false do
-  before(:all) {load_cathlab_procs}
+describe "'Pending validations for nurse' screen" do
   let(:n_pendings) {CompletedProc.pending_validations.count}
 
   it 'displays a table with a row for each pending proc, shows # of procs' do
