@@ -41,7 +41,7 @@ describe CompletedProc do
   describe "#ack_reject" do
     it "changes status of comp proc to acknowleged" do
       pv_orig = pv
-      cp = Fabricate :completed_proc
+      cp = Fabricate :comp_proc_seq
       pv.should eq pv_orig+1
       cp.ack_reject
       cp.save

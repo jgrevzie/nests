@@ -47,7 +47,9 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 
   config.before :all do
-    load_cathlab_procs
+    clear_db
+    5.times {Fabricate :proc_seq}
+#    load_cathlab_procs
   end
 
 end

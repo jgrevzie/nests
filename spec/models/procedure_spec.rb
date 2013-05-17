@@ -6,9 +6,9 @@ require 'spec_helper'
 
 describe Procedure do
 
-  describe "seed data" do
-  	specify { Procedure.count.should > 0 }
-  end
+  # describe "seed data" do
+  # 	specify { Procedure.count.should > 0 }
+  # end
 
   describe "fabricators" do
     describe "Fabricate :procedure" do
@@ -28,10 +28,12 @@ describe Procedure do
       end
     end
 
-    describe "Fabricate :random_proc" do
+    describe "random_proc" do
       it "returns random existing proc" do
+        Fabricate :proc_seq
+        # There's a procedure in the db now, so n of procs shouldn't go up
         proc_count = Procedure.count
-        10.times { Fabricate :random_proc }
+        5.times { random_proc }
         Procedure.count.should eq proc_count
       end
     end

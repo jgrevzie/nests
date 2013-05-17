@@ -38,7 +38,7 @@ end
 Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) do
   date { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
-  proc { Fabricate :random_proc}
+  proc { random_proc }
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
   role {CP::ROLES.sample}
   emergency {[true, false].sample}
