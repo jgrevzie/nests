@@ -5,15 +5,8 @@
 
 
 
-fabricators shouldn't need to have procs loaded (should load procs themselves if necessary)
-reset_db should not be true by default
 remove precompile of assets?
 maybe get rid of crazy initialization code in fabricators (could try model options to auto-generate or ! option in Fabrication)
-move after_build! out of CompletedProc in completed_proc_fabricator.rb
-Array.new(50) {fabricate.cp.call} .call could be replaced because it may be possible to pass a block in directly
-reset_db: false could be replaced by something that doesn't load procs?
-Shouldn't load the procedures from CathLab during test, should perhaps have special test spreadsheet of procedures
-Nurse.count.should eq 5 not pretty in spreadsheet loader spec
 
 FEATURES
 Procs need to be categorized by heading in drop down list.

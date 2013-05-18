@@ -2,22 +2,6 @@
 
 
 
-class CompletedProc
-  def after_build!
-    # Setup a validator if necessary.
-    if [CP::VALID, CP::REJECTED].include? self.status
-      vn = Nurse.where(validator: true).to_ary.sample || Fabricate(:v_nurse)
-      self.validated_by = vn
-    end
-
-    # Setup options if necessary.
-    if self.proc && (opts=self.proc.options) && opts.size>0
-      if opts[-1]=='?' then self.options=[opts.chop, '0'].sample
-      else self.options=opts.split(',').sample end
-    end
-  end
-end
-
 Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date { Date.today }
@@ -28,7 +12,20 @@ Fabricator(:completed_proc, aliases: [:cp]) do
     Fabricate :procedure, Hash[params]
   end
   role CP::SCRUBBED
-  after_build {|cp| cp.after_build! }
+  
+  after_build do |cp|
+    # Setup a validator if necessary.
+    if [CP::VALID, CP::REJECTED].include? cp.status
+      vn = Nurse.where(validator: true).to_ary.sample || Fabricate(:v_nurse)
+      cp.validated_by = vn
+    end
+
+    # Setup options if necessary.
+    if cp.proc && (opts=cp.proc.options) && opts.size>0
+      if opts[-1]=='?' then cp.options=[opts.chop, '0'].sample
+      else cp.options=opts.split(',').sample end
+    end
+  end
 end
 
 Fabricator(:comp_proc_seq, from: :completed_proc) do

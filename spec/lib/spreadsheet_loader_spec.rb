@@ -7,11 +7,12 @@
 
 require 'spec_helper'
 
-describe SpreadsheetLoader do
-  TEST_XLS = "#{File.dirname __FILE__}/test.xls"
-  let(:n_nonblank_rows) {SL::get_sheet(TEST_XLS, 'procedures').inject(0) {|accu, i| 
-          i[0].nil? ? accu : accu+1}}
+TEST_XLS = "#{File.dirname __FILE__}/test.xls"
+def nonblank_rows_for_sheet sheet_name  
+  SL::get_sheet(TEST_XLS, sheet_name).inject(0) {|accu, i| i[0].nil? ? accu : accu+1}
+end
 
+describe SpreadsheetLoader do
   # Have to split tests into two sections, because need to clear the database twice.
   describe "" do
     before(:all) do
@@ -25,7 +26,7 @@ describe SpreadsheetLoader do
       def proc_by_name(name) Procedure.where(name: name).first end 
 
       it "saves correct number of procs, skips over any blank lines"  do
-        Procedure.count.should eq n_nonblank_rows-1
+        Procedure.count.should eq nonblank_rows_for_sheet('procedures')-1
       end
       it "removes spaces between options" do
         (proc_by_name "Space between the options").options.should eq "Orange,Red"
@@ -69,7 +70,7 @@ describe SpreadsheetLoader do
       def nurse_by_name(name) Nurse.where(name: name).first end
 
       it "saves correct number of nurses" do
-        Nurse.count.should eq 5
+        Nurse.count.should eq nonblank_rows_for_sheet('nurses') -1
       end
 
       context "assigns all fields correctly" do
@@ -116,7 +117,7 @@ describe SpreadsheetLoader do
       its(:location) {should eq 'location'}
     end
     it "loads procs" do
-      Procedure.count.should eq n_nonblank_rows-1
+      Procedure.count.should eq nonblank_rows_for_sheet('procedures')-1
     end
     it "loads nurses" do
       Nurse.count.should eq 5
