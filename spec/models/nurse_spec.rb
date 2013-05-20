@@ -18,6 +18,11 @@ describe Nurse do
       n.completed_procs.size.should == 5
       CompletedProc.all.count.should == n_comp_procs+5
     end
+    it '(:nurse_1_proc) allows optional params proc_name: and quantity:' do
+      n = Fabricate :nurse_1_proc, proc_name: 'Robot Dance', quantity: 5
+      n.completed_procs[0].proc.name.should eq 'Robot Dance'
+      n.completed_procs[0].quantity.should eq 5
+    end
   end
 
   describe '#pendings' do 

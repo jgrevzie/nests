@@ -20,6 +20,12 @@ describe CompletedProc do
         cp.validated_by.id.should_not be_nil
       end
     end
+    describe ":completed_proc" do
+      it "takes optional parameter proc_name: and sets procedure name" do
+        cp = Fabricate :cp, proc_name: 'Shock!'
+        cp.proc.name.should eq 'Shock!'
+      end
+    end
   end
 
   describe '#pending_validations' do 

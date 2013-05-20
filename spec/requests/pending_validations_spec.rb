@@ -8,7 +8,7 @@ describe "'Pending validations for nurse' screen" do
   it 'displays a table with a row for each pending proc, shows # of procs' do
     vn = Fabricate :v_nurse
 
-    Fabricate :nurse_1_proc, proc_name: 'PROC_NAME', q: 5
+    Fabricate :nurse_1_proc, proc_name: 'PROC_NAME', quantity: 5
 
     login vn
     on_pending_vn_page?.should be_true
@@ -48,7 +48,7 @@ describe "'Pending validations for nurse' screen" do
   end
   it "displays links to completed procs, takes user to edit proc screen" do
     vn = Fabricate :v_nurse
-    Fabricate(:nurse_1_proc, proc_name: 'PROC', q: 5)
+    Fabricate(:nurse_1_proc, proc_name: 'PROC', quantity: 5)
     login vn
     click_link('PROC (5)')
     page.should have_content 'procedure'

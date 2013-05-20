@@ -2,15 +2,18 @@
 
 
 
+
+def random_proc
+  return Procedure.all.sample if Procedure.count>0
+  return Fabricate :proc_seq
+end
+
 Fabricator(:completed_proc, aliases: [:cp]) do
 	transient :proc_name
   date { Date.today }
 	quantity 1
 	# If proc_name: was specified, use that as proc name.
-  proc do |a| 
-    params = [] << ( [:name, a[:proc_name]] if a[:proc_name] )
-    Fabricate :procedure, Hash[params]
-  end
+  proc {|attrs| Fabricate :procedure, opt_params(attrs, proc_name: :name)}
   role CP::SCRUBBED
   
   after_build do |cp|
@@ -40,3 +43,4 @@ Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) d
   role {CP::ROLES.sample}
   emergency {[true, false].sample}
 end
+
