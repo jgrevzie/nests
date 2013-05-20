@@ -15,9 +15,7 @@ end
 
 Fabricator(:nurse_random_procs, from: :nurse) do
 	transient :n_procs
-	after_create do |me, t| 
-		t[:n_procs].times { me.completed_procs << Fabricate(:random_completed_proc) }
-	end
+	completed_procs { |attrs| Array.new(attrs[:n_procs] || 1) {Fabricate(:random_completed_proc)} } 
 end
 
 Fabricator(:nurse_5_pending, from: :nurse, aliases: [:nurse_5_pendings]) do

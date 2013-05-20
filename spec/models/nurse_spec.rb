@@ -23,6 +23,12 @@ describe Nurse do
       n.completed_procs[0].proc.name.should eq 'Robot Dance'
       n.completed_procs[0].quantity.should eq 5
     end
+    it '(:nurse_random_procs) allows optional param :n_procs to specify number of procs' do
+      (Fabricate :nurse_random_procs, n_procs: 2).completed_procs.size.should eq 2
+    end
+    it '(:nurse_random_procs) defaults to a single proc' do
+      (Fabricate :nurse_random_procs).completed_procs.size.should eq 1
+    end
   end
 
   describe '#pendings' do 
