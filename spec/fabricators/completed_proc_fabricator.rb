@@ -8,12 +8,12 @@ def random_proc
   return Fabricate :proc_seq
 end
 
-Fabricator(:completed_proc, aliases: [:cp]) do
-	transient :proc_name
+Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
+	transient :proc_name, :dept
   date { Date.today }
 	quantity 1
 	# If proc_name: was specified, use that as proc name.
-  proc {|attrs| Fabricate :procedure, opt_params(attrs, proc_name: :name)}
+  proc {|attrs| Fabricate :proc_seq, opt_params(attrs, :dept, proc_name: :name)}
   role CP::SCRUBBED
   
   after_build do |cp|
@@ -31,14 +31,10 @@ Fabricator(:completed_proc, aliases: [:cp]) do
   end
 end
 
-Fabricator(:comp_proc_seq, from: :completed_proc) do
-  proc { Fabricate :proc_seq }
-end
-
 Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) do
   date { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
-  proc { random_proc }
+  proc {random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
   role {CP::ROLES.sample}
   emergency {[true, false].sample}

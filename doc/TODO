@@ -6,13 +6,12 @@
 
 
 remove precompile of assets?
-maybe get rid of crazy initialization code in fabricators (could try model options to auto-generate or ! option in Fabrication)
 
 FEATURES
 Procs need to be categorized by heading in drop down list.
 Nurse needs to be able to change password.
 Summary of completed procedures by date with y axis showing quantity?
-Record year started in application.
+Record year started in CliniTraq.
 Abbreviation search.
 Nurse should be attached to section in hospital and get appropriate procedures.
 Completed procs should be clickable, take through to information about each procedure.

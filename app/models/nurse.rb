@@ -31,7 +31,7 @@ class Nurse
   def last_name; name.split[-1] end
 
   def pendings
-     CompletedProc.all(nurse_id: self.id, status: CompletedProc::PENDING).desc(:date)
+     CompletedProc.all(nurse_id: self.id, status: CP::PENDING).desc(:date)
   end
   alias_method :pending_procs, :pendings
 
@@ -59,6 +59,11 @@ class Nurse
     completed_procs_summary(*args).values.inject(0, :+)
   end
 
+  def procs_i_can_validate
+    procs = Procedure.where(dept_id: self.dept.id).map(&:id)
+    CP.where(status: CP::PENDING).in(proc_id: procs)
+  end
+
   def validate_by_id(completed_proc_ids)
     self.vdate(CompletedProc.in _id: completed_proc_ids)
   end
@@ -70,6 +75,8 @@ class Nurse
       i.save
     end
   end
+
+  def vdate_all ; vdate self.procs_i_can_vdate end
 
   def self.send_all_pending_validation_mails
     Nurse.where(validator: true, wants_mail: true).each do |n| 

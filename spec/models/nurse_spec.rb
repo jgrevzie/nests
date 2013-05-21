@@ -29,6 +29,12 @@ describe Nurse do
     it '(:nurse_random_procs) defaults to a single proc' do
       (Fabricate :nurse_random_procs).completed_procs.size.should eq 1
     end
+    it '(:nurse_random_procs) allows :dept to specify dept, sets dept of nurse and procs' do 
+      dept = Fabricate :dept, name: 'Knitwear'
+      n = Fabricate :nurse_random_procs, dept: dept
+      n.dept.should eq dept
+      n.completed_procs[0].proc.dept.should eq dept
+    end
   end
 
   describe '#pendings' do 
@@ -159,6 +165,21 @@ describe Nurse do
     it "doesn't care about silly names, that are epic in magnitude" do
       n = Fabricate :nurse, name: "James Fredrick Mulberry Fortesque D'Angelo"
       n.last_name.should eq "D'Angelo"
+    end
+  end
+  describe "#procs_i_can_validate" do
+    before(:all) do
+      @dept = Fabricate :dept, name: 'kitchenware'
+      @vn = Fabricate :v_nurse, dept: @dept
+      Fabricate :nurse_rand_procs, status: CP::PENDING, dept: @dept, n_procs: 5
+    end
+
+    it "returns a list of procs that the nurse can validate" do
+      @vn.procs_i_can_validate.count.should eq 5
+    end
+    it "only provides procs in same dept as v nurse" do
+      Fabricate :dept, name: 'Manchester'
+      @vn.procs_i_can_validate.count.should eq 5
     end
   end
   # Nurse.send_all_pending_validation_mails

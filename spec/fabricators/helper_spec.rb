@@ -16,5 +16,11 @@ describe "fabricator helper" do
     it "doesn't add empty values to hash" do
       opt_params({a:1}, b: :banana).should == {}
     end
+    it "allows list of keys and then a hash of mappings" do
+      opt_params({a:1, b:2}, :a, b: :banana).should == {a:1, banana: 2}
+    end
+    it "ignores null values in input hash" do
+      opt_params({a:1}, :a, :b).should == {a:1}
+    end
   end
 end
