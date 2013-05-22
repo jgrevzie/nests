@@ -76,7 +76,7 @@ class Nurse
     end
   end
 
-  def vdate_all ; vdate self.procs_i_can_vdate end
+  def validate_all ; vdate self.procs_i_can_validate end
 
   def self.send_all_pending_validation_mails
     Nurse.where(validator: true, wants_mail: true).each do |n| 

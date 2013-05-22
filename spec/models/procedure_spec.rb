@@ -11,13 +11,6 @@ describe Procedure do
   # end
 
   describe "fabricators" do
-    describe "Fabricate :procedure" do
-      it "if dept: is specified, then dept is set in procedure" do
-        dept = Fabricate :dept, name: 'Dept'
-        p = Fabricate :proc, dept: dept
-        p.dept.name.should eq dept.name
-      end
-    end
 
     describe "Fabricate :proc_seq" do
       it "makes a sequence of procs" do
@@ -25,6 +18,11 @@ describe Procedure do
         p2 = Fabricate :proc_seq
         p1.name.should_not eq p2.name
         p1.dept.should eq p2.dept
+      end
+      it "if dept: is specified, then dept is set in procedure" do
+        dept = Fabricate :dept, name: 'Dept'
+        p = Fabricate :proc_seq, dept: dept
+        p.dept.name.should eq dept.name
       end
     end
 

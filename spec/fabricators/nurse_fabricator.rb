@@ -5,6 +5,17 @@
 
 
 
+def random_nurse
+	return Nurse.all.sample if Nurse.count>0
+	return Fabricate :nurse
+end
+
+def v_nurses ; Nurse.where(validator:true) end
+def random_v_nurse
+	return v_nurses.all.sample if v_nurses.count>0
+	return Fabricate :v_nurse
+end
+
 Fabricator(:nurse) do
 	name {sequence {|i| "Nancy Jones#{i}"}}
 	username {sequence {|i| "nancy#{i}" }}

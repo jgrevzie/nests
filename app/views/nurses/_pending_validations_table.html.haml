@@ -7,13 +7,13 @@
 
 = form_for :proc_ids, method: :put, url: validate_procs_nurse_url(@nurse) do |f|
   %table#pendingValidationsTable{border: 1}
-    %caption (total #{CompletedProc.pending_validations.count})
+    %caption (total #{@nurse.procs_i_can_validate.count})
     %tr
       %th Validate?
       %th Nurse
       %th Procedure
       %th Date
-    - CompletedProc.pending_validations.asc(:date).each do |comp_proc|
+    - @nurse.procs_i_can_validate.asc(:date).each do |comp_proc|
       %tr
         %td= f.check_box comp_proc.id, {checked: true}, 'validate', nil
         %td #{comp_proc.nurse.first_name} (#{comp_proc.nurse.username})

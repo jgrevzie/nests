@@ -2,12 +2,6 @@
 
 
 
-
-def random_proc
-  return Procedure.all.sample if Procedure.count>0
-  return Fabricate :proc_seq
-end
-
 Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
 	transient :proc_name, :dept
   date { Date.today }
@@ -15,11 +9,12 @@ Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
 	# If proc_name: was specified, use that as proc name.
   proc {|attrs| Fabricate :proc_seq, opt_params(attrs, :dept, proc_name: :name)}
   role CP::SCRUBBED
+  nurse {random_nurse}
   
   after_build do |cp|
     # Setup a validator if necessary.
     if [CP::VALID, CP::REJECTED].include? cp.status
-      vn = Nurse.where(validator: true).to_ary.sample || Fabricate(:v_nurse)
+      vn = Nurse.where(validator: true).to_ary.sample || random_v_nurse
       cp.validated_by = vn
     end
 
