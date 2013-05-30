@@ -21,6 +21,16 @@ describe SpreadsheetLoader do
       SL.load_procs TEST_XLS, dept
       SL.load_nurses TEST_XLS, dept
     end
+
+    describe "::load_sheet" do
+      it "provides option to give different names for sheets" do
+        sheet = SL::get_sheet TEST_XLS, 'dept', 'Dept Info'
+        sheet.name.should eq 'Dept Info'
+      end
+      it "doesn't care about case" do
+        SL::get_sheet(TEST_XLS, 'dept info').name.should eq 'Dept Info'
+      end
+    end
     
     describe "::load_procs" do
       def proc_by_name(name) Procedure.where(name: name).first end 
@@ -70,7 +80,7 @@ describe SpreadsheetLoader do
       def nurse_by_name(name) Nurse.where(name: name).first end
 
       it "saves correct number of nurses" do
-        Nurse.count.should eq nonblank_rows_for_sheet('nurses') -1
+        Nurse.count.should eq nonblank_rows_for_sheet('nurses')-1
       end
 
       context "assigns all fields correctly" do
@@ -103,6 +113,23 @@ describe SpreadsheetLoader do
         nurse_by_name("Josephine Eggplant").validator.should be_false
       end
     end
+
+    describe "::load_dept_info" do
+      before(:all) { SL.load_dept_info TEST_XLS }
+      context "basics" do
+        subject {Dept.where(name:'Test Dept').first}
+        its(:hospital) {should eq 'Test Hospital'}
+        its(:location) {should eq 'Test Location'}
+      end
+    end
+    describe "::key_value_pairs" do
+      it "gets keys from column 0 and values from column 1" do
+        hash = SL::key_value_pairs SL::get_dept_info_sheet TEST_XLS
+        hash['name'].should eq 'Test Dept'
+        hash['hospital'].should eq 'Test Hospital'
+        hash['location'].should eq 'Test Location'
+      end
+    end
   end
 
   describe "::load_dept" do
@@ -126,5 +153,4 @@ describe SpreadsheetLoader do
       Procedure.all.each {|p| p.dept.name.should eq 'test'}
     end
   end
-
 end

@@ -25,10 +25,10 @@ module SpreadsheetLoader
     File.basename file_name, '.xls'
   end
 
-  def self.get_sheet(file_name, sheet_name)
+  def self.get_sheet file_name, *sheet_names
     spready = Spreadsheet.open file_name
-    spready.worksheets.find {|w| w.name.downcase==sheet_name.downcase} or
-      puts "Couldn't find sheet '#{sheet_name}' in #{file_name}"
+    spready.worksheets.find {|w| sheet_names.map(&:downcase).include? w.name.downcase} or
+      puts "Couldn't find any of sheet names '#{sheet_name}' in #{file_name}"
   end
 
   def self.get_headers sheet    
@@ -55,15 +55,30 @@ module SpreadsheetLoader
     }
   end
 
-# hash keys could be symbols
   def self.load_nurses file_name, dept
     load_from_spreadsheet file_name, class: Nurse, dept: dept, munger: lambda { |h|
       fn, ln = h[:name].split[0].lc_alpha, h[:name].split[-1].lc_alpha
       h[:username] = fn + ln[0] unless h[:username]
       h[:validator] = h[:validator] ? h[:validator].to_s.downcase.start_with?('y', 't') : false
+      # following could be replaced with an eval of an attr of dept
       h[:email] = "#{fn}.#{ln}@svpm.org.au" unless h[:email]
       h[:password] = ln
     }
+  end
+
+  def self.key_value_pairs sheet
+    hash = HashWithIndifferentAccess.new
+    sheet.each sheet.first.idx do |row| hash[ row[0] ] = row[1] if row[0] end
+    return hash
+  end
+
+  def self.get_dept_info_sheet file_name
+    get_sheet file_name, 'dept', 'dept info', 'department', 'department info'
+  end
+
+  def self.load_dept_info file_name
+    return unless dept_sheet = get_dept_info_sheet(TEST_XLS)
+    Dept.create key_value_pairs(dept_sheet)
   end
 
   def self.load_dept file_name, *args
