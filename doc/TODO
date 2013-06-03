@@ -6,6 +6,7 @@
 
 
 remove precompile of assets?
+only validating nurse should be able to load dept
 
 FEATURES
 Procs need to be categorized by heading in drop down list.

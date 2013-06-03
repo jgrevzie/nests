@@ -5,16 +5,18 @@ require 'spec_helper'
 describe "'Pending validations for nurse' screen" do
   before(:all) do
     # Fabricate another department and a bunch of random procs to try to trick the tests.
-    Fabricate :dept, name: 'Woolens'
-    10.times {Fabricate :rand_cp}
+    dept = Fabricate :dept, name: 'Woolens'
+    10.times {Fabricate :rand_cp, dept: dept}
   end
   let(:table_rows) {page.all('table#pendingValidationsTable tr').count}
   it 'displays a table with a row for each pending proc, shows caption with # of procs' do
     vn = Fabricate :v_nurse
     Fabricate :nurse_1_proc, proc_name: 'PROC_NAME', quantity: 5
+    Fabricate :rand_cp, status: CP::PENDING, dept: Fabricate(:dept, name: 'hello')
 
     login vn
     on_pending_vn_page?.should be_true
+
     find('caption').text.should =~ /total 1/
     table_rows.should eq vn.procs_i_can_validate.count+1
     page.should have_content "PROC_NAME (5)"
@@ -23,7 +25,7 @@ describe "'Pending validations for nurse' screen" do
     vn = Fabricate :v_nurse
     np_orig = vn.procs_i_can_validate.count
 
-    Fabricate :nurse_5_pendings  
+    Fabricate :nurse_5_pendings
     vn.procs_i_can_validate.count.should eq np_orig+5
 
     login vn

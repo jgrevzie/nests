@@ -19,6 +19,11 @@ describe CompletedProc do
         cp = Fabricate :random_completed_proc, status: CP::REJECTED
         cp.validated_by.id.should_not be_nil
       end
+      it "allows dept to be specified" do
+        dept = Fabricate :dept, name: 'Toddler Wear'
+        procs = Array.new(10) {Fabricate :rand_cp, dept: dept}
+        procs.each {|i| i.proc.dept.name.should eq 'Toddler Wear'}
+      end
     end
     describe ":completed_proc" do
       it "takes optional parameter proc_name: and sets procedure name" do

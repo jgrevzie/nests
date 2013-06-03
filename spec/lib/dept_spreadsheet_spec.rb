@@ -8,31 +8,46 @@
 require 'spec_helper'
 
 TEST_XLS = "#{File.dirname __FILE__}/test.xls"
-def nonblank_rows_for_sheet sheet_name  
-  SL::get_sheet(TEST_XLS, sheet_name).inject(0) {|accu, i| i[0].nil? ? accu : accu+1}
-end
 
-describe SpreadsheetLoader do
-  # Have to split tests into two sections, because need to clear the database twice.
-  describe "" do
+describe DeptSpreadsheet do
+
+  describe "(utility methods)" do
     before(:all) do
-      clear_db
-      dept = Fabricate(:dept, name: 'Disco Dept')
-      SL.load_procs TEST_XLS, dept
-      SL.load_nurses TEST_XLS, dept
+      @io = File.open(TEST_XLS)
+      @ds = DS.new @io
     end
 
-    describe "::load_sheet" do
+    describe "::get_sheet" do
       it "provides option to give different names for sheets" do
-        sheet = SL::get_sheet TEST_XLS, 'dept', 'Dept Info'
+        sheet = @ds.get_sheet 'dept', 'Dept Info'
         sheet.name.should eq 'Dept Info'
       end
       it "doesn't care about case" do
-        SL::get_sheet(TEST_XLS, 'dept info').name.should eq 'Dept Info'
+        @ds.get_sheet('dept info').name.should eq 'Dept Info'
+      end
+      it "finds a sheet called 'procedures' with procs in it" do
+        @ds.get_sheet('procedures').first[0].downcase.should eq 'name'
       end
     end
-    
-    describe "::load_procs" do
+
+    describe "::key_value_pairs" do
+      it "gets keys from column 0 and values from column 1" do
+        hash = @ds.key_value_pairs @ds.get_dept_info_sheet
+        hash[:name].should eq 'Test Dept'
+        hash[:hospital].should eq 'Test Hospital'
+        hash[:location].should eq 'Test Location'
+      end
+    end
+
+    after(:all) do @io.close end
+  end
+  
+  describe "::load_dept" do
+    before(:all) do
+      clear_db
+      File.open(TEST_XLS) {|io| DS.load_dept io}
+    end
+    describe "(procs)" do
       def proc_by_name(name) Procedure.where(name: name).first end 
 
       it "saves correct number of procs, skips over any blank lines"  do
@@ -59,24 +74,14 @@ describe SpreadsheetLoader do
       its(:abbrev) {should eq 'E'}
       its(:options) {should eq 'A,B,C,D'}
       its(:comments) {should eq 'Hello!'}
-      its('dept.name') {should eq 'Disco Dept'}
-    end
-
-    describe "::get_dept_name" do
-      specify {expect {SL.get_dept_name("hello")}.to raise_error}
-      specify {SL.get_dept_name("hello.xls").should eq "hello"}
-      specify {SL.get_dept_name("/pretty/long/path/to/hello.xls").should eq "hello"}
-      specify {SL.get_dept_name("with spaces all over.xls").should eq "with spaces all over"}
-      specify {SL.get_dept_name("FunkyCaps.xls").should eq "FunkyCaps"}
-    end
-
-    describe "::get_sheet" do
-      it "finds a sheet called 'procedures' with procs in it" do
-        SL::get_sheet(TEST_XLS, 'procedures').first[0].downcase.should eq 'name'
+      its('dept.name') {should eq 'Test Dept'}
+    
+      it "gives procs the correct dept" do
+        Procedure.all.each {|p| p.dept.name.should eq 'Test Dept'}
       end
-    end 
+    end
 
-    describe "::load_nurses" do
+    describe "(nurses)" do
       def nurse_by_name(name) Nurse.where(name: name).first end
 
       it "saves correct number of nurses" do
@@ -91,7 +96,7 @@ describe SpreadsheetLoader do
         its(:email) {should eq "japple@random.com"}
         its(:designation) {should eq "Dominator"}
         its(:comments) {should eq "Excellent nurse."}
-        its('dept.name') {should eq "Disco Dept"}
+        its('dept.name') {should eq "Test Dept"}
       end
 
       it "handles boolean value TRUE for validator" do
@@ -111,46 +116,26 @@ describe SpreadsheetLoader do
       end
       it "handles n as false for validator" do
         nurse_by_name("Josephine Eggplant").validator.should be_false
+      end    
+      it "gives nurses the correct dept" do
+        Nurse.all.each {|n| n.dept.name.should eq 'Test Dept'}
       end
     end
 
-    describe "::load_dept_info" do
-      before(:all) { SL.load_dept_info TEST_XLS }
-      context "basics" do
-        subject {Dept.where(name:'Test Dept').first}
-        its(:hospital) {should eq 'Test Hospital'}
-        its(:location) {should eq 'Test Location'}
-      end
-    end
-    describe "::key_value_pairs" do
-      it "gets keys from column 0 and values from column 1" do
-        hash = SL::key_value_pairs SL::get_dept_info_sheet TEST_XLS
-        hash['name'].should eq 'Test Dept'
-        hash['hospital'].should eq 'Test Hospital'
-        hash['location'].should eq 'Test Location'
-      end
+    context "creates a dept with correct options" do
+      subject {Dept.first}
+      its(:name) {should eq 'Test Dept'}
+      its(:hospital) {should eq 'Test Hospital'}
+      its(:location) {should eq 'Test Location'}
     end
   end
 
-  describe "::load_dept" do
-    before(:all) do
-      clear_db
-      SL.load_dept TEST_XLS, hospital: 'hospital', location: 'location'
-    end
-    context "fabricates a dept with correct options" do
-      subject {Dept.first}
-      its(:name) {should eq 'test'}
-      its(:hospital) {should eq 'hospital'}
-      its(:location) {should eq 'location'}
-    end
-    it "loads procs" do
-      Procedure.count.should eq nonblank_rows_for_sheet('procedures')-1
-    end
-    it "loads nurses" do
-      Nurse.count.should eq 5
-    end
-    it "gives procs the correct dept" do
-      Procedure.all.each {|p| p.dept.name.should eq 'test'}
-    end
+end
+
+require 'spreadsheet'
+def nonblank_rows_for_sheet sheet_name  
+  File.open(TEST_XLS) do |io|
+    DS.new(io).get_sheet(sheet_name).inject(0) {|accu, i| i[0].nil? ? accu : accu+1}
   end
 end
+

@@ -26,12 +26,12 @@ describe Procedure do
       end
     end
 
-    describe "random_proc" do
+    describe "random_existing_proc" do
       it "returns random existing proc" do
         Fabricate :proc_seq
         # There's a procedure in the db now, so n of procs shouldn't go up
         proc_count = Procedure.count
-        5.times { random_proc }
+        5.times { random_existing_proc }
         Procedure.count.should eq proc_count
       end
     end

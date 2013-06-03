@@ -7,7 +7,7 @@ Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
   date { Date.today }
 	quantity 1
 	# If proc_name: was specified, use that as proc name.
-  proc {|attrs| Fabricate :proc_seq, opt_params(attrs, :dept, proc_name: :name)}
+  proc {|attrs| Fabricate :proc, opt_params(attrs, :dept, proc_name: :name)}
   role CP::SCRUBBED
   nurse {random_nurse}
   
@@ -29,9 +29,9 @@ end
 Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) do
   date { Date.today-Random.rand(1..6) } 
   quantity { Random.rand(5..20) }
-  proc {random_proc}
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
   role {CP::ROLES.sample}
   emergency {[true, false].sample}
+  proc {|attrs| random_existing_proc opt_params(attrs, :dept, proc_name: :name)}
 end
 

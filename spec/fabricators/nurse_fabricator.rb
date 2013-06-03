@@ -27,12 +27,12 @@ end
 Fabricator(:nurse_random_procs, from: :nurse, aliases: [:nurse_rand_procs]) do
 	transient :n_procs, status: CP::PENDING
 	completed_procs {|attrs| Array.new(attrs[:n_procs] || 1) {
-		Fabricate :cp_seq, opt_params(attrs, :status).merge(dept: attrs[:dept])}}
+		Fabricate :cp_seq, opt_params(attrs, :status, :dept)}}
 end
 
 Fabricator(:nurse_5_pending, from: :nurse, aliases: [:nurse_5_pendings]) do
-	completed_procs(count: 5) {|attrs|
-		Fabricate :cp_seq, status: CP::PENDING}
+	transient dept: Fabricate(:dept_singleton)
+	completed_procs(count: 5) {|a| Fabricate :cp_seq, status: CP::PENDING, dept: a[:dept]}
 end
 
 # Fabricates a nurse with 1 pending completed proc.

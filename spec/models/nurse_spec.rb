@@ -84,7 +84,7 @@ describe Nurse do
     end
   end
   describe "#completed_procs_summary" do
-    it "returns an array of totals of.vdated proc types for a given nurse" do
+    it "returns an array of totals of proc types a given nurse has completed" do
       n = Fabricate :nurse
       n.completed_procs << (cp_1=Fabricate(:comp_proc_seq, quantity: 5))
       n.completed_procs << (cp_2=Fabricate(:comp_proc_seq, quantity: 7))
