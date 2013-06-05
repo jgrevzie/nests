@@ -11,9 +11,11 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
-require 'capybara/rails'
 require 'capybara/rspec'
+#require 'capybara/poltergeist'
 
+Capybara.javascript_driver = :webkit
+#Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -55,9 +57,6 @@ RSpec.configure do |config|
 
 end
 
-#Capybara.javascript_driver = :webkit
-#require 'capybara/poltergeist'
-#Capybara.javascript_driver = :poltergeist
 
 def load_cathlab_procs
   clear_db

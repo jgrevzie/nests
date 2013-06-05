@@ -25,3 +25,4 @@ pickle-email-*.html
 ~*
 .DS_Store
 /nbproject/private/
+gem_graph.png

@@ -1,43 +1,44 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (3.2.11)
-      actionpack (= 3.2.11)
-      mail (~> 2.4.4)
-    actionpack (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
+    actionmailer (3.2.13)
+      actionpack (= 3.2.13)
+      mail (~> 2.5.3)
+    actionpack (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
-      rack (~> 1.4.0)
+      rack (~> 1.4.5)
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
-    activemodel (3.2.11)
-      activesupport (= 3.2.11)
+    activemodel (3.2.13)
+      activesupport (= 3.2.13)
       builder (~> 3.0.0)
-    activerecord (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
+    activerecord (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activeresource (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
-    activesupport (3.2.11)
-      i18n (~> 0.6)
+    activeresource (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
       multi_json (~> 1.0)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
-    capybara (2.1.0)
+    capybara (2.0.3)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
-      xpath (~> 2.0)
-    capybara-webkit (1.0.0)
+      selenium-webdriver (~> 2.0)
+      xpath (~> 1.0.0)
+    capybara-webkit (0.14.2)
       capybara (~> 2.0, >= 2.0.2)
       json
     childprocess (0.3.9)
@@ -57,8 +58,6 @@ GEM
     execjs (1.4.0)
       multi_json (~> 1.0)
     fabrication (2.7.2)
-    faye-websocket (0.4.7)
-      eventmachine (>= 0.12.0)
     ffi (1.8.1)
     formatador (0.2.4)
     guard (1.8.0)
@@ -73,8 +72,7 @@ GEM
     haml (4.0.3)
       tilt
     hike (1.2.3)
-    http_parser.rb (0.5.3)
-    i18n (0.6.4)
+    i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (3.0.0)
       railties (>= 3.0, < 5.0)
@@ -85,8 +83,7 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     lumberjack (1.0.3)
-    mail (2.4.4)
-      i18n (>= 0.4.0)
+    mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.1)
@@ -100,12 +97,6 @@ GEM
     multi_json (1.7.6)
     nokogiri (1.5.9)
     origin (1.1.0)
-    phantomjs (1.8.1.1)
-      poltergeist
-    poltergeist (1.3.0)
-      capybara (~> 2.1.0)
-      faye-websocket (>= 0.4.4, < 0.5.0)
-      http_parser.rb (~> 0.5.3)
     polyglot (0.3.3)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -118,17 +109,17 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.11)
-      actionmailer (= 3.2.11)
-      actionpack (= 3.2.11)
-      activerecord (= 3.2.11)
-      activeresource (= 3.2.11)
-      activesupport (= 3.2.11)
+    rails (3.2.13)
+      actionmailer (= 3.2.13)
+      actionpack (= 3.2.13)
+      activerecord (= 3.2.13)
+      activeresource (= 3.2.13)
+      activesupport (= 3.2.13)
       bundler (~> 1.0)
-      railties (= 3.2.11)
-    railties (3.2.11)
-      actionpack (= 3.2.11)
-      activesupport (= 3.2.11)
+      railties (= 3.2.13)
+    railties (3.2.13)
+      actionpack (= 3.2.13)
+      activesupport (= 3.2.13)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -180,9 +171,6 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    teabag (0.7.2)
-      phantomjs (>= 1.8.1.1)
-      railties (>= 3.2.5, < 5)
     thin (1.5.1)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
@@ -200,7 +188,7 @@ GEM
     validates_timeliness (3.0.14)
       timeliness (~> 0.3.6)
     websocket (1.0.7)
-    xpath (2.0.0)
+    xpath (1.0.0)
       nokogiri (~> 1.3)
 
 PLATFORMS
@@ -208,23 +196,20 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
-  capybara
-  capybara-webkit
-  coffee-rails (~> 3.2.1)
+  capybara (= 2.0.3)
+  capybara-webkit (~> 0.14.2)
+  coffee-rails
   fabrication
   guard-rspec
   haml
   jquery-rails
   mongoid
-  poltergeist
-  rails (= 3.2.11)
-  rb-fsevent (~> 0.9.1)
+  rails
+  rb-fsevent
   rspec-rails
-  sass-rails (~> 3.2.3)
-  selenium-webdriver
+  sass-rails
   simplecov
   spreadsheet
-  teabag
   thin
-  uglifier (>= 1.0.3)
+  uglifier
   validates_timeliness

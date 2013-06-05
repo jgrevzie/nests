@@ -20,7 +20,7 @@ def fill_in_proc_form(cp, *args)
   fill_in 'Date', with: cp.date
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
-  #find_field('Emergency?').trigger('click') if cp.emergency?
+#  find('#completed_proc_emergency').trigger('click') if cp.emergency?
   check 'Emergency' if cp.emergency?
   choose cp.role
   choose cp.options if cp.options
@@ -34,7 +34,6 @@ end
 
 describe "'Submit proc for validation' page" do
 # def fill_in field, options
-#   puts 'BEEBO!'
 #   super
 #   page.execute_script "$('label:contains(#{field})').siblings('input').keydown()"
 # end
@@ -142,8 +141,8 @@ describe "'Submit proc for validation' page" do
     find('#procError').should  be_visible
     fill_in 'Procedure Name', with: PROC_NAME
     fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
-    page.should have_no_css '#procError'
-    #find('#procError').should_not  be_visible
+    #page.should have_no_css '#procError'
+    find('#procError').should_not  be_visible
   end
   it "fixes proc name up a little, if it's on the dodgy side", js: true do
     fill_in 'Procedure Name', with: PROC_NAME.upcase
