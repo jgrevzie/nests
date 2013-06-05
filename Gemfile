@@ -54,6 +54,8 @@ gem "rspec-rails", :group => [:test, :development]
 group :test do
   gem "capybara"
   gem "guard-rspec"
-  gem "capybara-webkit"
+  gem "poltergeist"
+  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
   gem 'simplecov', require: false
 end

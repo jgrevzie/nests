@@ -10,9 +10,11 @@ describe "'Pending validations for nurse' screen" do
   end
   let(:table_rows) {page.all('table#pendingValidationsTable tr').count}
   it 'displays a table with a row for each pending proc, shows caption with # of procs' do
-    vn = Fabricate :v_nurse
-    Fabricate :nurse_1_proc, proc_name: 'PROC_NAME', quantity: 5
-    Fabricate :rand_cp, status: CP::PENDING, dept: Fabricate(:dept, name: 'hello')
+    clear_db
+    dept = Fabricate :dept, name: 'Sportcoats'
+    vn = Fabricate :v_nurse, dept: dept
+    Fabricate :nurse_1p, proc_name: 'PROC_NAME', quantity: 5, dept: dept
+    Fabricate :cp, status: CP::PENDING, dept: Fabricate(:dept, name: 'Hoisery')
 
     login vn
     on_pending_vn_page?.should be_true
@@ -25,7 +27,7 @@ describe "'Pending validations for nurse' screen" do
     vn = Fabricate :v_nurse
     np_orig = vn.procs_i_can_validate.count
 
-    Fabricate :nurse_5_pendings
+    Fabricate :nurse_5p
     vn.procs_i_can_validate.count.should eq np_orig+5
 
     login vn
@@ -44,7 +46,7 @@ describe "'Pending validations for nurse' screen" do
   end
   it "validates a subset of total procs" do
     vn = Fabricate :v_nurse
-    2.times { Fabricate :nurse_5_pendings }
+    2.times { Fabricate :nurse_5p }
     login vn
 
     np_orig = vn.pendings.count
@@ -57,7 +59,7 @@ describe "'Pending validations for nurse' screen" do
   end
   it "displays links to completed procs, takes user to edit proc screen" do
     vn = Fabricate :v_nurse
-    Fabricate(:nurse_1_proc, proc_name: 'PROC', quantity: 5)
+    Fabricate(:nurse_1p, proc_name: 'PROC', quantity: 5)
     login vn
     click_link('PROC (5)')
     page.should have_content 'procedure'

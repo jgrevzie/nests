@@ -82,6 +82,7 @@ class DeptSpreadsheet
     ds.load_dept_info
     ds.load_procs
     ds.load_nurses
+    return @dept
   end
       
 end

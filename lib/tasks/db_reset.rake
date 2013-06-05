@@ -8,8 +8,7 @@ namespace :nest do
 	task reset: :environment do
 		Mongoid.purge!
 		puts "Loading spreadhseets"
-		SpreadsheetLoader.load_dept DB_DIR+'/CathLab.xls'
-		SpreadsheetLoader.load_dept DB_DIR+'/Theatre.xls'
+		File.open(DB_DIR+'/CathLab.xls') {|io| DeptSpreadsheet.load_dept io}
 		puts "Making procs"
 		Nurse.all.each {|n| 50.times { n.completed_procs << Fabricate(:random_completed_proc) }} \
 			if Rails.env.development?

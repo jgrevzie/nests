@@ -20,7 +20,8 @@ def fill_in_proc_form(cp, *args)
   fill_in 'Date', with: cp.date
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
-  check 'Emergency?' if cp.emergency?
+  #find_field('Emergency?').trigger('click') if cp.emergency?
+  check 'Emergency' if cp.emergency?
   choose cp.role
   choose cp.options if cp.options
   click_button 'submit' if options[:submit]
@@ -32,31 +33,29 @@ def procs_equiv?(cp_1, cp_2)
 end
 
 describe "'Submit proc for validation' page" do
+# def fill_in field, options
+#   puts 'BEEBO!'
+#   super
+#   page.execute_script "$('label:contains(#{field})').siblings('input').keydown()"
+# end
+
   before(:each) { clear_db }
-  let(:comp_proc) do
-    p = Fabricate :procedure, name: PROC_NAME, options: "option1,option2"
-    Fabricate :completed_proc, quantity: 7, date: Date.today-1, comments:'Hello', 
-              options: 'option1', emergency: true, role: CP::SCOUT, proc: p
-  end
   let(:dept) {Fabricate :dept}
-  let(:logged_in_nurse) { login Fabricate :nurse, dept: dept }
+  let!(:proc1) {Fabricate :procedure, name: PROC_NAME, options: "option1,option2", dept: dept}
+  let!(:proc2) {Fabricate :procedure, name: PROC_NAME2, options: "checkbox?", dept: dept}
+  let(:cp) do
+    Fabricate :completed_proc, quantity: 7, date: Date.today-1, comments:'Hello', 
+              options: 'option1', emergency: true, role: CP::SCOUT, proc: proc1
+  end
+  let!(:n) { login Fabricate :nurse, dept: dept }
 
   it "includes a shiny drop-down menu with known proc names", :js => true do
-    Fabricate :procedure, name: PROC_NAME, dept: dept
-    
-    logged_in_nurse
-
     fill_in "Procedure Name", with: PROC_NAME[1..5]
     page.should have_text PROC_NAME
     fill_in "Procedure Name", with: PROC_NAME[-5, -1]
     page.should have_text PROC_NAME
   end
   it "updates page with proc options, once a proc name is chosen from menu", js: true do 
-    Fabricate :procedure, name: PROC_NAME, options: "option1,option2"
-    Fabricate :procedure, name: PROC_NAME2, options: "checkbox?"
-
-    logged_in_nurse
-
     fill_in "Procedure Name", with: PROC_NAME
     click_on_popup_menu_item PROC_NAME
     page.should have_unchecked_field "option1"
@@ -65,10 +64,7 @@ describe "'Submit proc for validation' page" do
     click_on_popup_menu_item PROC_NAME2
     page.should have_unchecked_field 'checkbox?'
   end
-  it "submits proc for validation, stores proc", js: true do
-    logged_in_nurse
-    cp = comp_proc
-
+  it "submits proc for validation, stores proc", js:true do
     fill_in_proc_form cp, submit: true
     
     page.should have_content 'Submit Procedure'
@@ -81,16 +77,13 @@ describe "'Submit proc for validation' page" do
     procs_equiv?(cp, cp_out).should be_true
   end
   it "submits proc with unknown name, gets error" do
-    logged_in_nurse
-    cp = Fabricate :completed_proc
-    cp.proc.name = 'NON-EXIST'
-
-    fill_in_proc_form cp, submit: true
+    # Warning - do not use that proc_name: option or the proc _will_ exist :)
+    nonexist = Fabricate :completed_proc
+    nonexist.proc.name = 'NON_EXIST'
+    fill_in_proc_form nonexist, submit: true
     page.should have_selector '#errorExplanation', text: 'Proc'
   end
   it 'when updating, shows fields of previously entered completed proc' do 
-    n = logged_in_nurse
-    cp = comp_proc
     n.completed_procs << cp
     visit edit_completed_proc_path(cp)
     page.should have_content "Edit procedure"
@@ -100,13 +93,10 @@ describe "'Submit proc for validation' page" do
     all("#options input[type='radio']").size.should eq cp.proc.options.split(',').size
   end
   it "updates proc, and saves new values", js: true do
-    n = logged_in_nurse
-    cp = comp_proc
     n.completed_procs << cp
-    
-    p2 = Fabricate :procedure, name: PROC_NAME2, options: "option4,option5"
+    p = Fabricate :proc, name: 'Walk Pooch', options: 'option4,option5'
     cp_2 = Fabricate :completed_proc, quantity: 1, date: Date.today-2, comments:'Later', 
-                 options: 'option4', emergency: true, role: CP::SCOUT, proc: p2    
+                 options: 'option4', emergency: true, role: CP::SCOUT, proc: p
     
     visit edit_completed_proc_path(cp)
     fill_in_proc_form cp_2, submit: true
@@ -116,7 +106,6 @@ describe "'Submit proc for validation' page" do
     procs_equiv?(cp, cp_2).should be_true
   end
   it "lets VN validate a proc" do
-    cp = comp_proc
     (Fabricate :nurse).completed_procs << cp
 
     login Fabricate :v_nurse
@@ -127,7 +116,6 @@ describe "'Submit proc for validation' page" do
     CompletedProc.pending.size.should eq 0
   end
   it "let VN reject a proc, provding comments and saving VN as validator" do
-    cp = comp_proc
     (Fabricate :nurse).completed_procs << cp
     vn = login Fabricate :v_nurse
     visit edit_completed_proc_path(cp)
@@ -140,7 +128,7 @@ describe "'Submit proc for validation' page" do
     cp.validated_by.id.should eq vn.id
   end
   it "lets nurse acknowledge a rejected proc, page should contain name of validator" do 
-    (cp = comp_proc).reject vn=Fabricate(:v_nurse)
+    cp.reject vn=Fabricate(:v_nurse)
     (n = login Fabricate(:nurse)).completed_procs << cp
     visit edit_completed_proc_path cp
     find('.rejected').text.should match /#{vn.first_name}/
@@ -149,24 +137,21 @@ describe "'Submit proc for validation' page" do
     cp.reload.ackd?.should be_true
   end
   it "shows error message if proc name is invalid, disappears if it is valid", js: true do
-    Fabricate :procedure, name: 'PROC', dept: dept
-    login Fabricate :nurse, dept: dept
     fill_in 'Procedure Name', with: 'this is not a procedure name'
     fill_in 'Comments', with: 'Look at that gorgeous error message.'
     find('#procError').should  be_visible
-    fill_in 'Procedure Name', with: 'PROC'
+    fill_in 'Procedure Name', with: PROC_NAME
     fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
-    find('#procError').should_not  be_visible
+    page.should have_no_css '#procError'
+    #find('#procError').should_not  be_visible
   end
   it "fixes proc name up a little, if it's on the dodgy side", js: true do
-    login Fabricate :nurse, dept: (Fabricate :procedure, name: 'Procedure Test').dept
-    fill_in 'Procedure Name', with: 'procedure test'
+    fill_in 'Procedure Name', with: PROC_NAME.upcase
     fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
-    find_field('Procedure Name').value.should eq 'Procedure Test'
+    find_field('Procedure Name').value.should eq PROC_NAME
   end
 
   def update_new_proc_with_old_date_and_submit(nurse)
-    cp = comp_proc
     nurse.completed_procs << cp
     login nurse
     visit edit_completed_proc_path(cp)

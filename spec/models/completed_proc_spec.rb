@@ -36,13 +36,13 @@ describe CompletedProc do
   describe '#pending_validations' do 
     it "gets all non-validated procs" do 
       pv_orig = pv
-      n = Fabricate :nurse_5_pending
+      n = Fabricate :nurse_5p
       pv.should eq pv_orig+5
     end
     it "doesn't get validated procs" do
       pv_orig = pv
-      n1 = Fabricate :nurse_5_pending
-      n2 = Fabricate :nurse_5_pending
+      n1 = Fabricate :nurse_5p
+      n2 = Fabricate :nurse_5p
       vn = Fabricate :v_nurse
       vn.vdate n1.completed_procs
       pv.should eq pv_orig+5

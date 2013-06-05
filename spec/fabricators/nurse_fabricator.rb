@@ -17,32 +17,26 @@ def random_v_nurse
 end
 
 Fabricator(:nurse) do
-	name {sequence {|i| "Nancy Jones#{i}"}}
-	username {sequence {|i| "nancy#{i}" }}
+	name {sequence(:name) {|i| "Nancy Jones#{i}"}}
+	username {sequence(:uname) {|i| "nancy#{i}" }}
 	password 'password'
 	dept(fabricator: :dept_singleton)
-	email {sequence {|i| "nancy#{i}@example.com"}}
+	email {sequence(:email) {|i| "nancy#{i}@example.com"}}
 end
 
-Fabricator(:nurse_random_procs, from: :nurse, aliases: [:nurse_rand_procs]) do
-	transient :n_procs, status: CP::PENDING
-	completed_procs {|attrs| Array.new(attrs[:n_procs] || 1) {
-		Fabricate :cp_seq, opt_params(attrs, :status, :dept)}}
+Fabricator(:nurse_random_procs, from: :nurse, aliases: [:nurse_rand_procs, :nurse_rp]) do
+	transient :n_procs, :proc_name, :quantity, status: CP::PENDING
+	completed_procs {|a| Array.new(a[:n_procs] || 1) {
+		Fabricate :rand_cp, opt_params(a, :status, :dept, :proc_name, :quantity)}}
 end
 
-Fabricator(:nurse_5_pending, from: :nurse, aliases: [:nurse_5_pendings]) do
-	transient dept: Fabricate(:dept_singleton)
-	completed_procs(count: 5) {|a| Fabricate :cp_seq, status: CP::PENDING, dept: a[:dept]}
+Fabricator(:nurse_5p, from: :nurse, aliases: [:nurse_5p, :nurse_5p]) do
+	initialize_with {|a| Fabricate :nurse_rp, a.to_hash.merge(n_procs:5, status: CP::PENDING) }
 end
 
-# Fabricates a nurse with 1 pending completed proc.
-# Client can pass in (quantity: set quantity in completed proc), (proc_name: name of proc in cp) 
-Fabricator(:nurse_1_proc, from: :nurse) do
-	transient :proc_name, :quantity
-	completed_procs(count: 1) {|a| Fabricate :completed_proc, opt_params(a, :proc_name, :quantity)}
+Fabricator(:nurse_1_pending, from: :nurse_rp, aliases: [:nurse_1p]) do
 end
 
 Fabricator :v_nurse, from: :nurse do
 	validator true
 end
-

@@ -1,6 +1,8 @@
+
+
+
+
 class NursesController < ApplicationController
-
-
 
   before_filter :is_nurse_allowed_here
   skip_before_filter :is_nurse_allowed_here, only: []

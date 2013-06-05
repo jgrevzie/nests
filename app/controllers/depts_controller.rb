@@ -41,7 +41,7 @@ class DeptsController < ApplicationController
   # POST /depts
   # POST /depts.json
   def create
-    @dept = Dept.new(params[:dept])
+    @dept = DeptSpreadsheet.load_dept(params[:dept][:spreadsheet].tempfile)
 
     respond_to do |format|
       if @dept.save
@@ -57,7 +57,7 @@ class DeptsController < ApplicationController
   # PUT /depts/1
   # PUT /depts/1.json
   def update
-    @dept = Dept.find(params[:id])
+    # warning needs to be FIXED
 
     respond_to do |format|
       if @dept.update_attributes(params[:dept])

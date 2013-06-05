@@ -13,11 +13,8 @@ Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
   
   after_build do |cp|
     # Setup a validator if necessary.
-    if [CP::VALID, CP::REJECTED].include? cp.status
-      vn = Nurse.where(validator: true).to_ary.sample || random_v_nurse
-      cp.validated_by = vn
-    end
-
+    (vn=random_v_nurse ; cp.validated_by=vn) if [CP::VALID, CP::REJECTED].include? cp.status
+ 
     # Setup options if necessary.
     if cp.proc && (opts=cp.proc.options) && opts.size>0
       if opts[-1]=='?' then cp.options=[opts.chop, '0'].sample

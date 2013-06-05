@@ -15,7 +15,7 @@ end
 
 describe DailyValidations do
   before(:all) do 
-    Fabricate :nurse_5_pendings
+    Fabricate :nurse_5p
     @vn = Fabricate :v_nurse, email: 'nurse@example.org', wants_mail: true
     4.times { Fabricate :v_nurse }
   end
