@@ -30,8 +30,8 @@ Fabricator(:nurse_random_procs, from: :nurse, aliases: [:nurse_rand_procs, :nurs
 		Fabricate :rand_cp, opt_params(a, :status, :dept, :proc_name, :quantity)}}
 end
 
-Fabricator(:nurse_5p, from: :nurse, aliases: [:nurse_5p, :nurse_5p]) do
-	initialize_with {|a| Fabricate :nurse_rp, a.to_hash.merge(n_procs:5, status: CP::PENDING) }
+Fabricator(:nurse_5p, from: :nurse_rp, aliases: [:nurse_5p, :nurse_5p]) do
+	transient :n_procs => 5
 end
 
 Fabricator(:nurse_1_pending, from: :nurse_rp, aliases: [:nurse_1p]) do
