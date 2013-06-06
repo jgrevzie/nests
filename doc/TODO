@@ -8,6 +8,8 @@
 remove precompile of assets?
 only validating nurse should be able to load dept
 clear_db
+sleep 1 may not be necessary
+test uniqueness of dept
 
 FEATURES
 Procs need to be categorized by heading in drop down list.

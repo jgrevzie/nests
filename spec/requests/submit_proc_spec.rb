@@ -63,7 +63,7 @@ describe "'Submit proc for validation' page" do
     click_on_popup_menu_item PROC_NAME2
     page.should have_unchecked_field 'checkbox?'
   end
-  it "submits proc for validation, stores proc" do
+  it "submits proc for validation, stores proc" , js:true do
     fill_in_proc_form cp, submit: true
     
     page.should have_content 'Submit Procedure'
@@ -78,6 +78,7 @@ describe "'Submit proc for validation' page" do
     # Warning - do not use that proc_name: option or the proc _will_ exist :)
     nonexist = Fabricate :completed_proc
     nonexist.proc.name = 'NON_EXIST'
+    nonexist.options = nil
     fill_in_proc_form nonexist, submit: true
     page.should have_selector '#errorExplanation', text: 'Proc'
   end
@@ -160,19 +161,19 @@ describe "'Submit proc for validation' page" do
   DATE_ERROR = 'Date must be after'
 
   describe "invokes timliness checks that" do
-    before(:each) do
-      @old_proc = Fabricate :cp, date: CP::OLDEST_NEW_PROC-1, nurse: (Fabricate :nurse)
-    end
+    # An old completed proc with a proc that has no options (means don't have to use js:true)
+    let(:old_cp) {Fabricate :cp, date: CP::OLDEST_NEW_PROC-1, nurse: n, 
+                              proc: (Fabricate :proc, dept: dept)}
     it "don't allow the creation of an old procedure by regular nurse" do
       login Fabricate :nurse
       visit new_completed_proc_path
-      fill_in_proc_form @old_proc, submit: true
+      fill_in_proc_form old_cp, submit: true
       find('#errorExplanation').should have_text DATE_ERROR
     end
     it "allow creation of old procedure by vn" do
       login Fabricate :v_nurse
       visit new_completed_proc_path
-      fill_in_proc_form @old_proc, submit: true
+      fill_in_proc_form old_cp, submit: true
       page.should have_no_selector('#errorExplanation')
     end
     it "don't allow update of old procedure by regular nurse" do

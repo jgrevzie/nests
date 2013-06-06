@@ -44,8 +44,8 @@ describe Nurse do
 
   describe '#pendings' do 
     it "gets an enumeration of procedures for a nurse that have't been.vdated" do     
-      n = Fabricate :nurse_5p
-      n.pendings.count.should == 5
+      n = Fabricate :nurse_1p
+      n.pendings.count.should == 1
     end
     it "won't get procs that belong to another nurse" do
       n1 = Fabricate :nurse_1p
@@ -66,7 +66,7 @@ describe Nurse do
       CompletedProc.pending_validations.size.should eq 0
     end
     it "throws exception if the nurse is not a validator" do
-      n1 = Fabricate :nurse_5p
+      n1 = Fabricate :nurse_1p
       n2 = Fabricate :nurse
       expect { n2.vdate(CompletedProc.pending_validations) }.to raise_error
     end
@@ -91,8 +91,10 @@ describe Nurse do
   describe "#completed_procs_summary" do
     it "returns an array of totals of proc types a given nurse has completed" do
       n = Fabricate :nurse
-      n.completed_procs << (cp_1=Fabricate(:comp_proc_seq, quantity: 5))
-      n.completed_procs << (cp_2=Fabricate(:comp_proc_seq, quantity: 7))
+      p1 = Fabricate :proc
+      p2 = Fabricate :proc
+      n.completed_procs << (cp_1=Fabricate(:cp, quantity: 5, proc: p1))
+      n.completed_procs << (cp_2=Fabricate(:cp, quantity: 7, proc: p2))
 
       vn = Fabricate :v_nurse
       vn.vdate n.completed_procs

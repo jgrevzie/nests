@@ -7,9 +7,9 @@ Fabricator(:completed_proc, aliases: [:cp, :comp_proc_seq, :cp_seq]) do
   date { Date.today }
 	quantity 1
 	# If proc_name: was specified, use that as proc name.
-  proc {|attrs| Fabricate :proc, opt_params(attrs, :dept, proc_name: :name)}
+  proc {|attrs| random_existing_proc opt_params(attrs, :dept, proc_name: :name)}
   role CP::SCRUBBED
-  nurse {random_nurse}
+  nurse{random_nurse}
   
   after_build do |cp|
     # Setup a validator if necessary.
@@ -29,6 +29,7 @@ Fabricator(:random_completed_proc, from: :completed_proc, aliases: [:rand_cp]) d
   status { ([CP::VALID]*15 + [CP::REJECTED] + [CP::PENDING]*3 + [CP::ACK_REJECTED]).sample }
   role {CP::ROLES.sample}
   emergency {[true, false].sample}
+  comments 'This procedure was carried out in a random fashion.'
   proc {|attrs| random_existing_proc opt_params(attrs, :dept, proc_name: :name)}
 end
 
