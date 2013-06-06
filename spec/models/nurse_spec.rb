@@ -48,8 +48,8 @@ describe Nurse do
       n.pendings.count.should == 5
     end
     it "won't get procs that belong to another nurse" do
-      n1 = Fabricate :nurse_5p
-      n2 = Fabricate :nurse_5p
+      n1 = Fabricate :nurse_1p
+      n2 = Fabricate :nurse_1p
       n2.pendings.should_not include n1.pendings
     end
   end
@@ -57,11 +57,11 @@ describe Nurse do
   describe '#vdate' do
     it "does pretty much what you'd expect :)" do
       n_pendings = CompletedProc.pending_validations.size
-      2.times { Fabricate :nurse_5p }
+      2.times { Fabricate :nurse_1p }
       vn = Fabricate :v_nurse
 
       comp_procs = CompletedProc.pending_validations
-      comp_procs.size.should eq n_pendings+10
+      comp_procs.size.should eq n_pendings+2
       vn.vdate comp_procs
       CompletedProc.pending_validations.size.should eq 0
     end

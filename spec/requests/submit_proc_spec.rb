@@ -63,13 +63,12 @@ describe "'Submit proc for validation' page" do
     click_on_popup_menu_item PROC_NAME2
     page.should have_unchecked_field 'checkbox?'
   end
-  it "submits proc for validation, stores proc", js:true do
+  it "submits proc for validation, stores proc" do
     fill_in_proc_form cp, submit: true
     
     page.should have_content 'Submit Procedure'
     page.should_not have_selector "#errorExplanation"
     page.should have_selector '#notice'
-    page.should have_content 'Submit Procedure'
 
     CompletedProc.pending.count.should eq 2    
     cp_out = CompletedProc.pending[1]
