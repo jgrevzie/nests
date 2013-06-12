@@ -54,7 +54,8 @@ describe "'Submit proc for validation' page" do
     fill_in "Procedure Name", with: PROC_NAME[-5, -1]
     page.should have_text PROC_NAME
   end
-  it "updates page with proc options, once a proc name is chosen from menu", js: true do 
+  # Skip the following test, because it's subsumed by the one after it and several others
+  it "updates page with proc options, once a proc name is chosen from menu", js:true,skip:true do 
     fill_in "Procedure Name", with: PROC_NAME
     click_on_popup_menu_item PROC_NAME
     page.should have_unchecked_field "option1"

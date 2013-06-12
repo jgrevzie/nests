@@ -10,6 +10,8 @@ only validating nurse should be able to load dept
 clear_db
 sleep 1 may not be necessary
 test uniqueness of dept
+when loading in spreadsheet, nurse may already exist
+dealing with other spreadsheet errors
 
 FEATURES
 Procs need to be categorized by heading in drop down list.
