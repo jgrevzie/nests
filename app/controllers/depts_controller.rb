@@ -41,7 +41,12 @@ class DeptsController < ApplicationController
   # POST /depts
   # POST /depts.json
   def create
-    @dept = DeptSpreadsheet.load_dept(params[:dept][:spreadsheet].tempfile)
+    # Was this POSTed from the spreadsheet upload page?
+    if params[:dept][:spreadsheet]
+      @dept = DeptSpreadsheet.load_dept(params[:dept][:spreadsheet].tempfile)
+    else
+      @dept = Dept.new(params[:dept])
+    end
 
     respond_to do |format|
       if @dept.save
@@ -80,5 +85,9 @@ class DeptsController < ApplicationController
       format.html { redirect_to depts_url }
       format.json { head :no_content }
     end
+  end
+
+  def upload
+    self.new
   end
 end

@@ -7,8 +7,6 @@
 
 require 'spec_helper'
 
-TEST_XLS = "#{File.dirname __FILE__}/test.xls"
-
 describe DeptSpreadsheet do
 
   describe "(utility methods)" do
@@ -45,7 +43,7 @@ describe DeptSpreadsheet do
   describe "::load_dept" do
     before(:all) do
       clear_db
-      File.open(TEST_XLS) {|io| DS.load_dept io}
+      File.open(TEST_XLS) {|io| @dept = DS.load_dept io}
     end
     describe "(procs)" do
       def proc_by_name(name) Procedure.where(name: name).first end 
@@ -127,6 +125,9 @@ describe DeptSpreadsheet do
       its(:name) {should eq 'Test Dept'}
       its(:hospital) {should eq 'Test Hospital'}
       its(:location) {should eq 'Test Location'}
+    end
+    it "returns dept that's been created" do
+      @dept.should eq Dept.first
     end
   end
 

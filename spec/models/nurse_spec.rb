@@ -121,7 +121,8 @@ describe Nurse do
       vn = Fabricate :v_nurse
       vn.vdate n.completed_procs
 
-      n.completed_procs_total.should eq n.completed_procs.inject(0) {|accu, cp| accu+cp.quantity}
+      n.completed_procs_total.should eq n.completed_procs.inject(0) {|accu, cp| accu+cp.
+        quantity}
     end
     it "doesn't include rejected or pending procs" do
       n = Fabricate :nurse_random_procs, n_procs: 5

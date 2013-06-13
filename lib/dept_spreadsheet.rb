@@ -79,10 +79,10 @@ class DeptSpreadsheet
 
   def self.load_dept io
     ds = DS.new io
-    ds.load_dept_info
+    dept = ds.load_dept_info
     ds.load_procs
     ds.load_nurses
-    return @dept
+    return dept
   end
       
 end

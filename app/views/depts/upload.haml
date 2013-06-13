@@ -1,0 +1,16 @@
+
+
+
+
+
+= content_for :header do
+  %h1 New Dept
+
+
+
+
+= form_for @dept do |f|
+  = f.label :spreadsheet, "Choose a spreadsheet to upload"
+  = f.file_field :spreadsheet
+  %br
+  = f.submit

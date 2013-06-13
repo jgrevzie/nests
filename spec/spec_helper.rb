@@ -14,6 +14,8 @@ require 'rspec/autorun'
 require 'capybara/rspec'
 #require 'capybara/poltergeist'
 
+TEST_XLS = "#{Rails.root.to_s}/spec/data/test.xls"
+
 Capybara.javascript_driver = :webkit
 #Capybara.javascript_driver = :poltergeist
 

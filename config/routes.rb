@@ -2,7 +2,9 @@ Nests::Application.routes.draw do
   
 
 
-  resources :depts
+  resources :depts do
+    get 'upload', on: :collection
+  end
 
 
   root controller: :sessions, action: :home
