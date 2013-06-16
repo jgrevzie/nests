@@ -49,11 +49,11 @@ class DeptsController < ApplicationController
     end
 
     respond_to do |format|
-      if @dept.save
+      if @dept.valid?
         format.html { redirect_to @dept, notice: 'Created Dept' }
         format.json { render json: @dept, status: :created, location: @dept }
       else
-        format.html { render action: "new" }
+        format.html { render action: "upload" }
         format.json { render json: @dept.errors, status: :unprocessable_entity }
       end
     end

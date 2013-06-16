@@ -13,6 +13,7 @@ test uniqueness of dept
 when loading in spreadsheet, nurse may already exist
 dealing with other spreadsheet errors
 file upload controller completely broken, needs to check for errors and needs security
+https://github.com/blueimp/jQuery-File-Upload#readme
 FEATURES
 Procs need to be categorized by heading in drop down list.
 Nurse needs to be able to change password.

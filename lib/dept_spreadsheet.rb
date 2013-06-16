@@ -74,14 +74,12 @@ class DeptSpreadsheet
 
   def load_dept_info
     raise("Couldn't get department info, aborting.") unless dept_sheet = get_dept_info_sheet
-    @dept = Dept.create! key_value_pairs(dept_sheet)
+    @dept = Dept.create key_value_pairs(dept_sheet)
   end
 
   def self.load_dept io
     ds = DS.new io
-    dept = ds.load_dept_info
-    ds.load_procs
-    ds.load_nurses
+    (ds.load_procs ; ds.load_nurses) if (dept=ds.load_dept_info).valid?
     return dept
   end
       

@@ -1,0 +1,23 @@
+
+
+
+
+= content_for :header do
+  %h1 Dept Summary
+
+%p#notice #{notice}
+
+%p
+  %b Name:
+  = @dept.name
+
+%p
+  %b Hospital:
+  = @dept.hospital
+
+%p
+  %b Location:
+  = @dept.location
+
+= link_to 'Edit', edit_dept_path(@dept)
+= link_to 'Back', depts_path

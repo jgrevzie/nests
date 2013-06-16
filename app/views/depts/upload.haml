@@ -9,8 +9,23 @@
 
 
 
+- if @dept.errors.any?
+  #error_explanation
+    %h2 #{pluralize(@dept.errors.count, "error")} prevented this dept from being saved:
+
+    %ul
+      - @dept.errors.full_messages.each do |msg|
+        %li #{msg}
+
 = form_for @dept do |f|
   = f.label :spreadsheet, "Choose a spreadsheet to upload"
   = f.file_field :spreadsheet
   %br
   = f.submit
+
+%textarea#status
+
+:javascript
+  $('form').submit(function() {
+    $('#status').text('Status messages go here.');
+  })
