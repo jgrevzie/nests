@@ -1,41 +1,31 @@
+
+
+
+
+
 class DeptsController < ApplicationController
+  respond_to :html, :xml, :js
   # GET /depts
   # GET /depts.json
   def index
-    @depts = Dept.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @depts }
-    end
+    respond_with (@depts = Dept.all)
   end
 
   # GET /depts/1
   # GET /depts/1.json
   def show
-    @dept = Dept.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @dept }
-    end
+    respond_with (@dept = Dept.find(params[:id]))
   end
 
   # GET /depts/new
   # GET /depts/new.json
   def new
-    @dept = Dept.new
-    @nurse = logged_in_nurse
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @dept }
-    end
+    respond_with @dept=Dept.new, @nurse=logged_in_nurse
   end
 
   # GET /depts/1/edit
   def edit
-    @dept = Dept.find(params[:id])
+    respond_with @dept = Dept.find(params[:id])
   end
 
   # POST /depts
@@ -48,31 +38,16 @@ class DeptsController < ApplicationController
       @dept = Dept.new(params[:dept])
     end
 
-    respond_to do |format|
-      if @dept.valid?
-        format.html { redirect_to @dept, notice: 'Created Dept' }
-        format.json { render json: @dept, status: :created, location: @dept }
-      else
-        format.html { render action: "upload" }
-        format.json { render json: @dept.errors, status: :unprocessable_entity }
-      end
-    end
+    flash[:notice] = 'Created Dept' if @dept.valid?
+    respond_with @dept
   end
 
   # PUT /depts/1
   # PUT /depts/1.json
   def update
-    # warning needs to be FIXED
-
-    respond_to do |format|
-      if @dept.update_attributes(params[:dept])
-        format.html { redirect_to @dept, notice: 'Updated Dept.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @dept.errors, status: :unprocessable_entity }
-      end
-    end
+    @dept = Dept.find params[:id]
+    flash[:notice] = 'Updated Dept' if @dept.update_attributes(params[:dept])
+    respond_with @dept
   end
 
   # DELETE /depts/1
@@ -80,14 +55,10 @@ class DeptsController < ApplicationController
   def destroy
     @dept = Dept.find(params[:id])
     @dept.destroy
-
-    respond_to do |format|
-      format.html { redirect_to depts_url }
-      format.json { head :no_content }
-    end
+    respond_with @dept
   end
 
   def upload
-    self.new
+    respond_with @dept = Dept.new
   end
 end
