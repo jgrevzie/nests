@@ -8,12 +8,14 @@
 require 'spec_helper'
 
 describe DeptSpreadsheet do
+  def load_dept(file_name) File.open(file_name) {|io| DS.load_dept io} end
 
   describe "(utility methods)" do
     before(:all) do
       @io = File.open(TEST_XLS)
       @ds = DS.new @io
     end
+    after(:all) {@io.close}
 
     describe "::get_sheet" do
       it "provides option to give different names for sheets" do
@@ -36,14 +38,12 @@ describe DeptSpreadsheet do
         hash[:location].should eq 'Test Location'
       end
     end
-
-    after(:all) do @io.close end
   end
   
   describe "::load_dept" do
     before(:all) do
       clear_db
-      File.open(TEST_XLS) {|io| @dept = DS.load_dept io}
+      @dept = load_dept TEST_XLS
     end
     describe "(procs)" do
       def proc_by_name(name) Procedure.where(name: name).first end 
@@ -130,7 +130,29 @@ describe DeptSpreadsheet do
       @dept.should eq Dept.first
     end
   end
-
+  describe "when spreadsheet has invalid procs or nurses, but department is valid" do
+    before(:all) do
+      clear_db
+      @dept = load_dept INVALID_XLS
+    end
+    it "no errors in dept" do
+      @dept.errors.any?.should be_false
+      @dept.valid?.should be_true # Redundant?
+    end
+    it "forcing an error in dept prevents loading of nurses and procs" do
+      # reload, will trigger validation for dept
+      (d = load_dept INVALID_XLS).valid?.should be_false
+      d.errors.messages.size.should eq 1
+    end
+    it "errors in nurses bubble up to dept#upload_errors" do
+      (error = @dept.upload_errors.grep(/nancy/)[0]).should_not be_nil
+      error.downcase.should match /line 5/
+    end
+    it "errors in procs bubble up to dept#upload_errors" do
+      (error = @dept.upload_errors.grep(/Proc/)[0]).should_not be_nil
+      error.downcase.should match /line 7/
+    end
+  end
 end
 
 require 'spreadsheet'

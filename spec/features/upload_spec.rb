@@ -5,10 +5,10 @@
 
 require 'spec_helper'
 
-describe "uploading a spreadsheet with nurses and procs" do
+describe "Uploading a spreadsheet containing nurses and procs" do
   
-  def choose_file_and_submit
-    attach_file 'Choose a spreadsheet to upload', TEST_XLS
+  def choose_file_and_submit *file_name
+    attach_file 'Choose a spreadsheet to upload', (file_name[0] || TEST_XLS)
     click_button 'Create Dept'
   end
 
@@ -35,5 +35,12 @@ describe "uploading a spreadsheet with nurses and procs" do
     # submit the same dept twice should give an error
     choose_file_and_submit
     page.should have_selector('#error_explanation')
+    # COULD TEST WHAT PAGE WE'RE ON
+  end
+  it "if there's errors with nurses or procs, upload continues but errors are displayed later" do
+    n_depts = Dept.count
+    choose_file_and_submit INVALID_XLS
+    Dept.count.should eq n_depts+1
+    page.should have_selector '#upload_errors'
   end
 end

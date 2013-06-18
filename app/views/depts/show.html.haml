@@ -7,6 +7,13 @@
 
 %p#notice #{notice}
 
+- if @dept.upload_errors.any?
+  #upload_errors
+    Department created, but some nurses and/or procs were skipped.
+    - @dept.upload_errors.each do |error|
+      %ul
+        %li #{error}
+
 %p
   %b Name:
   = @dept.name
@@ -21,3 +28,12 @@
 
 = link_to 'Edit', edit_dept_path(@dept)
 = link_to 'Back', depts_path
+
+-# This should display all nurses and procs that are currently part of the dept.
+
+:css
+  #upload_errors { 
+    border: solid;
+    width: 50%;
+    color: red;
+   }

@@ -23,11 +23,13 @@ class DeptSpreadsheet
 
   def get_sheet *sheet_names
     spready = Spreadsheet.open @io
+    # THIS SHOULD ADD TO UPLOAD ERRORS, RATHER THAN JUST LOGGING A MESSAGE TO THE CONSOLE
     spready.worksheets.find {|w| sheet_names.map(&:downcase).include? w.name.downcase} or
       puts "Couldn't find any of sheet names '#{sheet_names}' in #{@io}"
   end
 
   def get_headers sheet    
+    # THIS SHOULD NOT THROW AN EXCEPTION, AND ADD TO UPLOAD ERRORS
     headers = sheet.first.map &:downcase
     raise "Couldn't find 'n/Name' at top of a column" unless headers.include? "name"
     return headers
@@ -38,9 +40,22 @@ class DeptSpreadsheet
     return unless sheet = get_sheet(opts[:class].to_s.pluralize)
 
     sheet.each sheet.first.idx+1 do |row|
-         next unless row.any? {|i| !i.nil? } # Blank line in middle of table.
-      opts[:munger].call( h=HashWithIndifferentAccess[get_headers(sheet).zip row] )
-      opts[:class].create! h.merge(dept: @dept)
+      next unless row.any? {|i| !i.nil? } # Blank line in middle of table.
+
+      h=HashWithIndifferentAccess[get_headers(sheet).zip row]
+      unless h[:name]
+        @dept.upload_errors << "#{opts[:class]} at line #{row.idx+1} doesn't have a name"
+        next
+      end
+
+      opts[:munger].call h
+      thing = opts[:class].create h.merge(dept: @dept)
+
+       unless thing.valid?
+        @dept.upload_errors << 
+          "#{opts[:class]} '#{h[:name]}', line #{row.idx+1}" +
+          " - #{thing.errors.full_messages.join(',')}" 
+      end
     end
   end
 
@@ -52,7 +67,7 @@ class DeptSpreadsheet
   end
 
   def load_nurses
-    load_from_spreadsheet class: Nurse, dept: @dept, munger: lambda { |h|
+    load_from_spreadsheet class: Nurse, munger: lambda { |h|
       fn, ln = h[:name].split[0].lc_alpha, h[:name].split[-1].lc_alpha
       h[:username] = fn + ln[0] unless h[:username]
       h[:validator] = h[:validator] ? h[:validator].to_s.downcase.start_with?('y', 't') : false

@@ -8,10 +8,12 @@ class Dept
   field :name
   field :hospital
   field :location
+  field :upload_errors, type: Array, default: []
 
-  has_many :nurses
-  has_many :procedures
+  has_many :nurses, validate: false
+  has_many :procedures, validate: false
 
   validates :name, uniqueness: {scope: [:hospital, :location]}
+
   def full_name; "#{self.name} (#{self.hospital}, #{self.location})" end
 end
