@@ -23,26 +23,27 @@ class DeptSpreadsheet
 
   def get_sheet *sheet_names
     spready = Spreadsheet.open @io
-    # THIS SHOULD ADD TO UPLOAD ERRORS, RATHER THAN JUST LOGGING A MESSAGE TO THE CONSOLE
-    spready.worksheets.find {|w| sheet_names.map(&:downcase).include? w.name.downcase} or
-      puts "Couldn't find any of sheet names '#{sheet_names}' in #{@io}"
+    spready.worksheets.find {|w| sheet_names.map(&:downcase).include? w.name.downcase}
   end
-
-  def get_headers sheet    
-    # THIS SHOULD NOT THROW AN EXCEPTION, AND ADD TO UPLOAD ERRORS
-    headers = sheet.first.map &:downcase
-    raise "Couldn't find 'n/Name' at top of a column" unless headers.include? "name"
-    return headers
-  end    
 
   def load_from_spreadsheet *args
     opts = args.extract_options!
-    return unless sheet = get_sheet(opts[:class].to_s.pluralize)
+    sheet_name = opts[:class].to_s.pluralize
+    unless sheet = get_sheet(opts[:class].to_s, sheet_name)
+      @dept.upload_errors << "Couldn't find worksheet '#{sheet_name}'"
+      return
+    end
+
+    headers = sheet.first.map &:downcase
+    unless headers.include? "name"
+      @dept.upload_errors << "Couldn't find column 'name' for worksheet '#{sheet.name}'"
+      return
+    end
 
     sheet.each sheet.first.idx+1 do |row|
       next unless row.any? {|i| !i.nil? } # Blank line in middle of table.
 
-      h=HashWithIndifferentAccess[get_headers(sheet).zip row]
+      h=HashWithIndifferentAccess[headers.zip row]
       unless h[:name]
         @dept.upload_errors << "#{opts[:class]} at line #{row.idx+1} doesn't have a name"
         next
@@ -79,7 +80,7 @@ class DeptSpreadsheet
 
   def key_value_pairs sheet
     hash = HashWithIndifferentAccess.new
-    sheet.each sheet.first.idx do |row| hash[ row[0] ] = row[1] if row[0] end
+    sheet.each sheet.first.idx do |row| hash[ row[0] ] = row[1] if row[0] end if sheet
     return hash
   end
 
@@ -88,8 +89,9 @@ class DeptSpreadsheet
   end
 
   def load_dept_info
-    raise("Couldn't get department info, aborting.") unless dept_sheet = get_dept_info_sheet
-    @dept = Dept.create key_value_pairs(dept_sheet)
+    dept_sheet = get_dept_info_sheet
+    (@dept = Dept.create key_value_pairs(dept_sheet)).using_upload = true
+    return @dept
   end
 
   def self.load_dept io

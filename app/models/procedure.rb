@@ -14,6 +14,6 @@ class Procedure
   has_many :completed_procs
   belongs_to :dept
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: {scope: [:dept]}
   validates :dept, presence: true
 end

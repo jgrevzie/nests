@@ -133,6 +133,7 @@ describe DeptSpreadsheet do
   describe "when spreadsheet has invalid procs or nurses, but department is valid" do
     before(:all) do
       clear_db
+      # INVALID_XLS has many errors in nurses and procs
       @dept = load_dept INVALID_XLS
     end
     it "no errors in dept" do
@@ -141,16 +142,37 @@ describe DeptSpreadsheet do
     end
     it "forcing an error in dept prevents loading of nurses and procs" do
       # reload, will trigger validation for dept
+      nurses = Nurse.count
       (d = load_dept INVALID_XLS).valid?.should be_false
-      d.errors.messages.size.should eq 1
+      Nurse.count.should eq nurses
     end
     it "errors in nurses bubble up to dept#upload_errors" do
       (error = @dept.upload_errors.grep(/nancy/)[0]).should_not be_nil
       error.downcase.should match /line 5/
     end
     it "errors in procs bubble up to dept#upload_errors" do
-      (error = @dept.upload_errors.grep(/Proc/)[0]).should_not be_nil
+      error = @dept.upload_errors.grep(/Proc/)[0]
       error.downcase.should match /line 7/
+    end
+  end
+  describe "when dept sheet is missing or invalid" do
+    it "adds an error to dept, to be displayed when upload fails" do
+      @dept = load_dept "#{DATA_DIR}/no_dept_sheet.xls"
+      @dept.valid?.should be_false
+      @dept.errors.full_messages.grep(/'dept info'/).any?.should be
+    end
+  end
+  describe "other errors" do
+    before(:all) {@dept = load_dept "#{DATA_DIR}/no_nurse_sheet.xls"}
+    it "if nurse sheet is missing, adds an error to dept.upload_errors" do
+      @dept.upload_errors.grep(/Couldn't find worksheet 'Nurses'/).any?.should be
+      @dept.valid?.should be
+    end
+    it "if there's no 'name' column, log an error in upload_errors and don't load it" do
+      @dept.upload_errors.grep(/Couldn't find column 'name'/).any?.should be
+      p @dept.upload_errors
+      @dept.procedures.any?.should be_false
+      @dept.valid?.should be
     end
   end
 end

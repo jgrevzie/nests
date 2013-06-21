@@ -35,6 +35,15 @@ describe Procedure do
         Procedure.count.should eq proc_count
       end
     end
+
+    describe "procedure validations" do
+      it "procs can have same name, as long as they're in different depts" do
+        d1 = Fabricate :dept, name: 'd1'
+        d2 = Fabricate :dept, name: 'd2'
+        Fabricate :proc, name: 'proc', dept: d1
+        expect { Fabricate :proc, name: 'proc', dept: d2}.not_to raise_error
+      end
+    end
   end
 
 end
