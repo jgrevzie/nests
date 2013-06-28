@@ -6,9 +6,6 @@
 = content_for :header do
   %h1 New Dept
 
-
-
-
 - if @dept.errors.any?
   #error_explanation
     %h2 #{pluralize(@dept.errors.count, "error")} prevented this dept from being saved:
@@ -17,13 +14,11 @@
       - @dept.errors.full_messages.each do |msg|
         %li #{msg}
 
-= form_for @dept do |f|
-  = f.label :spreadsheet, "Choose a spreadsheet to upload"
+= form_for @dept, url: {controller: 'depts', action: 'upload_submit', id: @dept.id} do |f|
+  = f.label :spreadsheet, "Choose a spreadsheet to upload -"
   = f.file_field :spreadsheet
   %br
-  = f.submit
-
-%textarea#status
+  = f.submit 'Upload Dept, Nurses and Procs', id: 'submitButton'
 
 :javascript
   $('form').submit(function() {

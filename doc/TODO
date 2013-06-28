@@ -15,6 +15,8 @@ dealing with other spreadsheet errors
 file upload controller completely broken, needs to check for errors and needs security
 https://github.com/blueimp/jQuery-File-Upload#readme
 what if forget to pick a file in upload?
+needs to go to correct page if there's a problem uploading department
+could perhaps use exceptions instead of return values in dept_spreadsheetrb
 
 FEATURES
 Procs need to be categorized by heading in drop down list.

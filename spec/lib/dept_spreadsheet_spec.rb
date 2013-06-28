@@ -147,7 +147,7 @@ describe DeptSpreadsheet do
       Nurse.count.should eq nurses
     end
     it "errors in nurses bubble up to dept#upload_errors" do
-      (error = @dept.upload_errors.grep(/nancy/)[0]).should_not be_nil
+      (error = @dept.upload_errors.grep(/nibbles/)[0]).should_not be_nil
       error.downcase.should match /line 5/
     end
     it "errors in procs bubble up to dept#upload_errors" do

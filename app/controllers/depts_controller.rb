@@ -31,15 +31,20 @@ class DeptsController < ApplicationController
   # POST /depts
   # POST /depts.json
   def create
-    # Was this POSTed from the spreadsheet upload page?
-    if params[:dept][:spreadsheet]
-      @dept = DeptSpreadsheet.load_dept(params[:dept][:spreadsheet].tempfile)
-    else
-      @dept = Dept.new(params[:dept])
-    end
+    @dept = Dept.new params[:dept]
 
-    flash[:notice] = 'Created Dept' if @dept.valid?
+    flash[:notice] = 'Created Dept' if @dept.save
     respond_with @dept
+  end
+
+  def upload_submit
+    @dept = DeptSpreadsheet.load_dept params[:dept][:spreadsheet].tempfile
+    if @dept.save
+      flash[:notice] = 'Created Dept' 
+      respond_with @dept
+    else
+      render action: 'upload'
+    end
   end
 
   # PUT /depts/1

@@ -4,6 +4,7 @@ Nests::Application.routes.draw do
 
   resources :depts do
     get 'upload', on: :collection
+    post 'upload_submit', on: :member
   end
 
 

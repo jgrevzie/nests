@@ -9,7 +9,7 @@ describe "Uploading a spreadsheet containing nurses and procs" do
   
   def choose_file_and_submit *file_name
     attach_file 'Choose a spreadsheet to upload', (file_name[0] || TEST_XLS)
-    click_button 'Create Dept'
+    click_button 'submitButton'
   end
 
   before(:each) do
@@ -24,11 +24,6 @@ describe "Uploading a spreadsheet containing nurses and procs" do
     Procedure.count.should be > n_procs
     Nurse.count.should be > n_nurses
   end
-  it "page has simple textarea that fills up with status info" do
-    find_field('status').value.should eq ''
-    #choose_file_and_submit
-    #find_field('status').value.should_not eq ''
-  end
   it "shows a pleasant error message if there's a problem with the dept" do
     choose_file_and_submit
     visit upload_depts_path
@@ -39,7 +34,7 @@ describe "Uploading a spreadsheet containing nurses and procs" do
   end
   it "if there's errors with nurses or procs, upload continues but errors are displayed later" do
     n_depts = Dept.count
-    choose_file_and_submit INVALID_XLS
+    choose_file_and_submit "#{DATA_DIR}/no_nurse_sheet.xls"
     Dept.count.should eq n_depts+1
     page.should have_selector '#upload_errors'
   end
