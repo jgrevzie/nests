@@ -38,18 +38,18 @@ class DeptsController < ApplicationController
   end
 
   def upload_submit
-    if params[:dept]
+    begin
       @dept = DeptSpreadsheet.load_dept params[:dept][:spreadsheet].tempfile
       if @dept.save
         flash[:notice] = 'Created Dept' 
         respond_with @dept
-      else
-        render action: 'upload'
+        return
       end
-    else
-      (@dept = Dept.new).errors[:base] << 'Choose a valid file name.'
-      render action: :upload
-    end      
+    rescue => ex
+      logger.info ex
+      (@dept = Dept.new).errors[:base] << "Choose a valid xls file."
+    end
+    render action: :upload    
   end
 
   # PUT /depts/1

@@ -38,4 +38,8 @@ describe "Uploading a spreadsheet containing nurses and procs" do
     Dept.count.should eq n_depts+1
     page.should have_selector '#upload_errors'
   end
+  it "shows pleasing error if user doesn't choose a valid xls" do
+    choose_file_and_submit "#{DATA_DIR}/cats.jpeg"
+    page.should have_selector('#error_explanation', text: 'Choose a valid xls file')
+  end
 end
