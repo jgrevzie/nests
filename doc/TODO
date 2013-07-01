@@ -8,7 +8,6 @@
 remove precompile of assets?
 only validating nurse should be able to load dept
 clear_db
-sleep 1 may not be necessary
 https://github.com/blueimp/jQuery-File-Upload#readme
 
 FEATURES

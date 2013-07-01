@@ -6,10 +6,7 @@ require 'spec_helper'
 
 describe "Nurse's home page" do
 
-  before(:all) {
-    clear_db
-    dept = Fabricate :dept, name: 'Hankerchief Dept'
-  }
+  before(:all) {Fabricate :dept, name: 'Hankerchief Dept'}
 
   it "shows title for signed in nurse" do
     visit_home n=Fabricate(:nurse)

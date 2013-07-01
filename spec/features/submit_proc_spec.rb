@@ -9,9 +9,9 @@ PROC_NAME = '_____procedure'
 PROC_NAME2 = "#{PROC_NAME}2"
 
 def click_on_popup_menu_item(item_name)
-    sleep 1
-    selector = ".ui-menu-item a:contains(\"#{item_name}\"):first"
-    page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
+  click_link item_name
+  #selector = ".ui-menu-item a:contains(\"#{item_name}\"):first"
+  #page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
 end
 
 def fill_in_proc_form(cp, *args)
