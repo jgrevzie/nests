@@ -9,16 +9,10 @@ remove precompile of assets?
 only validating nurse should be able to load dept
 clear_db
 sleep 1 may not be necessary
-test uniqueness of dept
-when loading in spreadsheet, nurse may already exist
-dealing with other spreadsheet errors
-file upload controller completely broken, needs to check for errors and needs security
 https://github.com/blueimp/jQuery-File-Upload#readme
-what if forget to pick a file in upload?
-needs to go to correct page if there's a problem uploading department
-could perhaps use exceptions instead of return values in dept_spreadsheetrb
 
 FEATURES
+Nurse username unique to department.
 Procs need to be categorized by heading in drop down list.
 Nurse needs to be able to change password.
 Summary of completed procedures by date with y axis showing quantity?

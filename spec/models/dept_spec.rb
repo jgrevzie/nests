@@ -21,7 +21,6 @@ describe Dept do
       dept = Dept.new # Invalid because does not specify name and hospital and location
       dept.using_upload = true
       dept.valid?.should be_false
-      p dept.errors
       grep_errors(dept).should be
     end
     it "no missing sheet reminder unless there's a 'can't be blank' error already" do
@@ -33,6 +32,15 @@ describe Dept do
     it "no missing sheet reminder if dept isn't from an upload" do
       (d = Dept.new).valid?.should be_false
       grep_errors(d).should be_false
+    end
+  end
+  describe "uniqueness" do
+    it "allows depts with same names if hospital and/or location are different" do
+      Fabricate :dept, name: 'Diabolical', hopital: 'Heinous', location: 'Lascivious'
+      (Dept.new name: 'Diabolical', hospital: 'Horrible', location: 'Lustful').valid?.should be
+      (Dept.new name: 'Diabolical', hospital: 'Heinous', location: 'Lewd').valid?.should be
+      (Dept.new name: 'Diabolical', hopital: 'Heinous', location: 'Lascivious').valid?.should_not be
+      (Dept.new name: 'Diabolical', hospital: 'Happy', location: 'Lovely').valid?.should be
     end
   end
 end

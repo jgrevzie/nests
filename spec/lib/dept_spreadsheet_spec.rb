@@ -165,7 +165,7 @@ describe DeptSpreadsheet do
   describe "other errors" do
     before(:all) {@dept = load_dept "#{DATA_DIR}/no_nurse_sheet.xls"}
     it "if nurse sheet is missing, adds an error to dept.upload_errors" do
-      @dept.upload_errors.grep(/Couldn't find worksheet 'Nurses'/).any?.should be
+      @dept.upload_errors.grep(/Couldn't find sheet 'Nurses'/).any?.should be
       @dept.valid?.should be
     end
     it "if there's no 'name' column, log an error in upload_errors and don't load it" do

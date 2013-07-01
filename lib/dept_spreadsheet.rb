@@ -29,35 +29,29 @@ class DeptSpreadsheet
   def load_from_spreadsheet *args
     opts = args.extract_options!
     sheet_name = opts[:class].to_s.pluralize
-    unless sheet = get_sheet(opts[:class].to_s, sheet_name)
-      @dept.upload_errors << "Couldn't find worksheet '#{sheet_name}'"
-      return
-    end
+    raise "Couldn't find sheet '#{sheet_name}'" unless sheet=get_sheet(opts[:class].to_s, 
+                                                                       sheet_name)
 
     headers = sheet.first.map &:downcase
-    unless headers.include? "name"
-      @dept.upload_errors << "Couldn't find column 'name' for worksheet '#{sheet.name}'"
-      return
-    end
+    raise "Couldn't find column 'name' for sheet '#{sheet.name}'" unless headers.include? "name"
 
-    sheet.each sheet.first.idx+1 do |row|
-      next unless row.any? {|i| !i.nil? } # Blank line in middle of table.
+    sheet.each sheet.first.idx+1 do |row| begin  
+      next unless row.any? {|i| !i.nil? } # blank line in middle of table.
 
       h=HashWithIndifferentAccess[headers.zip row]
-      unless h[:name]
-        @dept.upload_errors << "#{opts[:class]} at line #{row.idx+1} doesn't have a name"
-        next
-      end
+      raise "#{opts[:class]} at line #{row.idx+1} doesn't have a name" unless h[:name] # no name?
 
-      opts[:munger].call h
+      opts[:munger].call h # massage row of data
       thing = opts[:class].create h.merge(dept: @dept)
-
-       unless thing.valid?
-        @dept.upload_errors << 
-          "#{opts[:class]} '#{h[:name]}', line #{row.idx+1}" +
-          " - #{thing.errors.full_messages.join(',')}" 
-      end
-    end
+      
+      # record an error if there's a problem with the model
+      raise "#{opts[:class]} '#{h[:name]}', line #{row.idx+1} " +
+            "- #{thing.errors.full_messages.join(',')}" unless thing.valid?
+    rescue => ex
+      @dept.upload_errors << ex.message
+    end end
+  rescue => ex
+    @dept.upload_errors << ex.message
   end
 
   def load_procs
