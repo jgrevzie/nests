@@ -170,7 +170,6 @@ describe DeptSpreadsheet do
     end
     it "if there's no 'name' column, log an error in upload_errors and don't load it" do
       @dept.upload_errors.grep(/Couldn't find column 'name'/).any?.should be
-      p @dept.upload_errors
       @dept.procedures.any?.should be_false
       @dept.valid?.should be
     end

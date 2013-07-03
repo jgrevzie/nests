@@ -61,9 +61,7 @@ RSpec.configure do |config|
 
 end
 
-
 def load_cathlab_procs
-  clear_db
   SpreadsheetLoader::load_procs "#{DB_DIR}/CathLab.xls", Fabricate(:dept, name: 'CathLab')
 end
 
