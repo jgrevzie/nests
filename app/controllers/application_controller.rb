@@ -25,7 +25,6 @@ class ApplicationController < ActionController::Base
     n.validator? ? pending_validations_nurse_path(n): new_completed_proc_path
   end
 
-  FORBID_PAGE = "#{Rails.root}/public/403"
-  def forbid ; render file: FORBID_PAGE, status: :forbidden, layout: false end
+  def forbid ; render file: "#{Rails.root}/public/403", status: :forbidden, layout: false end
   
 end

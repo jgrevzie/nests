@@ -4,8 +4,6 @@
 
 
 class DeptsController < ApplicationController
-  before_filter { forbid unless logged_in_nurse.validator? }
-
   respond_to :html, :xml, :js
   # GET /depts
   # GET /depts.json

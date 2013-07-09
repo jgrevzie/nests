@@ -42,9 +42,4 @@ describe "Uploading a spreadsheet containing nurses and procs" do
     choose_file_and_submit "#{DATA_DIR}/cats.jpeg"
     page.should have_selector('#error_explanation', text: 'Choose a valid xls file')
   end
-  it "isn't accessible to regular nurses" do
-    login Fabricate :nurse
-    visit upload_depts_path
-    page.should have_content "you don't belong here"
-  end
 end
