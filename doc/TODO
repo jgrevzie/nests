@@ -5,8 +5,7 @@
 
 
 
-remove precompile of assets?
-only validating nurse should be able to load dept
+needs tests for theme (example would be accordian on nurse home page)
 
 FEATURES
 Nurse username unique to department.
