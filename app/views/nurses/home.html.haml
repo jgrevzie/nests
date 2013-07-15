@@ -89,7 +89,7 @@
            collection: @nurse.completed_procs_summary(emergency: true).to_a,
            row_partial: 'completed_proc',
            owise: 'No procedures carried out in an emergency (yet).'
- 
+
 :css
   a.rejected  {
     color: red;
@@ -112,4 +112,6 @@
   .validated_by {
     border: none;
     font-style: italic;
+    font-size: 0.75em;
   }
+

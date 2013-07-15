@@ -11,3 +11,10 @@
  *= require_self
  *= require_tree .
  */
+  table {
+    text-align: left;
+  }
+  th {
+    font-size: 14px;
+    border-bottom: 2px solid #6678b1;
+  }

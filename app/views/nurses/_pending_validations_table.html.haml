@@ -6,7 +6,7 @@
 
 
 = form_for :proc_ids, method: :put, url: validate_procs_nurse_url(@nurse) do |f|
-  %table#pendingValidationsTable{border: 1}
+  %table#pendingValidationsTable
     %caption (total #{@nurse.procs_i_can_validate.count})
     %tr
       %th Validate?
@@ -25,3 +25,9 @@
         %td= comp_proc.date
 
   =f.submit 'Validate Checked'
+
+  :javascript
+    $("tr:odd").css("background-color", "rgba(66, 179, 255, 0.1)");
+
+  :css
+    td { padding: 4px; }
