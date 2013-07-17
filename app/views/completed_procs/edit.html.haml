@@ -13,7 +13,7 @@
       = "(by #{@completed_proc.validated_by.first_name})" if @completed_proc.validated_by
       \- please read comments and resubmit, or acknowledge.
 
-  = render 'form'
+  = render 'form', editing:true
 
 - else @completed_proc.validated
   %h1 Procedure has already been validated, can only be edited by validating nurse.

@@ -136,11 +136,11 @@ describe "'Submit proc for validation' page" do
   end
   describe "validation / rejection / acknowledgement / obsession" do
     before (:all) { @vn = Fabricate :v_nurse }
-    it "lets VN validate a proc" do
+    it "lets VN validate a proc, validate radio button is selcted by default" do
       pendings_orig = CP.pendings.count
       login @vn
       visit edit_completed_proc_path(regen_cp)
-      choose 'Valid'
+      page.should have_checked_field "Validate"
       click_button 'submit'
       on_pending_vn_page?.should be_true
       # regen_cp reference would have added a pending cp, and submitting would have removed it
@@ -164,6 +164,15 @@ describe "'Submit proc for validation' page" do
       click_on 'Acknowledge'
       CP.pendings.count.should eq pendings_orig
       regen_cp.reload.ackd?.should be_true
+    end
+    it "doesn't show options to ack/reject if it's a new proc" do
+      login @vn
+      visit new_completed_proc_path
+      page.should have_no_checked_field "Validate"
+    end
+    it "doesn't let regular nurse ack/reject" do
+      visit edit_completed_proc_path @cp
+      page.should have_no_checked_field "Validate"
     end
   end
 

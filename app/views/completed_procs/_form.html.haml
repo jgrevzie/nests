@@ -27,11 +27,11 @@
           = f.radio_button :role, r
     #options
       = render 'options', options: @completed_proc.proc.options if @completed_proc.proc
-  - if @nurse.validator? then
+  - if @nurse.validator? && editing then
     Validate this procedure?
     %label
       Validate
-      = f.radio_button :status, CompletedProc::VALID
+      = f.radio_button :status, CompletedProc::VALID, checked:true
     %label
       Reject
       = f.radio_button :status, CompletedProc::REJECTED

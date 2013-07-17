@@ -6,6 +6,8 @@
 
 
 needs tests for theme (example would be accordian on nurse home page)
+regular nurse shouldn't be able to edit a proc that's been validated
+need to check format of pending validations mail
 
 FEATURES
 Nurse username unique to department.
