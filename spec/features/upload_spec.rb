@@ -45,6 +45,6 @@ describe "Uploading a spreadsheet containing nurses and procs" do
   it "isn't accessible to regular nurses" do
     login Fabricate :nurse
     visit upload_depts_path
-    page.should have_content "you don't belong here"
+    page.should have_css "div.dont-belong"
   end
 end

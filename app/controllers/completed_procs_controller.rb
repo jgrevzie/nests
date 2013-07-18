@@ -10,6 +10,7 @@ class CompletedProcsController < ApplicationController
 
   def is_nurse_allowed_here
     cp = CompletedProc.find(params[:id])
+    # only validators can look at other nurse's procs
     forbid unless logged_in_nurse.validator? or cp.nurse.id==logged_in_nurse.id
   end
 
@@ -42,7 +43,12 @@ class CompletedProcsController < ApplicationController
   def edit
     @nurse = logged_in_nurse
     @completed_proc = CompletedProc.find(params[:id])
-    respond_with( @completed_proc)
+    # regular nurses cannot edit procs that have been validated (there's no gui for it)
+    if !@nurse.validator? && @completed_proc.vdated?
+      forbid
+    else 
+      respond_with @completed_proc
+    end
   end
 
   def setup_date_validation(cp)
@@ -54,8 +60,8 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs.json
   def create
     @nurse = logged_in_nurse
-    # prevents sneaky nurses from posting validated procs
-    @completed_proc = CompletedProc.new params[:completed_proc], as: @nurse.role
+    # no nurse can post a validated proc (status is protected attribute)
+    @completed_proc = CompletedProc.new params[:completed_proc]
     setup_date_validation @completed_proc
 
     if @completed_proc.save && @nurse.completed_procs << @completed_proc
@@ -71,9 +77,12 @@ class CompletedProcsController < ApplicationController
     @nurse = logged_in_nurse
     @completed_proc = CompletedProc.find params[:id]
 
+    # A regular nurse may not alter an existing, validated proc
+    (forbid ; return) if !@nurse.validator? && @completed_proc.vdated?
+
     # Is nurse acking a reject?
     # Or is nurse a vn validating or rejecting a proc?
-    # Or is nurse simply updating a proc prior to validation?
+    # Or is nurse legally updating a proc prior to validation?
 
     ack = params[:commit]=="Acknowledge"
     status = params[:completed_proc][:status]
@@ -85,7 +94,7 @@ class CompletedProcsController < ApplicationController
      
     setup_date_validation @completed_proc
                     
-    #prevent sneaky nurse hackers from PUTting validated procs
+    # prevent sneaky nurse hackers from PUTting validated procs (status is protected attribute)
     flash[:notice] = 'Updated proc' if @completed_proc.update_attributes params[:completed_proc]                                                                
 
     if ack

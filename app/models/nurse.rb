@@ -26,7 +26,6 @@ class Nurse
 
   has_secure_password
 
-  def role; (self.validator?) ? :validator : :default end
   def first_name; name.split[0] end
   def last_name; name.split[-1] end
 
@@ -68,6 +67,7 @@ class Nurse
     self.vdate(CompletedProc.in _id: completed_proc_ids)
   end
 
+  # 'validate' conflicts with something built into rails
   def vdate(completed_procs)
     raise "ordinary nurse tried to validate a proc!!" unless self.validator?
     completed_procs.each do |i|

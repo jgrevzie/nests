@@ -43,7 +43,8 @@ describe "'Submit proc for validation' page" do
   before(:each) { login @n }
   # 'Regenerating' completed proc keeps appending a new cp to the end of @n.completed_procs
   let(:regen_cp) do
-    (@n.completed_procs << (Fabricate :rand_cp, comments:'Regen', options: 'option1', proc: @p))[-1]
+    (@n.completed_procs << 
+      (Fabricate :rand_cp, status:CP::PENDING, comments:'Regen', options:'option1', proc:@p))[-1]
   end
 
 # Following is for phantomjs driver
@@ -173,6 +174,11 @@ describe "'Submit proc for validation' page" do
     it "doesn't let regular nurse ack/reject" do
       visit edit_completed_proc_path @cp
       page.should have_no_checked_field "Validate"
+    end
+    it "doesn't let regular nurse edit a validated proc" do
+      (regen_cp.vdate @vn).save
+      visit edit_completed_proc_path regen_cp
+      page.should have_css "div.dont-belong"
     end
   end
 

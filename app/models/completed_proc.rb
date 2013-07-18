@@ -60,16 +60,19 @@ class CompletedProc
 	end
 	alias_method :set_status, :update_status
 
-	def vdate(nurse) self.update_status VALID, nurse end
+	# 'validate' conflicts with something built into rails
+	def vdate(nurse) self.update_status VALID, nurse ; self end
 	def vdated? ; self.status == VALID end
 
-	def reject(nurse) self.update_status REJECTED, nurse end
+	def reject(nurse) self.update_status REJECTED, nurse ; self end
 	def rejected? ; self.status == REJECTED end
 
 	def self.pending_validations ; CompletedProc.where(status: PENDING) end
 
-	def ack_reject ; self.status = ACK_REJECT end
+	def ack_reject ; self.status = ACK_REJECT ; self end
 	def ackd? ; self.status == ACK_REJECT end
+
+	def pending? ; self.status == PENDING end
 
 	def to_s ; self.proc.name + (self.quantity>1 ? " (#{self.quantity})" : '') + " #{self.date}" end
 
