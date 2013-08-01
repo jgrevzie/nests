@@ -24,6 +24,7 @@ Nests::Application.routes.draw do
       put 'validate_procs'
       get 'home'
       get 'send_mail'
+      get 'mugshot'
     end
   end
 

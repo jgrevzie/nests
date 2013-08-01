@@ -23,7 +23,8 @@ class NursesController < ApplicationController
   # GET /nurses/1
   # GET /nurses/1.json
   def show
-    respond_with( @nurse = Nurse.find(params[:id]) )
+    # send user to home page
+    respond_with @nurse=Nurse.find(params[:id])
   end
 
   # GET /nurses/new
@@ -49,8 +50,9 @@ class NursesController < ApplicationController
   # PUT /nurses/1.json
   def update
     @nurse = Nurse.find(params[:id])
-    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse])
-    respond_with @nurse
+    @nurse.mugshot=(File.open(params[:nurse][:image].tempfile){|f| f.read}) if params[:nurse][:image]
+    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse].except(:image))
+    respond_with @nurse, location: home_nurse_path(@nurse)
   end
 
   # DELETE /nurses/1
@@ -81,5 +83,12 @@ class NursesController < ApplicationController
     @nurse = Nurse.find(params[:id])
     @nurse.validate_by_id params[:proc_ids].keys if params[:proc_ids]
     redirect_to pending_validations_nurse_path(@nurse), notice: "procedures validated"
+  end
+
+  def mugshot
+    @nurse = Nurse.find params[:id]
+    File.open("#{Rails.root}/app/assets/images/nurse.jpeg") {|f| @nurse.mugshot=f.read} \
+      unless @nurse.mugshot
+    send_data @nurse.mugshot, type:'image', disposition:'inline'
   end
 end

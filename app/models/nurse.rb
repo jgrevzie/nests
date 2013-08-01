@@ -14,6 +14,7 @@ class Nurse
   field :designation
   field :email
   field :wants_mail, type: Boolean
+  field :mugshot, type: Moped::BSON::Binary
 
   has_many :completed_procs, dependent: :delete, autosave: true
   has_many :validations, class_name: 'CompletedProc'

@@ -9,6 +9,8 @@ namespace :nest do
 		Mongoid.purge!
 		puts "Loading spreadhseets"
 		File.open(DB_DIR+'/CathLab.xls') {|io| DeptSpreadsheet.load_dept io}
+		puts "Adding photos"
+		RakeUtils::photify_all
 		puts "Making procs"
 		Nurse.all.each {|n| 50.times { n.completed_procs << Fabricate(:random_completed_proc) }} \
 			if Rails.env.development?

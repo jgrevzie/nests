@@ -6,8 +6,10 @@
 
 
 needs tests for theme (example would be accordian on nurse home page)
-regular nurse shouldn't be able to edit a proc that's been validated
-need to check format of pending validations mail
+maybe test for New Dept link?
+need to check for size and type of uploaded nurse file
+could nurse update themselves to admin using update method of nurse_controller.rb?
+what happnes if there's no file selected in upload depts?
 
 FEATURES
 Nurse username unique to department.

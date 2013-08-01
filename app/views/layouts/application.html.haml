@@ -26,6 +26,7 @@
           - if is_vn
             .link= link_to 'Pending Validations', pending_validations_nurse_path(nurse)
             .link= link_to 'Send Mail', send_mail_nurse_path(nurse)
+            .link= link_to 'New Dept', upload_depts_path
           .link= link_to 'Logout', logout_path, method: :delete 
       .content
         = yield
