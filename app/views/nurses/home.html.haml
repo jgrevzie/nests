@@ -18,8 +18,8 @@
     %span#updateMe (updating #{image_tag 'ajax-loader.gif'})
 
   = form_for @nurse, remote: true do |f|
-    = f.label :image
-    .watchMe= f.file_field :image
+    = f.label :mugshot, 'Image'
+    .watchMe= f.file_field :mugshot
 
     = f.label :name
     (first and last name, no title)

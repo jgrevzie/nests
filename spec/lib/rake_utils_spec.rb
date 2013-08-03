@@ -44,7 +44,7 @@ describe RakeUtils do
   describe "random_file" do
     it "returns data from a file in a directory" do
       stub_rand 0
-      data = RakeUtils.random_file  DIR_NAME
+      data = File.open(RakeUtils.random_file(DIR_NAME), &:read)
       checksum(data).should eq checksum(file_at_dir_index(0))
     end
   end

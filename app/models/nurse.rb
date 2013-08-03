@@ -79,6 +79,10 @@ class Nurse
 
   def validate_all ; vdate self.procs_i_can_validate end
 
+  def mugshot=(image)
+    self[:mugshot] = File.open(image.path, &:read) if image
+  end
+
   def self.send_all_pending_validation_mails
     Nurse.where(validator: true, wants_mail: true).each do |n| 
       DailyValidations.pending_validations_mail(n).deliver

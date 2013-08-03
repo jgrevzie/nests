@@ -204,6 +204,7 @@ DEPENDENCIES
   haml
   jquery-rails
   mongoid
+  pry
   rails
   rb-fsevent
   rspec-rails

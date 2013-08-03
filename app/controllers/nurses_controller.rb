@@ -50,8 +50,7 @@ class NursesController < ApplicationController
   # PUT /nurses/1.json
   def update
     @nurse = Nurse.find(params[:id])
-    @nurse.mugshot=(File.open(params[:nurse][:image].tempfile){|f| f.read}) if params[:nurse][:image]
-    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse].except(:image))
+    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse])
     respond_with @nurse, location: home_nurse_path(@nurse)
   end
 
@@ -87,7 +86,7 @@ class NursesController < ApplicationController
 
   def mugshot
     @nurse = Nurse.find params[:id]
-    File.open("#{Rails.root}/app/assets/images/nurse.jpeg") {|f| @nurse.mugshot=f.read} \
+    File.open("#{Rails.root}/app/assets/images/nurse.jpeg") {|f| @nurse.mugshot=f} \
       unless @nurse.mugshot
     send_data @nurse.mugshot, type:'image', disposition:'inline'
   end

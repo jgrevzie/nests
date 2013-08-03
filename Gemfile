@@ -50,6 +50,7 @@ gem "fabrication"
 gem 'haml'
 gem 'spreadsheet'
 gem "rspec-rails", :group => [:test, :development]
+gem 'pry'
 
 group :test do
   gem "capybara", '2.0.3'
