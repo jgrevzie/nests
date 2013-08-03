@@ -42,16 +42,6 @@ describe Nurse do
     end
   end
 
-  describe "mugshot" do
-    it "should take some binary data" do
-      n = Fabricate :nurse
-      File.open("#{Rails.root}/app/assets/images/nurse.jpeg") {|f| n.mugshot = f.read}
-      n.save
-      n_again = Nurse.find(n.id)
-      File.open("/Users/quinn/Desktop/hello.jpg", "w") {|f| f.write n_again.mugshot}
-    end
-  end
-
   describe '#pendings' do 
     it "gets an enumeration of procedures for a nurse that have't been.vdated" do     
       n = Fabricate :nurse_1p

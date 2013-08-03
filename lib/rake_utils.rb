@@ -12,7 +12,5 @@ module RakeUtils
     Kernel.rand(10)==0 ? nurse.mugshot=nil : nurse.mugshot=random_file(DIR_NAME)
     nurse.save
   end
-  def self.random_file dir_name
-    File.open(Dir["#{dir_name}/*.jpeg"].sample) {|f| f.read}
-  end  
+  def self.random_file(dir_name) File.open(Dir["#{dir_name}/*.jpeg"].sample, &:read) end
 end

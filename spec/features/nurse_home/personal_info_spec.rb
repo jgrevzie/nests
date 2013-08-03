@@ -40,6 +40,7 @@ describe "Nurse's home page" do
       vn.reload.send(o[:attr]).should eq o[:with]
     end
 
+    # combine all these into a single test to speed it up
     it "updates if fields are changed" do
       check_autoupdate_field label: 'Name', with: 'Naughty Nurse', attr: :name
       check_autoupdate_field label: 'Designation', with: 'Test Desig', attr: :designation
@@ -56,6 +57,11 @@ describe "Nurse's home page" do
       check 'Receive daily emails?'
       click_and_wait_for_ajax
       vn.reload.wants_mail.should be_true
+
+      TEST_IMAGE = File.dirname(__FILE__)+'/image.jpeg'
+      attach_file 'Image', TEST_IMAGE
+      click_and_wait_for_ajax
+      checksum(vn.reload.mugshot).should eq checksum(File.open(TEST_IMAGE, &:read))
     end
     it "doesn't show checkbox to receive mail, unless validator" do
       visit_home Fabricate :nurse
@@ -67,6 +73,7 @@ describe "Nurse's home page" do
       # Wait till image disappears.
       page.has_no_css?('#topHeader img', visible: true).should be_true
     end
+    it "image can't be excessively large"
   end
 
 end

@@ -7,12 +7,15 @@ require 'spec_helper'
 
 describe RakeUtils do
   DIR_NAME = "#{Rails.root}/spec/data/nurse_images"
+  FILE_NAMES = Dir["#{DIR_NAME}/*.jpeg"]
 
-  def start_of_file(dir_index) 
-    (File.open(Dir["#{DIR_NAME}/*.jpeg"][dir_index]) {|f| f.read})[0..10]
+  def file_at_dir_index(dir_index) File.open(FILE_NAMES[dir_index], &:read) end
+
+  # stubs Kernel.rand() and Array.sample so that they're predictable
+  def stub_rand(value) 
+    Kernel.stub(:rand).and_return(value)
+    Array.any_instance.stub(:sample).and_return(FILE_NAMES[value])
   end
-
-  def stub_rand(value) Kernel.stub(:rand).and_return(value) end
 
   let(:n) {Fabricate :nurse}
 
@@ -35,14 +38,14 @@ describe RakeUtils do
       stub_rand 1
       RakeUtils.photify n
       # could remove the following, needs only to test for !nil because of other tests
-      n.mugshot.should start_with start_of_file(1)
+      checksum(n.mugshot).should eq checksum(file_at_dir_index(1))
     end
   end
   describe "random_file" do
     it "returns data from a file in a directory" do
       stub_rand 0
       data = RakeUtils.random_file  DIR_NAME
-      data.should start_with start_of_file(0)
+      checksum(data).should eq checksum(file_at_dir_index(0))
     end
   end
 end

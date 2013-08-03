@@ -89,3 +89,7 @@ def visit_home nurse
   login nurse
   visit home_nurse_path nurse
 end
+
+def checksum binary_data
+  Digest::MD5.hexdigest(binary_data)
+end
