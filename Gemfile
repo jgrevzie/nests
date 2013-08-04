@@ -51,6 +51,8 @@ gem 'haml'
 gem 'spreadsheet'
 gem "rspec-rails", :group => [:test, :development]
 gem 'pry'
+gem 'client_side_validations'
+gem 'client_side_validations-mongoid'
 
 group :test do
   gem "capybara", '2.0.3'

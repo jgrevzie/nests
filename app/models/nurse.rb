@@ -23,7 +23,10 @@ class Nurse
   validates :username, presence: true, uniqueness:true
   validates :name, presence: true
   validates :dept, presence: true
-  validates :email, presence: true
+  validates :email, :presence => true, 
+                    :length => {:minimum => 3, :maximum => 254},
+                    :uniqueness => true,
+                    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
 
   has_secure_password
 

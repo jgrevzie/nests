@@ -17,7 +17,7 @@
     Personal Info
     %span#updateMe (updating #{image_tag 'ajax-loader.gif'})
 
-  = form_for @nurse, remote: true do |f|
+  = form_for @nurse, remote: true, validate: :user_validators do |f|
     = f.label :mugshot, 'Image'
     .watchMe= f.file_field :mugshot
 
@@ -52,7 +52,7 @@
         $('#updateMe').show();
         $(this).parents('form:first').submit();
        } );
- 
+
   %h3 Professional Development
 
   %em Info about professional development goes here.
@@ -93,6 +93,7 @@
            row_partial: 'completed_proc',
            owise: 'No procedures carried out in an emergency (yet).'
 
+= yield :user_validators
 :css
   a.rejected  {
     color: red;
