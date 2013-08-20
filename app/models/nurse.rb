@@ -26,7 +26,8 @@ class Nurse
   validates :email, :presence => true, 
                     :length => {:minimum => 3, :maximum => 254},
                     :uniqueness => true,
-                    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i}
+                    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i,
+                                :message => 'not an email address'}
 
   has_secure_password
 
