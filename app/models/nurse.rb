@@ -65,7 +65,7 @@ class Nurse
 
   def procs_i_can_validate
     procs = Procedure.where(dept_id: self.dept.id).map(&:id)
-    CP.where(status: CP::PENDING).in(proc_id: procs)
+    CompletedProc.where(status: CP::PENDING).in(proc_id: procs)
   end
 
   def validate_by_id(completed_proc_ids)

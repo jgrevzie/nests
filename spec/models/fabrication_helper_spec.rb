@@ -4,6 +4,7 @@
 
 
 require 'spec_helper'
+require "#{Rails.root}/spec/fabricators/fabricator_helper_fabricator.rb"
 
 describe "fabricator helper" do
   describe "opt_params" do
@@ -21,6 +22,9 @@ describe "fabricator helper" do
     end
     it "ignores null values in input hash" do
       opt_params({a:1}, :a, :b).should == {a:1}
+    end
+    it "ought to show a warning" do
+      opt_params({a: nil, b: :banana}, :c, a: :apple)
     end
   end
 end

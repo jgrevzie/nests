@@ -5,6 +5,7 @@
 
 
 
+http://stackoverflow.com/questions/17135974/mongoid-w-rails-attr-accessible-no-method-found
 needs tests for theme (example would be accordian on nurse home page)
 maybe test for New Dept link?
 need to check for size and type of uploaded nurse file

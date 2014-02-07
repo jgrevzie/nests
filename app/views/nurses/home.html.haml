@@ -21,8 +21,7 @@
     = f.label :mugshot, 'Image'
     .watchMe= f.file_field :mugshot
 
-    = f.label :name
-    (first and last name, no title)
+    = f.label :name, "Name (first and last name)"
     .watchMe= f.text_field :name
 
     = f.label :designation
@@ -44,14 +43,6 @@
 
     %br
     %a#resume (Link to resume goes here)
-
-    -# Spinner is hidden again by ajax response in update.js.coffee
-    :javascript
-      $('#updateMe').hide();
-      $('.watchMe').change( function() { 
-        $('#updateMe').show();
-        $(this).parents('form:first').submit();
-       } );
 
   %h3 Professional Development
 
@@ -94,6 +85,18 @@
            owise: 'No procedures carried out in an emergency (yet).'
 
 = yield :user_validators
+
+-# Spinner is hidden again by ajax response in update.js.coffee
+:javascript
+  $('#updateMe').hide();
+  $('form').keypress( function(event) {
+    return event.keyCode != 13;
+  });
+  $('.watchMe').change( function() { 
+    $('#updateMe').show();
+    $('form').submit();
+  } );
+
 :css
   a.rejected  {
     color: red;
@@ -118,18 +121,23 @@
     font-style: italic;
     font-size: 0.75em;
   }
-  .watchMe {
-    padding-bottom: 1.15em;
-  }
   .field_with_errors {
     background:initial;
     color:red;
   }
+  .watchMe {
+    padding-bottom: 1.15em;
+  }
   .message {
-    padding-left:35px;
-    background-image:url(/assets/error-arrow.png);
-    background-size:20%;
+    font-size:0.75em;
+    padding-left:25px;
+    background-image:url(/assets/nurse-hat.png);
+    background-size:2.25em;
     background-repeat:no-repeat;
     background-origin:border-box;
+    display:inline;
   }
-
+-#  span#input_tag + label.message {
+-#   display:none;
+-#  }
+ 

@@ -12,12 +12,16 @@ def fill_in_proc_form(cp, *args)
   options = args.extract_options!
   fill_in 'Procedure Name', with: cp.proc.name
   fill_in 'Date', with: cp.date
+  # click on procedure name again to hide date pop up
+  find_field('Procedure Name').click
+
+check 'Emergency' && puts("about to tick emergency button") if cp.emergency?
+#  find('#completed_proc_emergency').trigger('click') if cp.emergency?
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments
-#  find('#completed_proc_emergency').trigger('click') if cp.emergency?
-  check 'Emergency' if cp.emergency?
   choose cp.role
   choose cp.options if cp.options
+
   click_button 'submit' if options[:submit]
 end
 
@@ -26,7 +30,7 @@ def procs_equiv?(cp_1, cp_2)
   cp_1.attributes.except(*ignore_attrs) == cp_2.attributes.except(*ignore_attrs)
 end
 
-describe "'Submit proc for validation' page" do
+describe "'Submit proc for validation' page," do
   before(:all) do
     @dept = Fabricate :dept
     @p = Fabricate :procedure, name: PROC_NAME, options: "option1,option2", dept: @dept
@@ -58,7 +62,7 @@ describe "'Submit proc for validation' page" do
     page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
   end
 
-  describe "javascript / ajax" do
+  describe "(javascript / ajax)," do
     it "includes a shiny drop-down menu with known proc names", js:true do
       fill_in "Procedure Name", with: PROC_NAME[1..5]
       page.should have_text PROC_NAME
@@ -83,8 +87,8 @@ describe "'Submit proc for validation' page" do
       find('#procError').should  be_visible
       fill_in 'Procedure Name', with: PROC_NAME
       fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
-      #page.should have_no_css '#procError'
-      find('#procError').should_not  be_visible
+      page.should have_no_css '#procError'
+      #find('#procError').should_not  be_visible
     end
     it "fixes proc name up a little, if it's on the dodgy side", js: true do
       fill_in 'Procedure Name', with: PROC_NAME.upcase
@@ -93,7 +97,7 @@ describe "'Submit proc for validation' page" do
     end
   end
 
-  describe "saving / updating" do
+  describe "(saving / updating)," do
     it "submits proc for validation, stores proc" , js:true do
       pendings_orig = CP.pending.count
       fill_in_proc_form @cp, submit: true
@@ -135,7 +139,7 @@ describe "'Submit proc for validation' page" do
       procs_equiv?(@cp, cp_2).should be_true
     end
   end
-  describe "validation / rejection / acknowledgement / obsession" do
+  describe "(validation / rejection / acknowledgement / obsession)" do
     before (:all) { @vn = Fabricate :v_nurse }
     it "lets VN validate a proc, validate radio button is selcted by default" do
       pendings_orig = CP.pendings.count
