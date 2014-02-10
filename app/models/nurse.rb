@@ -14,7 +14,7 @@ class Nurse
   field :designation
   field :email
   field :wants_mail, type: Boolean
-  field :mugshot, type: Moped::BSON::Binary
+  field :mugshot, type: BSON::Binary
 
   has_many :completed_procs, dependent: :delete, autosave: true
   has_many :validations, class_name: 'CompletedProc'
@@ -26,7 +26,7 @@ class Nurse
   validates :email, :presence => true, 
                     :length => {:minimum => 3, :maximum => 254},
                     :uniqueness => true,
-                    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i,
+                    :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
                                 :message => 'not an email address'}
 
   has_secure_password

@@ -34,7 +34,7 @@ Nests::Application.routes.draw do
     end
   end
 
-  match '/displeased-nurse.jpg' => redirect('/public/displeased-nurse.jpg')
+  match '/displeased-nurse.jpg' => redirect('/public/displeased-nurse.jpg'), via: [:get]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

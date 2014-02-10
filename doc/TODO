@@ -5,6 +5,8 @@
 
 
 
+should some utility methods be private?
+Couldn't seem to use CP in nurse.rb when vnurse logs in (line 68)
 http://stackoverflow.com/questions/17135974/mongoid-w-rails-attr-accessible-no-method-found
 needs tests for theme (example would be accordian on nurse home page)
 maybe test for New Dept link?

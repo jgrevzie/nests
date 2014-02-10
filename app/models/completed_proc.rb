@@ -47,8 +47,6 @@ class CompletedProc
 											if: 'proc && proc.options && proc.options.length>0'
 	validates :role, presence: true
 
- 	attr_protected :status
-
 	def proc_name=(proc_name) self.proc = Procedure.where(name: proc_name).first end
 
 	def proc_name ; self.proc.name if self.proc end
