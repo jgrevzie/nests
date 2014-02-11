@@ -4,4 +4,5 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Nests::Application.config.secret_token = 'c8ed61dd83c04e15e5ad8f34a8f0dfaa15e0023c3a8d2ae1a6d44ba13b561271ecbad169608b27875f66939398850b053e3c1aae27e07f684bcf1da369138be5'
+Nests::Application.config.secret_key_base = 'ddb8fc8cd9a1cb76b0f7c0b4af79eb23fe6666d4a16938aa0dd34e13b91f3ce089862daba6dc765724211c30f08ebdc853033761df458a0e928ff129ad28b1ad
+'

@@ -71,5 +71,7 @@ module Nests
         password: ENV['MAIL_PASSWORD'],
         enable_starttls_auto: true
     }
+
+    config.i18n.enforce_available_locales = true
   end
 end
