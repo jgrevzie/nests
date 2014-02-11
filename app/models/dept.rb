@@ -9,6 +9,7 @@ class Dept
   field :hospital
   field :location
   field :upload_errors, type: Array, default: []
+  field :email
 
   has_many :nurses, validate: false
   has_many :procedures, validate: false

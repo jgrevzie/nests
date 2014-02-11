@@ -16,7 +16,7 @@ describe CompletedProcsController do
   def setup_and_POST_valid_proc(nurse)
     login nurse
     # Fabricate comp proc to get a nice set of attrs, but remove _id so we don't always update.
-    cp = Fabricate :comp_proc_seq, status: CompletedProc::VALID, nurse: nurse
+    cp = Fabricate :comp_proc_seq, status: CompletedProc::VALID, nurse: nurse, comments: 'hello!'
     post :create, {id: cp.id, completed_proc: cp.attributes.except('_id')}, valid_session
   end    
 
@@ -26,7 +26,7 @@ describe CompletedProcsController do
       # There should be an extra pending proc, since the controller will ignore {validated: true}
       pendings.should eq @pendings_b4+1
     end
-    it "doesn't let validating nurse make a new validated proc" do
+    it "prevents validating nurse from making a new validated proc ('cause that'd be cheating)" do
       setup_and_POST_valid_proc Fabricate :v_nurse
       pendings.should eq @pendings_b4+1
     end

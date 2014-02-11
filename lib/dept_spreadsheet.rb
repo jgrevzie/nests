@@ -68,7 +68,7 @@ class DeptSpreadsheet
       h[:validator] = h[:validator] ? h[:validator].to_s.downcase.start_with?('y', 't') : false
       # following could be replaced with an eval of an attr of dept
       h[:email] = "#{fn}.#{ln}@svpm.org.au" unless h[:email]
-      h[:password] = ln
+      h[:password] = h[:password_confirmation] = ln
     }
   end
 

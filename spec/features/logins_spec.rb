@@ -11,17 +11,18 @@ describe 'login page' do
 		page.should have_content 'Submit Procedure'
 		on_pending_vn_page?.should be_false
 	end
-	it 'tells nurse that username and password are invalid, when annoyed' do
+	it 'nurse with the wrong password is rebuffed with prejudice' do
 		nurse = Fabricate :nurse
-		nurse.password = ''
+		nurse.password = 'wrong password'
 		login nurse
 		page.should have_content 'Invalid'
 	end
-	it "takes admin to validator page, if validator (ie validator wins over admin)" do
-		nurse = Fabricate :nurse, admin: true, validator: true
-		login nurse
-		on_pending_vn_page?.should be_true
-	end
+	# Commented out, because there aren't admins for the time being, just validators.
+	# it "takes admin to validator page, if validator (ie validator wins over admin)" do
+	# 	nurse = Fabricate :nurse, admin: true, validator: true
+	# 	login nurse
+	# 	on_pending_vn_page?.should be_true
+	# end
 	it 'takes validating nurse to validation page after successful login' do 
 		vn = Fabricate :v_nurse
 		login vn

@@ -36,10 +36,10 @@ describe Dept do
   end
   describe "uniqueness" do
     it "allows depts with same names if hospital and/or location are different" do
-      Fabricate :dept, name: 'Diabolical', hopital: 'Heinous', location: 'Lascivious'
+      Fabricate :dept, name: 'Diabolical', hospital: 'Heinous', location: 'Lowly'
       (Dept.new name: 'Diabolical', hospital: 'Horrible', location: 'Lustful').valid?.should be
       (Dept.new name: 'Diabolical', hospital: 'Heinous', location: 'Lewd').valid?.should be
-      (Dept.new name: 'Diabolical', hopital: 'Heinous', location: 'Lascivious').valid?.should_not be
+      (Dept.new name: 'Diabolical', hospital: 'Heinous', location: 'Lowly').valid?.should_not be
       (Dept.new name: 'Diabolical', hospital: 'Happy', location: 'Lovely').valid?.should be
     end
   end

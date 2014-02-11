@@ -41,7 +41,7 @@ class NursesController < ApplicationController
   # POST /nurses
   # POST /nurses.json
   def create
-    @nurse = Nurse.new(params[:nurse])
+    @nurse = Nurse.new(nurse_params)
     flash[:notice] = 'Created Nurse.' if @nurse.save
     respond_with @nurse
   end
@@ -50,7 +50,7 @@ class NursesController < ApplicationController
   # PUT /nurses/1.json
   def update
     @nurse = Nurse.find(params[:id])
-    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(params[:nurse])
+    flash[:notice] = 'Updated Nurse.' if @nurse.update_attributes(nurse_params)
     respond_with @nurse, location: home_nurse_path(@nurse)
   end
 
@@ -89,5 +89,10 @@ class NursesController < ApplicationController
     File.open("#{Rails.root}/app/assets/images/nurse.jpeg") {|f| @nurse.mugshot=f} \
       unless @nurse.mugshot
     send_data @nurse.mugshot, type:'image', disposition:'inline'
+  end
+
+  def nurse_params
+    params.require(:nurse)
+      .permit(:name, :comments, :designation, :email, :wants_mail, :mugshot, :dept_id)
   end
 end

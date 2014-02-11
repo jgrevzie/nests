@@ -66,6 +66,7 @@ class CompletedProc
 	def rejected? ; self.status == REJECTED end
 
 	def self.pending_validations ; CompletedProc.where(status: PENDING) end
+	def self.valid_procs ; CP.where(status: VALID) end
 
 	def ack_reject ; self.status = ACK_REJECT ; self end
 	def ackd? ; self.status == ACK_REJECT end

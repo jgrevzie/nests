@@ -5,6 +5,7 @@
 
 
 
+mongoid.yml - what are the appropriate test and prod options?
 should some utility methods be private?
 Couldn't seem to use CP in nurse.rb when vnurse logs in (line 68)
 http://stackoverflow.com/questions/17135974/mongoid-w-rails-attr-accessible-no-method-found

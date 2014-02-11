@@ -60,11 +60,11 @@ class CompletedProcsController < ApplicationController
   # POST /completed_procs.json
   def create
     @nurse = logged_in_nurse
-    @completed_proc = CompletedProc.new params[:completed_proc]
+    # strong_params protects against nurse hackers POSTing status=valid
+    @completed_proc = CompletedProc.new completed_proc_params
     setup_date_validation @completed_proc
 
-    # strong_params protects against nurse hackers making completed procs
-    if @completed_proc.save(completed_proc_params) && @nurse.completed_procs << @completed_proc
+    if save_status=@completed_proc.save && @nurse.completed_procs << @completed_proc
       flash[:notice] = 'Submitted procedure for validation.' 
     end
 
@@ -123,6 +123,6 @@ class CompletedProcsController < ApplicationController
 
   def completed_proc_params
     params.require(:completed_proc)
-      .permit(:quantity, :proc, :role, :comments, :date, :quantity, :options, :emergency)
+      .permit(:quantity, :proc_name, :role, :comments, :date, :quantity, :options, :emergency, :proc_id)
   end
 end
