@@ -16,7 +16,9 @@ could nurse update themselves to admin using update method of nurse_controller.r
 what happnes if there's no file selected in upload depts?
 what if there are issues with fields in personal info section, and errors must be displayed?
 filter mugshot from mongo logging
+
 FEATURES
+Validate form input without requiring full submit
 Nurse username unique to department.
 Procs need to be categorized by heading in drop down list.
 Nurse needs to be able to change password.
