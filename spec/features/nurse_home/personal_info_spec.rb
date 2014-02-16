@@ -63,6 +63,8 @@ describe "Nurse's home page" do
       click_and_wait_for_ajax
       checksum(vn.reload.mugshot).should eq checksum(File.open(TEST_IMAGE, &:read))
     end
+    it "shows an error immediately if name is missing"
+    it "shows an error immediately if email is invalid"
     it "doesn't show checkbox to receive mail, unless validator" do
       visit_home Fabricate :nurse
       page.should have_no_css('#wants_mail')

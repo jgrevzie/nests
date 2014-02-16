@@ -5,6 +5,7 @@
 
 
 
+where should the parsley css end up?
 mongoid.yml - what are the appropriate test and prod options?
 should some utility methods be private?
 Couldn't seem to use CP in nurse.rb when vnurse logs in (line 68)
@@ -16,7 +17,7 @@ could nurse update themselves to admin using update method of nurse_controller.r
 what happnes if there's no file selected in upload depts?
 what if there are issues with fields in personal info section, and errors must be displayed?
 filter mugshot from mongo logging
-
+binstubs http://blog.barbershoplabs.com/blog/2013/03/01/upgrading-to-rails-40-binstubs/
 FEATURES
 Validate form input without requiring full submit
 Nurse username unique to department.

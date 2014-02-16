@@ -123,6 +123,8 @@ GEM
       mini_portile (~> 0.5.0)
     optionable (0.2.0)
     origin (2.1.0)
+    parsley-rails (1.2.3.0)
+      railties (>= 3.0.0)
     poltergeist (1.5.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -232,6 +234,7 @@ DEPENDENCIES
   haml
   jquery-rails
   mongoid (= 4.0.0.beta1)!
+  parsley-rails
   poltergeist
   pry
   rails (~> 4)

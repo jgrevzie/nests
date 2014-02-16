@@ -38,6 +38,7 @@ gem 'rspec-rails', :group => [:test, :development]
 gem 'pry'
 gem 'bson_ext'
 gem 'daemon_controller'
+gem 'parsley-rails'
 
 group :test do
   gem 'capybara'
