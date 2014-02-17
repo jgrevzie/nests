@@ -39,6 +39,19 @@ describe "Nurse's home page" do
       click_and_wait_for_ajax
       vn.reload.send(o[:attr]).should eq o[:with]
     end
+    def check_field_error *args
+      o = args.extract_options!
+      orig_attrs = vn.attributes
+      fill_in o[:label], with: o[:with_bad]
+      click_and_wait_for_ajax
+      page.should have_text o[:error]
+      # there are errors on the form, so nurse should not have changed in db
+      vn.attributes.should eq orig_attrs
+
+      # valid data should clear the error
+      fill_in o[:label], with: o[:with_valid]
+      page.should_not have_text o[:error]
+    end
 
     # combine all these into a single test to speed it up
     it "updates if fields are changed" do
@@ -63,7 +76,12 @@ describe "Nurse's home page" do
       click_and_wait_for_ajax
       checksum(vn.reload.mugshot).should eq checksum(File.open(TEST_IMAGE, &:read))
     end
-    it "shows an error immediately if name is missing"
+    it "shows errors immediately for certain fields", js: true do
+      check_field_error label: 'Name', with_bad: '', with_valid: 'Florence N', 
+                        error: 'This value is required'
+      check_field_error label: 'Email', with_bad: 'a@b', with_valid: 'a@b.com', 
+                        error: 'This value should be a valid email'
+    end
     it "shows an error immediately if email is invalid"
     it "doesn't show checkbox to receive mail, unless validator" do
       visit_home Fabricate :nurse
