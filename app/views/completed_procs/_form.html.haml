@@ -70,7 +70,7 @@
   $('#new_completed_proc').parsley( {
     validators: {
       validproc: function() {
-        return { validate: function(val) {return procIndex(val) != -1}, 
+        return { validate: function(val) { return !(val && procIndex(val)==-1) }, 
                  priority: 2};
       }
     }

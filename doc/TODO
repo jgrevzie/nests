@@ -5,6 +5,7 @@
 
 
 
+javascript unit tests in _form.html.haml
 where should the parsley css end up?
 mongoid.yml - what are the appropriate test and prod options?
 should some utility methods be private?
