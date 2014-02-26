@@ -6,15 +6,16 @@
 
 = render "errors"
 
-= form_for @completed_proc do |f|
+= form_for @completed_proc, 
+           html: {'parsley-validate'=>'', 'parsley-trigger'=>'change'} do |f|
   %fieldset
     .fields= f.label :proc_name, "Procedure Name"
-    .fields= f.text_field :proc_name
-    #procError Choose a valid procedure name
+    .fields= f.text_field :proc_name, 'parsley-required'=>true, 'parsley-validproc'=>true
     .fields= f.label :date, 'Date'
-    .fields= f.text_field :date
+    .fields= f.text_field :date, 'parsley-required' => true
     .fields= f.label :quantity, 'How many of these procedures?'
-    .fields= f.number_field :quantity, in: 1..CompletedProc::MAX_PROCS_PER_DAY
+    .fields= f.number_field :quantity, 'parsley-required'=>true, 'parsley-min'=>1, 
+            'parsley-max'=>CP::MAX_PROCS_PER_DAY
     .fields= f.label :comments
     .fields= f.text_area :comments, cols: 40, rows: 4
     = f.label :emergency, 'Emergency?'
@@ -23,8 +24,11 @@
       Role in this proc:
       - CP::ROLES.each do |r|
         %label
+          = f.radio_button :role, r, 'parsley-required'=>true, 
+                           'parsley-error-message'=>'Choose the role you played in the procedure.',
+                           'parsley-error-container'=>'#roleErrors'
           = r
-          = f.radio_button :role, r
+      #roleErrors
     #options
       = render 'options', options: @completed_proc.proc.options if @completed_proc.proc
   - if @nurse.validator? && editing then
@@ -41,16 +45,8 @@
   = f.submit id: 'submit'
 
 :css
-   #procError {
-    display: none;
-    width: 250px;
-    background: red;
-  }
   #ack {
     color: red
-  }
-  .field_with_errors {
-    display: inline;
   }
 
 :javascript
@@ -61,21 +57,36 @@
     $('#options').load( "#{options_completed_proc_path(@completed_proc._id)}",
                         "proc="+encodeURIComponent( $(PROCID).val() ) );
   }
-  function fixCase() {
-    where = $.inArray( $(PROCID).val().toLowerCase(), 
-                       proc_list.map( function(i) { return i.toLowerCase() }) );
-    if ( where != -1 ) { 
-      $(PROCID).val(proc_list[where]);
-      $('#procError').hide() 
-    }
-    else { $('#procError').show() }
+  function procIndex(name) {
+    return $.inArray( name.toLowerCase(), 
+                      proc_list.map( function(i) { return i.toLowerCase() }) );
+
   }
+  function fixCase() {
+    index = procIndex( $(PROCID).val() );
+    if ( index != -1 ) $(PROCID).val(proc_list[index]);
+  }
+
+  $('#new_completed_proc').parsley( {
+    validators: {
+      validproc: function() {
+        return {
+          validate: function(val) { 
+            return procIndex(val) != -1
+          },
+          priority: 2
+        };
+      }
+    }
+    ,messages: {
+      validproc: "Enter the name of a procedure."
+    }
+  });
   
   $(PROCID).autocomplete({
     source: proc_list,
     select: function( event, ui ) { 
       $(PROCID).val(ui.item.value);
-      $('#procError').hide();
       loadOptions();
     },
     minLength: 0,

@@ -82,7 +82,6 @@ describe "Nurse's home page" do
       check_field_error label: 'Email', with_bad: 'a@b', with_valid: 'a@b.com', 
                         error: 'This value should be a valid email'
     end
-    it "shows an error immediately if email is invalid"
     it "doesn't show checkbox to receive mail, unless validator" do
       visit_home Fabricate :nurse
       page.should have_no_css('#wants_mail')

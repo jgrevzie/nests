@@ -19,6 +19,8 @@ what if there are issues with fields in personal info section, and errors must b
 filter mugshot from mongo logging
 binstubs http://blog.barbershoplabs.com/blog/2013/03/01/upgrading-to-rails-40-binstubs/
 FEATURES
+Ugly errors on submit proc page.
+'Updated nurse' sometimes appears on Submit Proc page.
 Validate form input without requiring full submit
 Nurse username unique to department.
 Procs need to be categorized by heading in drop down list.
