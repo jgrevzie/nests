@@ -82,13 +82,13 @@ describe "'Submit proc for validation' page," do
       page.should have_unchecked_field 'checkbox?'
     end
     it "shows error message if proc name is invalid, disappears if it is valid", js: true do
+      PROC_ERROR = 'Enter the name of a procedure'
       fill_in 'Procedure Name', with: 'this is not a procedure name'
       fill_in 'Comments', with: 'Look at that gorgeous error message.'
-      find('#procError').should  be_visible
+      page.should have_text PROC_ERROR
       fill_in 'Procedure Name', with: PROC_NAME
       fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
-      page.should have_no_css '#procError'
-      #find('#procError').should_not  be_visible
+      page.should have_no_text PROC_ERROR
     end
     it "fixes proc name up a little, if it's on the dodgy side", js: true do
       fill_in 'Procedure Name', with: PROC_NAME.upcase
