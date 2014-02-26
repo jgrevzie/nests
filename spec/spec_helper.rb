@@ -12,14 +12,13 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
-#require 'capybara/poltergeist'
+require 'capybara-screenshot/rspec'
 
 DATA_DIR = "#{Rails.root.to_s}/spec/data/"
 TEST_XLS = "#{DATA_DIR}/test.xls"
 INVALID_XLS = "#{DATA_DIR}/invalid.xls"
 
 Capybara.javascript_driver = :webkit
-#Capybara.javascript_driver = :poltergeist
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

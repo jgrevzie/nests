@@ -48,4 +48,5 @@ group :test do
   gem 'capybara-webkit'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
+  gem 'capybara-screenshot'
 end
