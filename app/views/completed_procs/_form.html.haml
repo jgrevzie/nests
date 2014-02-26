@@ -70,12 +70,8 @@
   $('#new_completed_proc').parsley( {
     validators: {
       validproc: function() {
-        return {
-          validate: function(val) { 
-            return procIndex(val) != -1
-          },
-          priority: 2
-        };
+        return { validate: function(val) {return procIndex(val) != -1}, 
+                 priority: 2};
       }
     }
     ,messages: {
@@ -87,6 +83,7 @@
     source: proc_list,
     select: function( event, ui ) { 
       $(PROCID).val(ui.item.value);
+      $(PROCID).parsley('validate')
       loadOptions();
     },
     minLength: 0,
