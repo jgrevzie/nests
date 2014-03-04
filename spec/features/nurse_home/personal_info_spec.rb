@@ -31,7 +31,7 @@ describe "Nurse's home page" do
       # Click on something outside of auto-update fields.
       find('h1').click
       # Wait for the spinner to disappear.
-      page.has_no_text?('updating').should be_true
+      page.should have_text '(updated'
     end      
     def check_autoupdate_field *args
       o = args.extract_options!
@@ -43,7 +43,7 @@ describe "Nurse's home page" do
       o = args.extract_options!
       orig_attrs = vn.attributes
       fill_in o[:label], with: o[:with_bad]
-      click_and_wait_for_ajax
+      find('h1').click # click outside field to trigger error
       page.should have_text o[:error]
       # there are errors on the form, so nurse should not have changed in db
       vn.attributes.should eq orig_attrs
@@ -73,7 +73,8 @@ describe "Nurse's home page" do
 
       TEST_IMAGE = File.dirname(__FILE__)+'/image.jpeg'
       attach_file 'Image', TEST_IMAGE
-      click_and_wait_for_ajax
+      # when we submit a mugshot change, it goes via html.... so there's no ajax and 'updated'
+      find('h1').click
       checksum(vn.reload.mugshot).should eq checksum(File.open(TEST_IMAGE, &:read))
     end
     it "shows errors immediately for certain fields", js: true do

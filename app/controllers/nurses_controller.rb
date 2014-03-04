@@ -4,6 +4,8 @@
 
 class NursesController < ApplicationController
 
+  protect_from_forgery with: :null_session, 
+                       :if => Proc.new { |c| c.request.format == 'application/json' }
   before_filter :is_nurse_allowed_here
   skip_before_filter :is_nurse_allowed_here, only: []
   skip_before_filter :verify_authenticity_token, :only => [:send_mail]
