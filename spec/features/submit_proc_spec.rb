@@ -15,7 +15,7 @@ def fill_in_proc_form(cp, *args)
   # click on procedure name again to hide date pop up
   find_field('Procedure Name').click
 
-check 'Emergency' && puts("about to tick emergency button") if cp.emergency?
+  check 'Emergency' if cp.emergency?
 #  find('#completed_proc_emergency').trigger('click') if cp.emergency?
   fill_in 'How many of these procedures?', with: cp.quantity
   fill_in 'Comments', with: cp.comments

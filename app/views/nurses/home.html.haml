@@ -15,7 +15,7 @@
 #accordion
   %h3#topHeader 
     Personal Info
-    %span#updateMe (updating #{image_tag 'ajax-loader.gif'})
+    %span#updateMe
 
   = form_for @nurse, remote: true, 
                      html: {'parsley-validate'=>'', 'parsley-trigger'=>'focusin focusout'} do |f|
@@ -89,13 +89,12 @@
 
 -# Spinner is hidden again by ajax response in update.js.coffee
 :javascript
-  $('#updateMe').hide();
   $('form').keypress( function(event) {
     return event.keyCode != 13;
   });
   $('.watchMe').change( function() { 
     if ($('form').parsley('isValid')) {
-      $('#updateMe').show();
+      $('#updateMe').html('(updating #{image_tag "ajax-loader.gif"} )');
       $('form').submit();
     }
   } );
@@ -126,5 +125,8 @@
   }
   .watchMe {
     padding-bottom: 1.15em;
+  }
+  #tick {
+    width:1.5em;
   }
 

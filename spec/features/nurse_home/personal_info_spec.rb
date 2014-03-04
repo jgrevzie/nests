@@ -31,7 +31,7 @@ describe "Nurse's home page" do
       # Click on something outside of auto-update fields.
       find('h1').click
       # Wait for the spinner to disappear.
-      page.has_no_css?('#topHeader img', visible: true).should be_true
+      page.has_no_text?('updating').should be_true
     end      
     def check_autoupdate_field *args
       o = args.extract_options!
@@ -86,11 +86,11 @@ describe "Nurse's home page" do
       visit_home Fabricate :nurse
       page.should have_no_css('#wants_mail')
     end
-    it "shows spinning wheel while changes are being made", js: true do
+    it "shows 'updating' while changes are being saved", js: true do
       check 'Receive daily emails?'
-      find('#topHeader img').visible?.should be_true
+      page.should have_text('updating')
       # Wait till image disappears.
-      page.has_no_css?('#topHeader img', visible: true).should be_true
+      page.should have_text('updated')
     end
     it "image can't be excessively large"
   end

@@ -2,6 +2,7 @@ Nests::Application.routes.draw do
   
 
 
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   resources :depts do
     get 'upload', on: :collection
     post 'upload_submit', on: :member

@@ -34,11 +34,17 @@ gem 'validates_timeliness', git: 'git://github.com/adzap/validates_timeliness.gi
 gem 'fabrication'
 gem 'haml'
 gem 'spreadsheet'
-gem 'rspec-rails', :group => [:test, :development]
 gem 'pry'
 gem 'bson_ext'
 gem 'daemon_controller'
 gem 'parsley-rails'
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'jasmine-core', '~>1'
+  gem 'jasmine-rails'
+  gem 'guard-jasmine'
+end
 
 group :test do
   gem 'capybara'
