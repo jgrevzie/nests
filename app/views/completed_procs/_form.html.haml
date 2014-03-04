@@ -20,14 +20,15 @@
     .fields= f.text_area :comments, cols: 40, rows: 4
     = f.label :emergency, 'Emergency?'
     = f.check_box :emergency
-    .fields#role
+    .fields
       Role in this proc:
       - CP::ROLES.each do |r|
         %label
-          = f.radio_button :role, r, 'parsley-required'=>true, 
-                           'parsley-error-message'=>'Choose the role you played in the procedure.',
-                           'parsley-error-container'=>'#roleErrors'
           = r
+          .role= f.radio_button :role, r, 
+                  'parsley-required'=>true, 
+                  'parsley-error-message'=>'Choose the role you played in the procedure.',
+                  'parsley-error-container'=>'#roleErrors'
       #roleErrors
     #options
       = render 'options', options: @completed_proc.proc.options if @completed_proc.proc
@@ -47,6 +48,9 @@
 :css
   #ack {
     color: red
+  }
+  .role {
+    display: inline;
   }
 
 :javascript
