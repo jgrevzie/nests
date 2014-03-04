@@ -62,7 +62,7 @@ describe "'Submit proc for validation' page," do
     page.execute_script "$('#{selector}').trigger(\"mouseenter\").click();"
   end
 
-  describe "(javascript / ajax)," do
+  describe "(javascript / ajax),", js:true do
     it "includes a shiny drop-down menu with known proc names", js:true do
       fill_in "Procedure Name", with: PROC_NAME[1..5]
       page.should have_text PROC_NAME
@@ -70,7 +70,7 @@ describe "'Submit proc for validation' page," do
       page.should have_text PROC_NAME
     end
     # Skip the following test if necessary, because it's subsumed by other tests
-    it "updates page with proc options, once a proc name is chosen from menu", js:true, skip:true do 
+    it "updates page with proc options, once a proc name is chosen from menu", skip:true do 
       # when clicking on drop-down
       fill_in "Procedure Name", with: PROC_NAME[1..5]
       click_on_popup_menu_item PROC_NAME
@@ -81,7 +81,7 @@ describe "'Submit proc for validation' page," do
       fill_in 'Comments', with: 'Good gravy, observe those dynamically updating options!'
       page.should have_unchecked_field 'checkbox?'
     end
-    it "shows error message if proc name is invalid, disappears if it is valid", js: true do
+    it "shows error message if proc name is invalid, disappears if it is valid" do
       PROC_ERROR = 'Enter the name of a procedure'
       fill_in 'Procedure Name', with: 'this is not a procedure name'
       fill_in 'Comments', with: 'Look at that gorgeous error message.'
@@ -90,10 +90,17 @@ describe "'Submit proc for validation' page," do
       fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
       page.should have_no_text PROC_ERROR
     end
-    it "fixes proc name up a little, if it's on the dodgy side", js: true do
+    it "fixes proc name up a little, if it's on the dodgy side" do
       fill_in 'Procedure Name', with: PROC_NAME.upcase
       fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
       find_field('Procedure Name').value.should eq PROC_NAME
+    end
+    it "does client-side validation for certain required fields" do
+      REQUD = 'This value is required'
+      SUBMIT = '#submit'
+#      check_client_side_error label: 'Procedure Name', with_bad: '', with_valid: PROC_NAME, 
+#                              error: REQUD, submit: SUBMIT
+      
     end
   end
 
@@ -128,7 +135,7 @@ describe "'Submit proc for validation' page," do
     end
     it "updates proc, and saves new values", js: true do
       p = Fabricate :proc, name: 'Walk Pooch', options: 'option4,option5'
-      cp_2 = Fabricate :completed_proc, quantity: 1, date: Date.today-2, comments:'Later', 
+      cp_2 = Fabricate :completed_proc, quantity: 1, date: Date.today-2, comments:'Later tater.', 
                    options: 'option4', emergency: true, role: CP::SCOUT, proc: p
       
       visit edit_completed_proc_path(@cp)

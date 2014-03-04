@@ -39,18 +39,25 @@ describe "Nurse's home page" do
       click_and_wait_for_ajax
       vn.reload.send(o[:attr]).should eq o[:with]
     end
-    def check_field_error *args
+    def check_client_side_error *args
       o = args.extract_options!
       orig_attrs = vn.attributes
       fill_in o[:label], with: o[:with_bad]
       find('h1').click # click outside field to trigger error
       page.should have_text o[:error]
       # there are errors on the form, so nurse should not have changed in db
+      vn.reload
       vn.attributes.should eq orig_attrs
 
       # valid data should clear the error
       fill_in o[:label], with: o[:with_valid]
       page.should_not have_text o[:error]
+      find('h1').click # click outside field to trigger save
+      # wait for the save to occur
+      page.should have_text '(updated'
+      # nurse should be saved with new attributes
+      vn.reload
+      vn.attributes.should_not eq orig_attrs
     end
 
     # combine all these into a single test to speed it up
@@ -78,10 +85,10 @@ describe "Nurse's home page" do
       checksum(vn.reload.mugshot).should eq checksum(File.open(TEST_IMAGE, &:read))
     end
     it "shows errors immediately for certain fields", js: true do
-      check_field_error label: 'Name', with_bad: '', with_valid: 'Florence N', 
-                        error: 'This value is required'
-      check_field_error label: 'Email', with_bad: 'a@b', with_valid: 'a@b.com', 
-                        error: 'This value should be a valid email'
+      check_client_side_error label: 'Name', with_bad: '', with_valid: 'Florence N', 
+                              error: 'This value is required'
+      check_client_side_error label: 'Email', with_bad: 'a@b', with_valid: 'a@b.com', 
+                              error: 'This value should be a valid email'
     end
     it "doesn't show checkbox to receive mail, unless validator" do
       visit_home Fabricate :nurse
