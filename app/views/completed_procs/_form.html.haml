@@ -9,27 +9,36 @@
 = form_for @completed_proc, 
            html: {'parsley-validate'=>'', 'parsley-trigger'=>'change'} do |f|
   %fieldset
-    .fields= f.label :proc_name, "Procedure Name"
-    .fields= f.text_field :proc_name, 'parsley-required'=>true, 'parsley-validproc'=>true
-    .fields= f.label :date, 'Date'
-    .fields= f.text_field :date, 'parsley-required' => true
-    .fields= f.label :quantity, 'How many of these procedures?'
-    .fields= f.number_field :quantity, 'parsley-required'=>true, 'parsley-min'=>1, 
-            'parsley-max'=>CP::MAX_PROCS_PER_DAY
-    .fields= f.label :comments
-    .fields= f.text_area :comments, cols: 40, rows: 4
+    = f.label :proc_name, "Procedure Name"
+    = f.text_field :proc_name, 'parsley-required'=>true, 
+                               'parsley-validproc'=>true,
+                               'parsley-error-container'=>'#procError'
+    #procError
+    = f.label :date, 'Date'
+    = f.text_field :date, 'parsley-required' => true,
+                          'parsley-error-container'=>'#dateError'
+    #dateError
+    = f.label :quantity, 'How many of these procedures?'
+    = f.number_field :quantity, 'parsley-required'=>true, 
+                                'parsley-min'=>1, 
+                                'parsley-max'=>CP::MAX_PROCS_PER_DAY,
+                                'parsley-error-container'=>'#quantityError'
+    #quantityError
+    = f.label :comments
+    = f.text_area :comments, cols: 40, rows: 4
     = f.label :emergency, 'Emergency?'
     = f.check_box :emergency
-    .fields
-      Role in this proc:
-      - CP::ROLES.each do |r|
-        %label
-          = r
-          .role= f.radio_button :role, r, 
-                  'parsley-required'=>true, 
-                  'parsley-error-message'=>'Choose the role you played in the procedure.',
-                  'parsley-error-container'=>'#roleErrors'
-      #roleErrors
+    
+    %br
+    Role in this proc:
+    - CP::ROLES.each do |r|
+      %label
+        = r
+        .role= f.radio_button :role, r, 
+                'parsley-required'=>true, 
+                'parsley-error-message'=>'Choose the role you played in the procedure.',
+                'parsley-error-container'=>'#roleErrors'
+    #roleErrors
     #options
       = render 'options', options: @completed_proc.proc.options if @completed_proc.proc
   - if @nurse.validator? && editing then
@@ -50,6 +59,12 @@
     color: red
   }
   .role {
+    display: inline;
+  }
+  input, textarea {
+    display: block;
+  }
+  input[type="radio"], input[type="checkbox"] {
     display: inline;
   }
 
