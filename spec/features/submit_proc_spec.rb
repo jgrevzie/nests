@@ -81,26 +81,55 @@ describe "'Submit proc for validation' page," do
       fill_in 'Comments', with: 'Good gravy, observe those dynamically updating options!'
       page.should have_unchecked_field 'checkbox?'
     end
-    it "shows error message if proc name is invalid, disappears if it is valid" do
-      PROC_ERROR = 'Enter the name of a procedure'
-      fill_in 'Procedure Name', with: 'this is not a procedure name'
-      fill_in 'Comments', with: 'Look at that gorgeous error message.'
-      page.should have_text PROC_ERROR
-      fill_in 'Procedure Name', with: PROC_NAME
-      fill_in 'Comments', with: 'By gum, it seems to have vanished!!'
-      page.should have_no_text PROC_ERROR
-    end
     it "fixes proc name up a little, if it's on the dodgy side" do
       fill_in 'Procedure Name', with: PROC_NAME.upcase
       fill_in 'Comments', with: 'What a marvelous case correction scheme you have here.'
       find_field('Procedure Name').value.should eq PROC_NAME
     end
-    it "does client-side validation for certain required fields" do
-      REQUD = 'This value is required'
-      SUBMIT = '#submit'
-#      check_client_side_error label: 'Procedure Name', with_bad: '', with_valid: PROC_NAME, 
-#                              error: REQUD, submit: SUBMIT
-      
+    
+    let(:click_submit) do Proc.new do click_button('submit') end end
+    REQD = 'This value is required'
+
+    it "does client-side validation for Procedure Name" do
+      check_client_side_error label: 'Procedure Name', with_bad: '', submit: click_submit, 
+                              with_valid: PROC_NAME, error_div: '#procError', error: REQD
+ 
+      check_client_side_error label: 'Procedure Name', with_bad: 'Reckless Chainsawing', 
+                              submit: click_submit, with_valid: PROC_NAME, 
+                              error_div: '#procError', error: 'Enter the name of a procedure.'
+    end
+    it "does client side validation for Date" do
+      check_client_side_error label: 'Date', with_bad: '', submit: click_submit,
+                              with_valid: Date.today.strftime('%d/%m/%Y'), error_div: '#dateError',
+                              error: REQD
+    end
+    it "does client side date range checks, if user is not validator"
+    it "does client side validation for Quantity" do
+      Q_LABEL = 'How many of these procedures?'
+      check_client_side_error label: Q_LABEL, with_bad: '', submit: click_submit, 
+                              with_valid: 1, error_div: '#quantityError', error: REQD
+      check_client_side_error label: Q_LABEL, with_bad: 0, submit: click_submit,
+                              with_valid: 1, error_div: '#quantityError', 
+                              error: 'This value should be greater than or equal to 1.'
+      check_client_side_error label: Q_LABEL, with_bad: CP::MAX_PROCS_PER_DAY+1,
+                              submit: click_submit, with_valid: 1, error_div: '#quantityError', 
+                              error: 'This value should be lower than or equal to'
+    end
+    it "checks whether the user has selected a role, client side" do
+      click_submit.call
+      find('#roleErrors').text.length.should > 0
+      choose 'Scrubbed'
+      page.should_not have_selector '#roleErrors ul'
+    end
+    it "checks whether the user has selected a proc option, if the procedure has them" do
+      fill_in 'Procedure Name', with: PROC_NAME
+      fill_in 'Comments', with: 'just need to click outside proc name field'
+      page.should have_selector '#options input'
+      click_submit.call
+      find('#optionErrors').should have_text 'Please choose an option.'
+      choose 'option1'
+      page.should_not have_selector '#optionErrors ul'
+
     end
   end
 

@@ -14,17 +14,13 @@
       - options.split(',').each do |option|
         %label
           = option
-          .option= f.radio_button :options, option, 
+          = f.radio_button :options, option, 
                     'parsley-required'=>true,
                     'parsley-error-message'=>'Please choose an option.',
                     'parsley-error-container'=>'#optionErrors'
       #optionErrors
 
-:css
-  .option {
-    display: inline;
-  }
 :javascript
-  $('.option input').each(function() {
+  $('#options input').each(function() {
     $('form').parsley('addItem', $(this));
   });

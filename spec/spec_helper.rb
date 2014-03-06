@@ -92,3 +92,18 @@ end
 def checksum binary_data
   Digest::MD5.hexdigest(binary_data)
 end
+
+def check_client_side_error *args
+  o = args.extract_options!
+  raise "wrong options provided to method - #{o.inspect}" unless 
+    o.keys.to_set == [:label, :with_bad, :submit, :error_div, :error, :with_valid].to_set
+  fill_in o[:label], with: o[:with_bad]
+  o[:submit].call
+  find(o[:error_div]).should have_text o[:error]
+
+  # valid data should clear the error
+  fill_in o[:label], with: o[:with_valid]
+  # wait for the error messages to disappear (parsley will put an ul in the div if there's an error)
+  page.should_not have_selector "#{o[:error_div]} ul"
+  find(o[:error_div]).text.should eq ''
+end
